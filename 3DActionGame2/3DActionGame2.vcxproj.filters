@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Src\Objects">
+      <UniqueIdentifier>{3a3c185a-01b6-444e-bda9-79a75afbefa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Systems">
+      <UniqueIdentifier>{7c7429ff-2baf-4108-8813-51989f1d604d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Input">
+      <UniqueIdentifier>{afaf5ecd-41cb-439e-9725-d04bd84e6b41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Physics">
+      <UniqueIdentifier>{779e671f-1d74-4b9e-b39d-000f87cffa0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Collision">
+      <UniqueIdentifier>{b7c0f7b7-1dd3-442f-a7f7-ad402840b18e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scenes">
+      <UniqueIdentifier>{76309926-c890-4229-9593-0dfd36e7c96e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Mathmatics">
+      <UniqueIdentifier>{20c954b7-ad96-45d1-bb3f-63cdb8481bbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Objects\Components">
+      <UniqueIdentifier>{f578138c-6c0a-4383-8489-b5b2599a7d87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\main.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\App.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Systems\SystemTimeProcess.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\ButtonBehavior.cpp">
+      <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Physics\PhysicsManager.cpp">
+      <Filter>Src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\InputManager.cpp">
+      <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Systems\Time.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Systems\TimerManager.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\StickBehavior.cpp">
+      <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\TriggerBehavior.cpp">
+      <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Systems\Subject.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\InputBehavior.cpp">
+      <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\InputBehaviorWithSubject.cpp">
+      <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Systems\SimpleObserver.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\ObjectManager.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\TestObject.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scenes\SceneManager.cpp">
+      <Filter>Src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scenes\SceneFactory.cpp">
+      <Filter>Src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scenes\TitleScene.cpp">
+      <Filter>Src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scenes\GameScene.cpp">
+      <Filter>Src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\ObjectFactory.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Mathmatics\Vector3.cpp">
+      <Filter>Src\Mathmatics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\ColliderRegisterInterface.cpp">
+      <Filter>Src\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\CollisionManager.cpp">
+      <Filter>Src\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\Rigidbody.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\Transform.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Mathmatics\Quartanion.cpp">
+      <Filter>Src\Mathmatics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\Animator.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\Renderer.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scenes\SampleScene.cpp">
+      <Filter>Src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\SampleStage.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\SampleCharacter.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\SampleCamera.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\App.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\SystemTimeProcess.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\ButtonBehavior.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Physics\PhysicsManager.h">
+      <Filter>Src\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\Timer.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\MemberFunctionPointerContainer.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\InputManager.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\Time.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\TimerManager.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\TimerBase.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\MemberFunctionPointerContainerBase.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\TimerFactory.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\StickBehavior.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\TriggerBehavior.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\Subject.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\ObserverBase.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\InputBehavior.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\InputBehaviorWithSubject.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Systems\SimpleObserver.h">
+      <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\ObjectManager.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\ObjectBase.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\TestObject.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\SceneManager.h">
+      <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\SceneBase.h">
+      <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\SceneFactory.h">
+      <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\TitleScene.h">
+      <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\GameScene.h">
+      <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\ObjectFactory.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Common.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Mathmatics\Vector3.h">
+      <Filter>Src\Mathmatics</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\ColliderRegisterInterface.h">
+      <Filter>Src\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\CollisionManager.h">
+      <Filter>Src\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\Rigidbody.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\Transform.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Mathmatics\Quartanion.h">
+      <Filter>Src\Mathmatics</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\Animator.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\Renderer.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\SampleScene.h">
+      <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\SampleStage.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\SampleCharacter.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\SampleCamera.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

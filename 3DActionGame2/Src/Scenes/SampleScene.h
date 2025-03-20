@@ -1,0 +1,59 @@
+#pragma once
+#include "SceneBase.h"
+#include <memory>
+#include "../Common.h"
+
+class ObjectManager;
+class ObjectFactory;
+class SampleCamera;
+
+class SampleScene : public SceneBase
+{
+public:
+	SampleScene();
+	~SampleScene();
+
+public:
+	void FixedUpdate() override;
+	void Update(float elapsed_time_) override;
+	void Render() override;
+
+	void Initialize() override;
+	Type Delete() override;
+
+private:
+	void SetupLight();
+	void Load();
+	void DeleteHandles();
+
+	void IncreaseIntensity();
+	void DecreaseIntensity();
+
+private:
+	std::shared_ptr<ObjectManager> objectManager;
+	std::shared_ptr<ObjectFactory> objectFactory;
+	Type nextType = Type::Game;
+
+	int stageHandle = -1;
+	int charaHandle = -1;
+	int idleHandle = -1;
+	int walkHandle = -1;
+	int attackHandle = -1;
+	int enemyHandle = -1;
+
+	int normalVertexShaderHandle = -1;
+	int skinnedVertexShaderHandle = -1;
+	int normalPixelShaderHandle = -1;
+	int skinnedPixelShaderHandle = -1;
+	int blurPSHandle = -1;
+
+	int tmpScreenHandle = -1;
+
+	float intensity = 0.0f;
+
+	std::shared_ptr<SampleCamera> sampleCamera;
+
+#ifdef DEBUG
+	int maxMeshNum = 0;
+#endif
+};
