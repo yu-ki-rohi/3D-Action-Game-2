@@ -14,6 +14,7 @@ public:
 	void FixedUpdate();
 	void Update(float elapsed_time);
 	void Render();
+	void RenderShadow();
 private:
 	std::vector<std::shared_ptr<ObjectBase>> objects;
 };

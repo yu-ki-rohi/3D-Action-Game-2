@@ -12,6 +12,7 @@ public:
 	void FixedUpdate() override;
 	void Update(float elapsed_time) override;
 	void Render() override;
+	void RenderShadow() override;
 
 private:
 	void PressA();

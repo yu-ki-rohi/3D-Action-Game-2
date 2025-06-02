@@ -49,3 +49,11 @@ void ObjectManager::Render()
 		obj->Render();
 	}
 }
+
+void ObjectManager::RenderShadow()
+{
+	for (auto& obj : objects)
+	{
+		obj->RenderShadow();
+	}
+}

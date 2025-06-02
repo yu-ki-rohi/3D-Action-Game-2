@@ -4,6 +4,7 @@
 #include "Systems/Time.h"
 #include "Scenes/SceneManager.h"
 #include "Scenes/SceneFactory.h"
+#include "Common.h"
 
 App::App()
 {
@@ -30,10 +31,8 @@ bool App::InitApp()
 	srand((unsigned int)time(NULL));
 	// DXLib‰Šú‰»‘O‚Ì–‘O€”õ
 	ChangeWindowMode(true);
-	int window_width = 1920;
-	int window_height = 1080;
 	int color_bit = 32;
-	SetGraphMode(window_width, window_height, color_bit);
+	SetGraphMode(WindowSettings::WindowWidth, WindowSettings::WindowHeight, color_bit);
 
 	SetUseDirect3DVersion(DX_DIRECT3D_9EX);
 

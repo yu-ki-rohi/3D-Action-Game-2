@@ -1,6 +1,8 @@
 #pragma once
 #include "Transform.h"
 
+// ‹@”\‚ª‘‚¦‚é‚È‚çclass‚É‚µ‚½•û‚ª®‡«‚ªã‚ª‚é
+
 struct Rigidbody
 {
 public:

@@ -31,6 +31,13 @@ public:
 	void RegisterAnim(AnimType anim_type_, int anim_handle_);
 
 	void SetNextAnim(AnimType anim_type_, bool is_loop_ = false);
+	/// <summary>
+	/// アニメーション遷移先をセット
+	/// </summary>
+	/// <param name="anim_type_">遷移先の種類</param>
+	/// <param name="start_changing_time_">遷移を開始するアニメーション時刻</param>
+	/// <param name="changing_time_">遷移し終わるまでの時間</param>
+	/// <param name="is_loop_">次のアニメーションをループさせるか否か</param>
 	void SetNextAnim(AnimType anim_type_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
 
 	void SetAnimSpeed(float anim_speed_);
@@ -43,8 +50,11 @@ public:
 	void Update(float elapsed_time_);
 
 private:
-	// AnimTypeごとのハンドルをキャッシュ
+	// AnimTypeごとのハンドル
 	std::unordered_map<AnimType, int> animHandles;
+
+	// nextXXはアニメーション遷移先を予約するために使用
+	// (アニメーションの線形補間のため)
 
 	// 再生するアニメーションのハンドル
 	// AnimTypeを控えておく方法でもいいかも
@@ -65,11 +75,12 @@ private:
 	float animSpeed = 30.0f;
 
 	float startChangingTime = 0.0f;
-	float ChangingTime = 0.1f;
+	float changingTime = 0.1f;
 
 	bool isLoop = true;
 	bool nextIsLoop = false;
 
+	// 切替の始動/終了を通知するため
 	bool isStartChangeAnimNow = false;
 	bool isFinishChangeAnimNow = false;
 

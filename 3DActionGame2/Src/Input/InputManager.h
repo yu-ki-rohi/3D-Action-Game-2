@@ -2,9 +2,11 @@
 
 #include <memory>
 
+// *** •ÏX•s‰Â ***
 #define BUTTON_NUM 16
 #define STICK_NUM 2
 #define TRIGGER_NUM 2
+// ****************
 
 class ButtonBehavior;
 class StickBehavior;
@@ -19,11 +21,13 @@ class ObserverBase;
 class InputManager
 {
 public:
+	// unity‚ÌActionMap“I‚Èƒ‚ƒm
+	// ‘€ì‚ğØ‚è‘Ö‚¦‚Ég—p(—á: InGame <=> Menu)
 	enum class Map
 	{
 		Menu,
 		Player,
-		None
+		None		// Œ´‘¥None‚É‚Í‰½‚à“o˜^‚µ‚È‚¢
 	};
 
 	enum class State
@@ -58,6 +62,7 @@ public:
 	void RemoveObserver(Stick stick_, std::shared_ptr<ObserverBase> observer_);
 	void RemoveObserver(Trigger trigger_, std::shared_ptr<ObserverBase> observer_);
 
+	// “ü—Íó‘Ô‚ÌŠm”F‹y‚Ñ“o˜^‚³‚ê‚½ˆ—‚ÌÀs
 	void CheckInput();
 
 	void ChangeMap(Map map_);

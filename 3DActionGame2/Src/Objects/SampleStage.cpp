@@ -2,9 +2,9 @@
 #include "../Input/InputManager.h"
 #include "../Systems/MemberFunctionPointerContainer.h"
 
-SampleStage::SampleStage(Vector3 position_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_) :
+SampleStage::SampleStage(Vector3 position_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_) :
 	transform(Transform(position_)),
-	renderer(Renderer(model_handle_, vertex_shader_handle_, pixel_shader_handle_))
+	renderer(Renderer(model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_))
 {
 	InputManager::Instance().RegisiterBehave(
 		InputManager::Map::Menu,
@@ -36,6 +36,12 @@ void SampleStage::Render()
 	FLOAT4 monocrome_Rate = { monochromeRate,0.0f,0.0f, 0.0f };
 	SetPSConstF(22, monocrome_Rate);
 
+	renderer.Render(transform);
+}
+
+void SampleStage::RenderShadow()
+{
+	SetUseVertexShader(renderer.GetShadowVSHandle());
 	renderer.Render(transform);
 }
 

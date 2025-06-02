@@ -45,7 +45,7 @@ void TitleScene::TitleScene::Initialize()
 {
 	if (objectFactory != nullptr)
 	{
-		objectFactory->Create();
+		// objectFactory->Create();
 	}
 	currentStep = Step::Update;
 }

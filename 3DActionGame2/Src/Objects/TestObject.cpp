@@ -41,6 +41,11 @@ void TestObject::Render()
 	DrawCircle(x, y, range, color, true);
 }
 
+void TestObject::RenderShadow()
+{
+	DrawCircle(x, y, range, color, true);
+}
+
 void TestObject::PressA()
 {
 	color = GetColor(255, 0, 0);

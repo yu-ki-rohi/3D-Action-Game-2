@@ -9,7 +9,7 @@ public:
 public:
 
 public:
-	void CheckInput(InputManager::Map map_, unsigned char d_);
+	void CheckInput(InputManager::Map map_, unsigned char depth_);
 
 private:
 	unsigned char pastTriggerState = 0;

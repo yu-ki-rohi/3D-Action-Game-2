@@ -7,6 +7,10 @@
 
 class MemberFunctionPointerContainerBase;
 
+/// <summary>
+/// “ü—ÍŽž‚Ì‚Ó‚é‚Ü‚¢‚ÉŠÖ‚·‚éŠî’êƒNƒ‰ƒX
+/// On/Off‚Ì‚Ý
+/// </summary>
 class InputBehavior
 {
 public:

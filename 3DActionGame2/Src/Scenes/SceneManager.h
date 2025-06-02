@@ -2,6 +2,7 @@
 #include <memory>
 #include "../Systems/Timer.h"
 #include "../Common.h"
+#include "../Debug/Profiler.h"
 
 
 class SceneBase;
@@ -17,7 +18,7 @@ public:
 	bool IsRunning();
 public:
 	/// <summary>
-	/// 
+	/// Sceneの段階を確認
 	/// </summary>
 	/// <returns>初期化が実行されたかどうか</returns>
 	bool CheckSceneStep();
@@ -41,8 +42,12 @@ private:
 	std::shared_ptr<SceneBase> currentScene;
 
 	std::unique_ptr<Timer<SceneManager>> fixedUpdateTimer = nullptr;
-	float excess = 0.0f; // 超過時間
+	float excess = 0.0f; // 超過時間(次回FixedUpdateまでの補正のため)
 
+	// テストのために一旦こちらで直接保持
+	// TODO
+	// 最終的にはDebugManagerにまとめる
+	Profiler profiler;
 
 #ifdef DEBUG
 	int num = 0;

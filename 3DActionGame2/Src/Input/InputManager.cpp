@@ -64,6 +64,7 @@ void InputManager::AddObserver(Stick stick_, std::weak_ptr<ObserverBase> observe
 {
 	sticks[(int)stick_]->AddObserver(observer_);
 }
+
 void InputManager::AddObserver(Trigger trigger_, std::weak_ptr<ObserverBase> observer_)
 {
 	triggers[(int)trigger_]->AddObserver(observer_);
@@ -73,6 +74,7 @@ void InputManager::RemoveObserver(Stick stick_, std::shared_ptr<ObserverBase> ob
 {
 	sticks[(int)stick_]->RemoveObserver(observer_);
 }
+
 void InputManager::RemoveObserver(Trigger trigger_, std::shared_ptr<ObserverBase> observer_)
 {
 	triggers[(int)trigger_]->RemoveObserver(observer_);

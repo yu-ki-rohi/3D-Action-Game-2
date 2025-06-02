@@ -7,13 +7,18 @@ class TimerBase;
 class TimerManager
 {
 public:
+	// Timer‚Ì’Ç‰Á
 	std::shared_ptr<TimerBase> Add(std::shared_ptr<TimerBase> timer_);
+	// w’èTimer‚Ìœ‹
 	void Remove(std::shared_ptr<TimerBase> timer_);
 
 	void Update(float elapsed_time_);
 
+	// ÀsÏ‚İ‚ÌTimer‚Ìœ‹
 	void Erase();
+	// ‘S‚Ä‚ÌTimer‚ğÁ‹
 	void EraseAll();
+
 private:
 	std::vector<std::shared_ptr<TimerBase>> timers;
 

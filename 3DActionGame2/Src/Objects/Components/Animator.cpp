@@ -28,7 +28,7 @@ void Animator::SetNextAnim(AnimType anim_type_, float start_changing_time_, floa
 
 	nextAnimHandle = animHandles[anim_type_];
 	startChangingTime = start_changing_time_;
-	ChangingTime = changing_time_;
+	changingTime = changing_time_;
 	nextIsLoop = is_loop_;
 }
 
@@ -57,7 +57,7 @@ void Animator::SetupRenderAnim(int model_handle_)
 	nextAttachIndex = MV1AttachAnim(model_handle_, anim_index, nextAnimHandle);
 	MV1SetAttachAnimTime(model_handle_, nextAttachIndex, nextAnimTimer);
 
-	float nextRate = nextAnimTimer / ChangingTime;
+	float nextRate = nextAnimTimer / changingTime;
 
 	// アニメーションブレンド
 	MV1SetAttachAnimBlendRate(model_handle_, nextAttachIndex, nextRate);
@@ -97,7 +97,7 @@ void Animator::Update(float elapsed_time_)
 
 	nextAnimTimer += elapsed_time_ * animSpeed;
 
-	if (nextAnimTimer / ChangingTime < 1.0f) return;
+	if (nextAnimTimer / changingTime < 1.0f) return;
 	currentAnimHandle = nextAnimHandle;
 	currentAnimTimer = nextAnimTimer;
 

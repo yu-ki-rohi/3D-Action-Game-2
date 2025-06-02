@@ -29,6 +29,9 @@
     <Filter Include="Src\Objects\Components">
       <UniqueIdentifier>{f578138c-6c0a-4383-8489-b5b2599a7d87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Debug">
+      <UniqueIdentifier>{46eeb06c-e645-418f-9b8f-6614175471f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\main.cpp">
@@ -74,9 +77,6 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Src\Objects\ObjectManager.cpp">
-      <Filter>Src\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Objects\TestObject.cpp">
       <Filter>Src\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Src\Scenes\SceneManager.cpp">
@@ -128,6 +128,21 @@
       <Filter>Src\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Src\Objects\SampleCamera.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Debug\DebugManager.cpp">
+      <Filter>Src\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Debug\Profiler.cpp">
+      <Filter>Src\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\BoxCollider.cpp">
+      <Filter>Src\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\SphereCollider.cpp">
+      <Filter>Src\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\ObjectBase.cpp">
       <Filter>Src\Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -195,9 +210,6 @@
     <ClInclude Include="Src\Objects\ObjectBase.h">
       <Filter>Src\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Objects\TestObject.h">
-      <Filter>Src\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Scenes\SceneManager.h">
       <Filter>Src\Scenes</Filter>
     </ClInclude>
@@ -254,6 +266,21 @@
     </ClInclude>
     <ClInclude Include="Src\Objects\SampleCamera.h">
       <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Debug\DebugManager.h">
+      <Filter>Src\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Debug\Profiler.h">
+      <Filter>Src\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\Collider.h">
+      <Filter>Src\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\SphereCollider.h">
+      <Filter>Src\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\BoxCollider.h">
+      <Filter>Src\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

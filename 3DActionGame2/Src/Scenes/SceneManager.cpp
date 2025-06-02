@@ -61,6 +61,9 @@ void SceneManager::FixedUpdate()
 {
 	if (currentScene == nullptr) return;
 	currentScene->FixedUpdate();
+
+	profiler.Stamp(Profiler::Type::FixedUpdate);
+
 #ifdef DEBUG
 	fixedNum++;
 #endif
@@ -82,6 +85,8 @@ void SceneManager::Update(float elapsed_time_)
 	if (currentScene == nullptr) return;
 	currentScene->Update(elapsed_time_);
 
+	profiler.Stamp(Profiler::Type::Update);
+
 #ifdef DEBUG
 	num++;
 	if (debugTimer == nullptr)
@@ -98,18 +103,23 @@ void SceneManager::Render()
 
 	if (currentScene == nullptr) return;
 	currentScene->Render();
+	profiler.Render();
 
+	profiler.Stamp(Profiler::Type::Render);
 #ifdef DEBUG
 	DrawFormatString(0, 10, GetColor(255, 255, 255), "FixedFPS : %d", fixedNumView);
 	DrawFormatString(0, 30, GetColor(255, 255, 255), "FPS      : %d", numView);
 #endif
 	ScreenFlip();
+	profiler.Stamp(Profiler::Type::VSync);
 }
 
 
 #ifdef DEBUG
 void SceneManager::DebugView()
 {
+	profiler.Update();
+	profiler.ResetTimes();
 	numView = num;
 	fixedNumView = fixedNum;
 	num = 0;

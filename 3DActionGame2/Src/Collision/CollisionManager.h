@@ -1,17 +1,69 @@
 #pragma once
-#include "vector"
-#include "ColliderRegisterInterface.h"
+#include <vector>
+#include <memory>
+
+class ColliderRegisterInterface;
 
 // 前方宣言
 class Collider;
 
-class CollisionManager
+/*
+	ダメージ処理実装案
+	A.
+	GetComponentを用意してタグ付けして関数実行
+	利点
+	汎用性が高い
+	Unityライクのコンセプトに沿う
+	問題点
+	dynamic_castの発生による安全性・処理時間等の問題
+
+	B.
+	CharacterBaseに派生させる
+	利点
+	C++
+	問題点
+	静的オブジェクトと共通化できなくなる
+
+	C.
+	DataManager的なクラスを用意しそちら経由で情報を取得
+	利点
+
+	問題点
+
+
+*/
+
+
+class CollisionManager : public std::enable_shared_from_this<CollisionManager>
 {
 public:
-	ColliderRegisterInterface* GetRegisterInterface();
+	// 基本的にこれで取得したポインタを保持し続ける場合はweak_ptrにする
+	std::shared_ptr<ColliderRegisterInterface> GetRegisterInterface();
 
-	bool CheckCollision();
+	void CheckCollision();
 
 private:
-	ColliderRegisterInterface registerInterface = ColliderRegisterInterface(this);
+	bool IsCollidingSphereAndSphere(const Collider* collider_01_, const Collider* collider_02_);
+	bool IsCollidingBoxAndSphere(const Collider* box_collider_, const Collider* sphere_collider_);
+
+	// 現在実装中
+#if false
+
+	// Box(Obb) と Box(Obb) が当たっているかを確認
+	// 多少アレンジをしてはいるものの、ほぼ先生から頂いたソースを使用しています
+	bool IsCollidingBoxAndBox(const Collider* collider_01_, const Collider* collider_02_);
+
+
+private:
+	// IsCollidingBoxAndBoxの中で呼び出される関数
+	bool IsFindOBBSparationAxis(const VECTOR& axis_, VECTOR vertices_01_[8], VECTOR vertices_02_[8]);
+	bool CheckOBBLoacalAxisSAT(Axis axes_list_[2], VECTOR vertices_list_[2][8]);
+	bool CheckOBBCrossVecSAT(Axis axes_list_[2], VECTOR vertices_list_[2][8]);
+
+#endif
+private:
+	std::shared_ptr<ColliderRegisterInterface> colliderRegisterInterface;
+
+	std::vector<Collider*> bodies;
+	std::vector<Collider*> triggers;
 };

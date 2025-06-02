@@ -29,20 +29,24 @@ PS_OUTPUT main( PS_INPUT PSInput )
     float     RcpSampleCount ;
     float     Intensity ;
     float     Dither ;
+    float2    Center ;
+
+    Center = float2( 0.5f, 0.5f ) ;
 
     Dither = InterleavedGradientNoise(PSInput.TexCoords0.xy) ;
+    Dither = 0.0f ;
 
-    SampleCount = 2.0f ;
-    RcpSampleCount = 0.5f ;
+    SampleCount = 4.0f ;
+    RcpSampleCount = 0.25f ;
     Intensity = RadialParams.w ;
 
     for (int i = 0; i < SampleCount; i++)
     {
         float t = (i + Dither) * RcpSampleCount;
-        PSOutput.Color0.xyz += tex2D( ScreenTexture, PSInput.TexCoords0.xy ).rgb * lerp(1, 1 - Intensity, t) ;
+        TextureColor += tex2D( ScreenTexture, Center + (PSInput.TexCoords0.xy - Center) * lerp(1, 1 - Intensity, t)) ;
     }
-    PSOutput.Color0.a = 1.0f;
-    PSOutput.Color0 *= RcpSampleCount ;
+    TextureColor *= RcpSampleCount ;
 
+    PSOutput.Color0 = TextureColor ;
     return PSOutput ;
 }

@@ -7,7 +7,6 @@
 #include "../Systems/TimerManager.h"
 #include "../Systems/MemberFunctionPointerContainer.h"
 #include "../Mathmatics/Vector3.h"
-#include <DxLib.h>
 
 SampleScene::SampleScene() :
 	objectManager(std::make_shared<ObjectManager>()),
@@ -23,6 +22,9 @@ SampleScene::SampleScene() :
 		InputManager::Trigger::Left,
 		InputManager::State::Hold,
 		std::make_shared<MemberFunctionPointerContainer<SampleScene>>(this, &SampleScene::DecreaseIntensity));
+
+	lightCameraProjectionMatrix = MGetIdent();
+	lightCameraViewMatrix = MGetIdent();
 }
 
 SampleScene::~SampleScene()
@@ -49,22 +51,109 @@ void SampleScene::SampleScene::Update(float elapsed_time_)
 
 void SampleScene::SampleScene::Render()
 {
+	SetupDepthImage();
+
+	if (objectManager != nullptr)
+	{
+		objectManager->RenderShadow();
+	}
+
+	GraphFilter(shadowMapHandle00, DX_GRAPH_FILTER_GAUSS, 8, 3000);
+
 	SetDrawScreen(tmpScreenHandle);
 	ClearDrawScreen();
+	SetCameraNearFar(1.0f, 2000.0f);
 
 	sampleCamera->SetCameraInfo();
+
+	SetVSConstFMtx(44, lightCameraViewMatrix);
+	SetVSConstFMtx(48, lightCameraProjectionMatrix);
+	SetUseTextureToShader(2, shadowMapHandle00);
 
 	if (objectManager != nullptr)
 	{
 		objectManager->Render();
 	}
 
-	ResetPSConstF(22, 1);
+	// 使用テクスチャの設定を解除
+	SetUseTextureToShader(2, -1);
+
+	// 設定した定数を解除
+	ResetVSConstF(43, 8);
+
 	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(0, 0, tmpScreenHandle, FALSE);
+
+
+	// テスト的に作っているので直書き
+	// 本番は以下を関数にする
+	
+	VERTEX2DSHADER Vert[4];
+	unsigned short Index[6];
+
+
+	// ２ポリゴン分の頂点のデータをセットアップ
+	Vert[0].pos = VGet(0.0f, 0.0f, 0.0f);
+	Vert[0].rhw = 1.0f;
+	Vert[0].dif = GetColorU8(255, 255, 255, 255);
+	Vert[0].spc = GetColorU8(0, 0, 0, 0);
+	Vert[0].u = 0.0f;
+	Vert[0].v = 0.0f;
+	Vert[0].su = 0.0f;
+	Vert[0].sv = 0.0f;
+
+	Vert[1].pos = VGet(WindowSettings::WindowWidth, 0.0f, 0.0f);
+	Vert[1].rhw = 1.0f;
+	Vert[1].dif = GetColorU8(255, 255, 255, 255);
+	Vert[1].spc = GetColorU8(0, 0, 0, 0);
+	Vert[1].u = 1.0f;
+	Vert[1].v = 0.0f;
+	Vert[1].su = 1.0f;
+	Vert[1].sv = 0.0f;
+
+	Vert[2].pos = VGet(0.0f, WindowSettings::WindowHeight, 0.0f);
+	Vert[2].rhw = 1.0f;
+	Vert[2].dif = GetColorU8(255, 255, 255, 255);
+	Vert[2].spc = GetColorU8(0, 0, 0, 0);
+	Vert[2].u = 0.0f;
+	Vert[2].v = 1.0f;
+	Vert[2].su = 0.0f;
+	Vert[2].sv = 1.0f;
+
+	Vert[3].pos = VGet(WindowSettings::WindowWidth, WindowSettings::WindowHeight, 0.0f);
+	Vert[3].rhw = 1.0f;
+	Vert[3].dif = GetColorU8(255, 255, 255, 255);
+	Vert[3].spc = GetColorU8(0, 0, 0, 0);
+	Vert[3].u = 1.0f;
+	Vert[3].v = 1.0f;
+	Vert[3].su = 1.0f;
+	Vert[3].sv = 1.0f;
+
+	// ２ポリゴン分の頂点番号配列のセットアップ
+	Index[0] = 0;
+	Index[1] = 1;
+	Index[2] = 2;
+	Index[3] = 2;
+	Index[4] = 1;
+	Index[5] = 3;
+
+	// 使用するテクスチャを０番にセット
+	SetUseTextureToShader(0, tmpScreenHandle);
+
+	// 使用するピクセルシェーダーをセット
+	SetUsePixelShader(blurPSHandle);
+
+
+	FLOAT4 radial_parms = { 0.0f, 0.0f, 0.0f, intensity };
+	SetPSConstF(23, radial_parms);
+
+	// シェーダーを使用した２Ｄの２ポリゴンの描画
+	DrawPolygonIndexed2DToShader(Vert, 4, Index, 2);
+	SetUseTextureToShader(0, -1);
 
 #ifdef DEBUG
-	DrawFormatString(0, 50, GetColor(255, 255, 255), "ScreenNum : %d", GetMultiDrawScreenNum());
+	DrawFormatString(0, 50, GetColor(255, 255, 255), "Intensity : %f", intensity);
+	DrawExtendGraph(10, 80, 90, 160, shadowMapHandle00, TRUE);
+	//TestDrawShadowMap(shadowMapHandle00, 10, 80, 90, 160);
 #endif
 
 }
@@ -73,14 +162,12 @@ void SampleScene::SampleScene::Initialize()
 {
 	Load();
 
-	//SetDrawScreen(tmpScreenHandle);
-
 	SetUseZBuffer3D(true);
 	SetWriteZBuffer3D(true);
 
 	SetupLight();
 
-	SetCameraNearFar(0.1f, 2000.0f);
+	SetCameraNearFar(0.1f, 20.0f);
 
 
 	MV1SetUseOrigShader(TRUE);
@@ -88,14 +175,14 @@ void SampleScene::SampleScene::Initialize()
 	if (objectFactory != nullptr)
 	{
 		// カメラ作成
-		sampleCamera = objectFactory->CreateCamera(Vector3(5.0f, 18.0f, -30.0f));
+		sampleCamera = objectFactory->CreateCamera(Vector3(0.0f, 10.0f, 0.0f));
 
 		// ステージ作成
-		objectFactory->Create(Vector3(), stageHandle, normalVertexShaderHandle, normalPixelShaderHandle);
+		objectFactory->Create(Vector3(), stageHandle, normalVertexShaderHandle, pixelShaderHandle, skinnedShadowMapVSHandle);
 
 		// キャラ作成
-		std::shared_ptr<SampleCharacter> sampleChara = objectFactory->CreateCharacter(Vector3(), Vector3(0.1f, 0.1f, 0.1f), charaHandle, skinnedVertexShaderHandle, skinnedPixelShaderHandle, idleHandle, sampleCamera);
-		std::shared_ptr<SampleCharacter> sampleEnemy = objectFactory->CreateCharacter(Vector3(20.0f, 0.0f, 10.0f), Vector3(0.15f, 0.15f, 0.15f), enemyHandle, skinnedVertexShaderHandle, skinnedPixelShaderHandle, idleHandle, nullptr);
+		sampleChara = objectFactory->CreateCharacter(Vector3(), Vector3(0.1f, 0.1f, 0.1f), charaHandle, skinnedVertexShaderHandle, pixelShaderHandle, skinnedShadowMapVSHandle, idleHandle, sampleCamera);
+		std::shared_ptr<SampleCharacter> sampleEnemy = objectFactory->CreateCharacter(Vector3(20.0f, 0.0f, 10.0f), Vector3(0.15f, 0.15f, 0.15f), enemyHandle, skinnedVertexShaderHandle, pixelShaderHandle, skinnedShadowMapVSHandle, idleHandle, nullptr);
 
 		sampleChara->RegisterAnim(Animator::AnimType::Attack00, attackHandle);
 		sampleChara->RegisterAnim(Animator::AnimType::WalkF, walkHandle);
@@ -157,10 +244,13 @@ void SampleScene::SetupLight()
 		ライトの環境光の色を設定する
 	*/
 	SetLightAmbColor(GetColorF(0.4f, 0.4f, 0.5f, 1.0f));
+
 }
 
 void SampleScene::Load()
 {
+	// TODO
+	// File名
 	stageHandle = MV1LoadModel("Res/Models/Stage/StageA01.mv1");
 	charaHandle = MV1LoadModel("Res/Models/Player/Player_Model.mv1");
 	idleHandle = MV1LoadModel("Res/Models/Player/Player_Idle.mv1");
@@ -168,13 +258,31 @@ void SampleScene::Load()
 	attackHandle = MV1LoadModel("Res/Models/Player/Player_Attack1.mv1");
 	enemyHandle = MV1LoadModel("Res/Models/Enemy/Enemy_Model.mv1");
 
-	normalVertexShaderHandle = LoadVertexShader("Res/Shader/Test/TestVertex02.vso");
-	skinnedVertexShaderHandle = LoadVertexShader("Res/Shader/Test/TestVertex04.vso");
-	normalPixelShaderHandle = LoadPixelShader("Res/Shader/Test/TestPixel00.pso");
-	skinnedPixelShaderHandle = LoadPixelShader("Res/Shader/Test/TestPixel04.pso");
+	normalVertexShaderHandle = LoadVertexShader("Res/Shader/Test/TestVertex07.vso");
+	skinnedVertexShaderHandle = LoadVertexShader("Res/Shader/Test/TestVertex08.vso");
+	/*normalPixelShaderHandle = LoadPixelShader("Res/Shader/Test/TestPixel00.pso");
+	skinnedPixelShaderHandle = LoadPixelShader("Res/Shader/Test/TestPixel03.pso");*/
+	pixelShaderHandle = LoadPixelShader("Res/Shader/Test/TestPixel05.pso");
+
+	normalShadowMapVSHandle = LoadVertexShader("Res/Shader/Test/TestShadowMapVS01.vso");
+	skinnedShadowMapVSHandle = LoadVertexShader("Res/Shader/Test/TestShadowMapVS00.vso");
+	shadowMapPSHandle = LoadPixelShader("Res/Shader/Test/TestShadowMapPS00.pso");
+
 	blurPSHandle = LoadPixelShader("Res/Shader/Test/RadialBlurPS.pso");
 
-	tmpScreenHandle = MakeScreen(1920, 1080, TRUE);
+	tmpScreenHandle = MakeScreen(WindowSettings::WindowWidth, WindowSettings::WindowHeight, FALSE);
+
+	// 作成する画像のフォーマットを不動小数点型で１チャンネル、１６ビットにする
+	SetDrawValidFloatTypeGraphCreateFlag(TRUE);
+	SetCreateDrawValidGraphChannelNum(1);
+	SetCreateGraphColorBitDepth(16);
+	shadowMapHandle00 = MakeScreen(2048, 2048, FALSE);
+
+	// 設定を元に戻す
+	SetDrawValidFloatTypeGraphCreateFlag(FALSE);
+	SetCreateDrawValidGraphChannelNum(4);
+	SetCreateGraphColorBitDepth(32);
+	
 }
 
 void SampleScene::DeleteHandles()
@@ -196,16 +304,58 @@ void SampleScene::DeleteHandles()
 	InitShader();
 	
 	DeleteGraph(tmpScreenHandle);
+	DeleteGraph(shadowMapHandle00);
 }
 
 void SampleScene::IncreaseIntensity()
 {
-	intensity += 0.01f;
+	intensity += 0.001f;
 	if (intensity > 1.0f) { intensity = 1.0f; }
 }
 
 void SampleScene::DecreaseIntensity()
 {
-	intensity -= 0.01f;
+	intensity -= 0.001f;
 	if (intensity < 0.0f) { intensity = 0.0f; }
+}
+
+void SampleScene::SetupDepthImage()
+{
+	// 描画先を影用深度記録画像にする
+	SetDrawScreen(shadowMapHandle00);
+
+	// 影用深度記録画像を真っ白にクリア
+	//SetBackgroundColor(255, 255, 255);
+	ClearDrawScreen();
+	SetBackgroundColor(0, 0, 0);
+
+
+	// カメラのタイプを正射影タイプにセット、描画範囲も指定
+	SetupCamera_Ortho(200.0f);
+
+	// 描画する奥行き範囲をセット
+	SetCameraNearFar(1.0f, 500.0f);
+
+	//sampleCamera->SetCameraInfo();
+
+	// カメラの向きはライトの向き
+	Vector3 light_direction = Vector3::ConvertFromVECTOR(GetLightDirection());
+
+	Vector3 target_position = sampleCamera->GetNearShadowAreaPos();
+	Vector3 camera_position = target_position - light_direction * 100.0f;
+
+	Vector3 up = Vector3::UP;
+	SetCameraPositionAndTargetAndUpVec(
+		camera_position.ToVECTOR(),
+		target_position.ToVECTOR(),
+		up.ToVECTOR()
+	);
+
+	// 設定したカメラのビュー行列と射影行列を取得しておく
+	lightCameraViewMatrix = GetCameraViewMatrix();
+	lightCameraProjectionMatrix = GetCameraProjectionMatrix();
+
+	// 深度記録画像への描画用のピクセルシェーダーをセット
+	SetUsePixelShader(shadowMapPSHandle);
+
 }

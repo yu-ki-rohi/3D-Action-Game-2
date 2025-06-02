@@ -10,9 +10,15 @@ class SampleCamera : public ObjectBase
 public:
 	SampleCamera(Vector3 position_);
 public:
+	Vector3 GetNearShadowAreaPos();
+	Vector3 GetForward();
+	Vector3 GetRight();
+
+public:
 	void FixedUpdate() override;
 	void Update(float elapsed_time_) override;
 	void Render() override;
+	void RenderShadow() override;
 
 	void SetTarget(Transform* target_);
 
@@ -21,7 +27,7 @@ public:
 private:
 
 private:
-	// transformの扱いが他オブジェクトと違う
+	// transformの扱いが通常のオブジェクトと違う
 	// transform.Position   : 注視点の座標を補正
 	// transform.quartanion : カメラの位置(注視点に対してカメラがある方向) 
 	Transform transform;
