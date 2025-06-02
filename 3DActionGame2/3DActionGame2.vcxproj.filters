@@ -130,12 +130,6 @@
     <ClCompile Include="Src\Objects\SampleCamera.cpp">
       <Filter>Src\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Debug\DebugManager.cpp">
-      <Filter>Src\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Debug\Profiler.cpp">
-      <Filter>Src\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Collision\BoxCollider.cpp">
       <Filter>Src\Collision</Filter>
     </ClCompile>
@@ -144,6 +138,12 @@
     </ClCompile>
     <ClCompile Include="Src\Objects\ObjectBase.cpp">
       <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Debug\DebugManager.cpp">
+      <Filter>Src\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Debug\Profiler.cpp">
+      <Filter>Src\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,12 +267,6 @@
     <ClInclude Include="Src\Objects\SampleCamera.h">
       <Filter>Src\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Debug\DebugManager.h">
-      <Filter>Src\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Debug\Profiler.h">
-      <Filter>Src\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Collision\Collider.h">
       <Filter>Src\Collision</Filter>
     </ClInclude>
@@ -281,6 +275,12 @@
     </ClInclude>
     <ClInclude Include="Src\Collision\BoxCollider.h">
       <Filter>Src\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Debug\Profiler.h">
+      <Filter>Src\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Debug\DebugManager.h">
+      <Filter>Src\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
