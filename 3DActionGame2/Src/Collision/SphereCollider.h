@@ -1,22 +1,29 @@
 #pragma once
 #include "Collider.h"
 #include "../Mathmatics/Vector3.h"
+#include "../Common.h"
 
 class SphereCollider : public Collider
 {
+public:
+	SphereCollider(float radius_);
+	SphereCollider(float radius_, Vector3 position_);
 public:
 	Vector3 GetPosition() const override;
 	Vector3 GetScale() const override;			// 全ての成分が半径であるベクトルを返す
 	Vector3 GetRotate() const override;			// 全ての成分が0であるベクトルを返す
 	Quartanion GetQuartanion() const override;	// 単位元を返す
 
-	float GetRadius() const override;
-
 	Type GetType() const override;
 
 
 	void UpdateFromParentMat(const MATRIX& parent_mat_) override;
 
+	void UpdatePosition(const Vector3& new_position_) override;
+
+#ifdef DEBUG
+	void DebugDrow();
+#endif
 private:
 	Vector3 position;
 

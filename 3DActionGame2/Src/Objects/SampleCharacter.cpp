@@ -110,6 +110,8 @@ void SampleCharacter::Render()
 		Vector3 vector = Vector3::BasisTransformation(-transform.Position, transform.GetForward(), transform.GetUp(), transform.GetRight());
 		DrawFormatString(0, 660, GetColor(255, 255, 255), "Position : ( %f, %f, %f)", transform.Position.x, transform.Position.y, transform.Position.z);
 		DrawFormatString(0, 680, GetColor(255, 255, 255), "Origin : ( %f, %f, %f)", vector.x, vector.y, vector.z);
+		vector = transform.GetRight() * vector.x + transform.GetUp() * vector.y + transform.GetForward() * vector.z + transform.Position;
+		DrawFormatString(0, 700, GetColor(255, 255, 255), "Check : ( %f, %f, %f)", vector.x , vector.y, vector.z);
 	}
 #endif
 }

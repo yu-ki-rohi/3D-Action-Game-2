@@ -4,6 +4,7 @@
 #include "../../Common.h"
 #include <memory>
 #include <vector>
+#include "ComponentBase.h"
 
 // Suggested (コンポーネント全般に関するものだが、代表としてここに表記)
 // 利便性をあげるならComponentBaseクラスを作りGetComponent関数を作る
@@ -12,7 +13,7 @@
 // TODO
 // 階層構造の実装(優先度:低)
 
-struct Transform
+struct Transform : public ComponentBase
 {
 public:
 	Vector3 Position = Vector3::ZERO;

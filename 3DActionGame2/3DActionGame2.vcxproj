@@ -160,7 +160,6 @@
     <ClCompile Include="Src\Objects\Components\Renderer.cpp" />
     <ClCompile Include="Src\Objects\Components\Rigidbody.cpp" />
     <ClCompile Include="Src\Objects\Components\Transform.cpp" />
-    <ClCompile Include="Src\Objects\ObjectBase.cpp" />
     <ClCompile Include="Src\Objects\ObjectFactory.cpp" />
     <ClCompile Include="Src\Objects\ObjectManager.cpp" />
     <ClCompile Include="Src\Objects\SampleCamera.cpp" />
@@ -197,6 +196,7 @@
     <ClInclude Include="Src\Mathmatics\Quartanion.h" />
     <ClInclude Include="Src\Mathmatics\Vector3.h" />
     <ClInclude Include="Src\Objects\Components\Animator.h" />
+    <ClInclude Include="Src\Objects\Components\ComponentBase.h" />
     <ClInclude Include="Src\Objects\Components\Renderer.h" />
     <ClInclude Include="Src\Objects\Components\Rigidbody.h" />
     <ClInclude Include="Src\Objects\Components\Transform.h" />

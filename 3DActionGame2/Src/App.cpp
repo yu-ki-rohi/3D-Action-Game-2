@@ -18,6 +18,7 @@ App::~App()
 
 void App::Run()
 {
+	// 初期化に成功したらメインループに入る
 	if (InitApp())
 	{
 		MainLoop();
@@ -64,6 +65,7 @@ void App::MainLoop()
 		if (sceneManager == nullptr) break;
 
 		// シーンの初期化・終了処理
+		// 初期化が実行されたらif文内の処理が走る
 		if (sceneManager->CheckSceneStep())
 		{
 			// 初期化が実行された後の1フレーム目に異常値を渡さないため

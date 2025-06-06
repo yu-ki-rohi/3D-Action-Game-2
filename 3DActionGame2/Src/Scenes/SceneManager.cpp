@@ -44,11 +44,12 @@ bool SceneManager::CheckSceneStep()
 
 void SceneManager::Main(float elapsed_time_)
 {
-
+	// タイマー更新
 	TimerManager::Instance().Update(elapsed_time_ * Time::TimeScale);
 
 	FixedUpdate(elapsed_time_ * Time::TimeScale);
 
+	// コントローラーの入力状況確認
 	InputManager::Instance().CheckInput();
 
 	Update(elapsed_time_ * Time::TimeScale);

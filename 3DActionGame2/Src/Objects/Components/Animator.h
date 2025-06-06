@@ -1,7 +1,8 @@
 #pragma once
 #include <unordered_map>
+#include "ComponentBase.h"
 
-class Animator
+class Animator : public ComponentBase
 {
 public:
 	enum class AnimType

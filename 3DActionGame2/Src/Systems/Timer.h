@@ -22,6 +22,7 @@ public:
 
 	void Update(float elapsedTime_) override
 	{
+		// ストップ中や生存フラグが切られているときは更新しない
 		if (IsStop || !isActive) return;
 		elapsedTime += elapsedTime_;
 		if (elapsedTime > TIME)

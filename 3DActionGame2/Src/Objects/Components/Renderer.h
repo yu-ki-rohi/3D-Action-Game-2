@@ -1,4 +1,5 @@
 #pragma once
+#include "ComponentBase.h"
 
 struct Transform;
 class Animator;
@@ -9,7 +10,7 @@ class Animator;
 
 // シェーダーの使用はRenderer側で判断したほうがいいかも
 
-class Renderer
+class Renderer : public ComponentBase
 {
 public:
 	Renderer(int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_);

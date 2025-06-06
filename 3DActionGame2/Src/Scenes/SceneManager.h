@@ -22,6 +22,8 @@ public:
 	/// </summary>
 	/// <returns>初期化が実行されたかどうか</returns>
 	bool CheckSceneStep();
+
+	// シーンの実行
 	void Main(float elapsed_time_);
 
 private:
@@ -39,10 +41,14 @@ private:
 #endif
 
 private:
+	// 現在のシーン
 	std::shared_ptr<SceneBase> currentScene;
 
+	// FixedUpdateを実行させるためのタイマー
 	std::unique_ptr<Timer<SceneManager>> fixedUpdateTimer = nullptr;
-	float excess = 0.0f; // 超過時間(次回FixedUpdateまでの補正のため)
+
+	// 超過時間(次回FixedUpdateまでの補正のため)
+	float excess = 0.0f;
 
 	// テストのために一旦こちらで直接保持
 	// TODO

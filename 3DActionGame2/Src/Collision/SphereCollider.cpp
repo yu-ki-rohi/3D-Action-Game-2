@@ -1,6 +1,16 @@
 #include "SphereCollider.h"
 #include "../Mathmatics/Quartanion.h"
 
+SphereCollider::SphereCollider(float radius_)
+{
+	radius = radius_;
+}
+
+SphereCollider::SphereCollider(float radius_, Vector3 position_)
+{
+
+}
+
 Vector3 SphereCollider::GetPosition() const
 {
 	return position;
@@ -19,11 +29,6 @@ Quartanion SphereCollider::GetQuartanion() const
 	return Quartanion::IDENTITY;
 }
 
-float SphereCollider::GetRadius() const
-{
-	return radius;
-}
-
 Collider::Type SphereCollider::GetType() const
 {
 	return Type::Sphere;
@@ -31,5 +36,20 @@ Collider::Type SphereCollider::GetType() const
 
 void SphereCollider::UpdateFromParentMat(const MATRIX& parent_mat_)
 {
-
+	VECTOR new_pos = VGet(0, 0, 0);
+	position = Vector3::ConvertFromVECTOR(VTransform(new_pos, parent_mat_));
 }
+
+void SphereCollider::UpdatePosition(const Vector3& new_position_)
+{
+	position = new_position_;
+}
+
+#ifdef DEBUG
+void SphereCollider::DebugDrow()
+{
+	int div_num = 32;
+	unsigned int white = GetColor(255, 255, 255);
+	DrawSphere3D(position.ToVECTOR(), radius, div_num, white, white, FALSE);
+}
+#endif

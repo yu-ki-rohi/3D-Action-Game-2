@@ -136,9 +136,6 @@
     <ClCompile Include="Src\Collision\SphereCollider.cpp">
       <Filter>Src\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Objects\ObjectBase.cpp">
-      <Filter>Src\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Debug\DebugManager.cpp">
       <Filter>Src\Debug</Filter>
     </ClCompile>
@@ -281,6 +278,9 @@
     </ClInclude>
     <ClInclude Include="Src\Debug\DebugManager.h">
       <Filter>Src\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\ComponentBase.h">
+      <Filter>Src\Objects\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

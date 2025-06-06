@@ -8,35 +8,25 @@ class App
 {
 public:
 
-#pragma region コンストラクター・デストラクター
 	App();
 	~App();
-#pragma endregion
 	
-#pragma region アクセサ
-
-#pragma endregion
-	
-#pragma region 公開関数
 	void Run();
-#pragma endregion
 
-#pragma region 非公開関数
 private:
+	// 初期化処理
 	bool InitApp();
+	// 終了処理
 	void TermApp();
 
+	// メインループ
 	void MainLoop();
 
-#pragma endregion
-
-#pragma region 非公開メンバ変数
 private:
+	// システム時間
+	// 経過時間取得用
 	LONGLONG systemTime = GetNowHiPerformanceCount();
-
 	std::unique_ptr<SceneManager> sceneManager;
 
-
-#pragma endregion
 
 };

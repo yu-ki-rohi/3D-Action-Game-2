@@ -39,6 +39,11 @@ public:
 	Vector3(float x_, float y_, float z_);
 
 public:
+	// 成分を取り出す関数
+	// 疑似的に配列として使いたいときに
+	// 範囲外を指定したときは 0 を返す
+	float GetComponent(int index_);
+
 	// 正規化して返す
 	Vector3 Normalize() const;
 	// 長さを返す

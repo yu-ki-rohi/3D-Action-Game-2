@@ -14,11 +14,13 @@ public:
 	Quartanion GetQuartanion() const override;
 
 	// ¦’†S‚©‚çŠp(Å‚à‰“‚¢ˆÊ’u)‚Ü‚Å‚Ì‹——£‚ğ”¼Œa‚Æ‚µ‚Äˆµ‚¤
-	float GetRadius() const override;
+	//float GetRadius() const;
 
 	Type GetType() const override;
 
 	void UpdateFromParentMat(const MATRIX& parent_mat_) override;
+
+	void UpdatePosition(const Vector3& new_position_) override;
 
 #ifdef DEBUG
 	void DebugDrow();

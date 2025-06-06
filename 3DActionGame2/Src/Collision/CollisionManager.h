@@ -6,6 +6,8 @@ class ColliderRegisterInterface;
 
 // 前方宣言
 class Collider;
+struct Vector3;
+struct Quartanion;
 
 /*
 	ダメージ処理実装案
@@ -43,24 +45,20 @@ public:
 	void CheckCollision();
 
 private:
+	bool IsColliding(const Collider* collider_01_, const Collider* collider_02_);
+
 	bool IsCollidingSphereAndSphere(const Collider* collider_01_, const Collider* collider_02_);
 	bool IsCollidingBoxAndSphere(const Collider* box_collider_, const Collider* sphere_collider_);
 
-	// 現在実装中
-#if false
-
-	// Box(Obb) と Box(Obb) が当たっているかを確認
+	// Box(Obb) と Box(Obb) が当たっているかの確認
 	// 多少アレンジをしてはいるものの、ほぼ先生から頂いたソースを使用しています
 	bool IsCollidingBoxAndBox(const Collider* collider_01_, const Collider* collider_02_);
 
-
-private:
 	// IsCollidingBoxAndBoxの中で呼び出される関数
-	bool IsFindOBBSparationAxis(const VECTOR& axis_, VECTOR vertices_01_[8], VECTOR vertices_02_[8]);
-	bool CheckOBBLoacalAxisSAT(Axis axes_list_[2], VECTOR vertices_list_[2][8]);
-	bool CheckOBBCrossVecSAT(Axis axes_list_[2], VECTOR vertices_list_[2][8]);
+	bool IsFindOBBSparationAxis(const Vector3& axis_, Vector3 vertices_01_[8], Vector3 vertices_02_[8]);
+	bool CheckOBBLoacalAxisSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8]);
+	bool CheckOBBCrossVecSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8]);
 
-#endif
 private:
 	std::shared_ptr<ColliderRegisterInterface> colliderRegisterInterface;
 

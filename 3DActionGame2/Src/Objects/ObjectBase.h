@@ -1,11 +1,14 @@
 #pragma once
+#include <vector>
+#include <memory>
 
 class Collider;
+class ComponentBase;
 
 class ObjectBase
 {
 public:
-	bool IsActive();
+	bool IsActive() { return isActive; }
 
 public:
 	virtual void FixedUpdate() = 0;
@@ -13,15 +16,20 @@ public:
 	virtual void Render() = 0;
 	virtual void RenderShadow() = 0;
 
-	// 当たり判定・基底では空関数
-	virtual void OnTriggerEnter(Collider* collider);
-	virtual void OnTriggerStay(Collider* collider);
-	virtual void OnTriggerExit(Collider* collider);
-
-	virtual void OnCollisionEnter(Collider* collider);
-	virtual void OnCollisionStay(Collider* collider);
-	virtual void OnCollisionExit(Collider* collider);
+	// ChatGPTを使用して生成したコード
+	template<typename T>
+	std::shared_ptr<T> GetComponent()
+	{
+		for (auto& comp : components)
+		{
+			if (auto casted = std::dynamic_pointer_cast<T>(comp))
+			{
+				return casted;
+			}
+		}
+	}
 
 protected:
 	bool isActive = true;
+	std::vector<std::shared_ptr<ComponentBase>> components;
 };

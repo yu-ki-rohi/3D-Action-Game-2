@@ -146,14 +146,19 @@ Vector3::Vector3(float x_, float y_, float z_) :
 
 }
 
-void Vector3::ToArray(float array_[COMPONENTS_NUM])
+float Vector3::GetComponent(int index_)
 {
-	// サイズチェック
-	if (sizeof(*array_) / sizeof(float) != COMPONENTS_NUM) { return; }
-
-	array_[0] = x;
-	array_[1] = y;
-	array_[2] = z;
+	switch (index_)
+	{
+	case 0:
+		return x;
+	case 1:
+		return y;
+	case 2:
+		return z;
+	default:
+		return 0.0f;
+	}
 }
 
 Vector3 Vector3::Normalize() const
@@ -199,6 +204,15 @@ DirectX::XMFLOAT3 Vector3::ToXMFLOAT3() const
 	return xmfloat3;
 }
 
+void Vector3::ToArray(float array_[COMPONENTS_NUM])
+{
+	// サイズチェック
+	if (sizeof(*array_) / sizeof(float) != COMPONENTS_NUM) { return; }
+
+	array_[0] = x;
+	array_[1] = y;
+	array_[2] = z;
+}
 
 #pragma region Vector3 operator
 

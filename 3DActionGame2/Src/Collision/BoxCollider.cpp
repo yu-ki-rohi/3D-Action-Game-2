@@ -32,11 +32,6 @@ Quartanion BoxCollider::GetQuartanion() const
 	return transform.GetQuartanion();
 }
 
-float BoxCollider::GetRadius() const
-{
-	return radius;
-}
-
 Collider::Type BoxCollider::GetType() const
 {
 	return Type::Box;
@@ -55,6 +50,11 @@ void BoxCollider::UpdateFromParentMat(const MATRIX& parent_mat_)
 
 	transform.UpdateFromMatrix(transformMat);
 
+}
+
+void BoxCollider::UpdatePosition(const Vector3& new_position_)
+{
+	transform.Position = new_position_;
 }
 
 #ifdef DEBUG
