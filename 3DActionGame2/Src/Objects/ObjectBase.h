@@ -27,6 +27,7 @@ public:
 				return casted;
 			}
 		}
+		return nullptr;
 	}
 
 protected:

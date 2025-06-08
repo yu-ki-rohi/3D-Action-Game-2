@@ -1,5 +1,8 @@
 #pragma once
 #include <DxLib.h>
+#include <memory>
+#include <vector>
+#include "../Objects/Components/ComponentBase.h"
 
 struct Vector3;
 struct Quartanion;
@@ -35,10 +38,62 @@ public:
 		return owner;
 	}
 
+
 	// 親オブジェクトの行列によるTransformの更新
 	virtual void UpdateFromParentMat(const MATRIX& parent_mat_) = 0;
 
 	virtual void UpdatePosition(const Vector3& new_position_) = 0;
+
+	// 当たり時に通知する対象を追加
+	void AddObserver(std::shared_ptr<ComponentBase> observer_)
+	{
+		observers.push_back(observer_);
+	}
+
+	// 各種当たり時に呼び出す
+	void OnTriggerEnter(const Collider* other_) const
+	{
+		for (auto obeserver : observers)
+		{
+			obeserver->OnTriggerEnter(other_);
+		}
+	}
+	void OnTriggerStay(const Collider* other_) const
+	{
+		for (auto obeserver : observers)
+		{
+			obeserver->OnTriggerStay(other_);
+		}
+	}
+	void OnTriggerExit(const Collider* other_) const
+	{
+		for (auto obeserver : observers)
+		{
+			obeserver->OnTriggerExit(other_);
+		}
+	}
+
+	void OnCollisionEnter(const Collider* other_) const
+	{
+		for (auto obeserver : observers)
+		{
+			obeserver->OnCollisionEnter(other_);
+		}
+	}
+	void OnCollisionStay(const Collider* other_) const
+	{
+		for (auto obeserver : observers)
+		{
+			obeserver->OnCollisionStay(other_);
+		}
+	}
+	void OnCollisionExit(const Collider* other_) const
+	{
+		for (auto obeserver : observers)
+		{
+			obeserver->OnCollisionExit(other_);
+		}
+	}
 
 protected:
 	// コライダーの所有者
@@ -47,4 +102,8 @@ protected:
 
 	// 球以外の場合は、その当たり判定を包含する球の半径(Bounding Sphere)
 	float radius = 1.0f;
+
+private:
+	// 当たりを通知する相手
+	std::vector<std::shared_ptr<ComponentBase>> observers;
 };

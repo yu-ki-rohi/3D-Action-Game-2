@@ -1,27 +1,20 @@
 #pragma once
 #include <memory>
 class CollisionManager;
+class Collider;
 
 class ColliderRegisterInterface
 {
 public:
-	ColliderRegisterInterface(const CollisionManager* collision_manager);
+	ColliderRegisterInterface(std::shared_ptr<CollisionManager> collision_manager_);
 
 public:
-	void RegisterBody();
-	void RegisterAttack();
+	void RegisterBody(const Collider* collider_);
+	void RegisterTrigger(const Collider* collider_);
 
-	void ReleaseBody();
-	void ReleaseAttack();
+	void ReleaseBody(const Collider* collider_);
+	void ReleaseTrigger(const Collider* collider_);
 
-#pragma region ”ñŒöŠJŠÖ”
-private:
-
-#pragma endregion
-
-
-#pragma region ƒƒ“ƒo•Ï”
 private:
 	std::weak_ptr<CollisionManager> collisionManager;
-#pragma endregion
 };

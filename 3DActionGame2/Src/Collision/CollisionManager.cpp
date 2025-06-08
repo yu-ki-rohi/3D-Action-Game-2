@@ -1,7 +1,60 @@
 #include "CollisionManager.h"
 #include "Collider.h"
+#include "ColliderRegisterInterface.h"
 #include "../Mathmatics/Vector3.h"
 #include "../Mathmatics/Quartanion.h"
+
+
+CollisionManager::CollisionManager() : 
+	colliderRegisterInterface(std::make_shared<ColliderRegisterInterface>(shared_from_this()))
+{
+
+}
+
+std::shared_ptr<ColliderRegisterInterface> CollisionManager::GetRegisterInterface()
+{
+	return colliderRegisterInterface;
+}
+
+void CollisionManager::RegisterBody(const Collider* collider_)
+{
+	bodies.push_back(collider_);
+}
+
+void CollisionManager::RegisterTrigger(const Collider* collider_)
+{
+	triggers.push_back(collider_);
+}
+
+void CollisionManager::ReleaseBody(const Collider* collider_)
+{
+	for (auto itr = bodies.begin(); itr != bodies.end(); )
+	{
+		if (*itr == collider_)
+		{
+			itr = bodies.erase(itr);
+		}
+		else
+		{
+			itr++;
+		}
+	}
+}
+
+void CollisionManager::ReleaseTrigger(const Collider* collider_)
+{
+	for (auto itr = triggers.begin(); itr != triggers.end(); )
+	{
+		if (*itr == collider_)
+		{
+			itr = triggers.erase(itr);
+		}
+		else
+		{
+			itr++;
+		}
+	}
+}
 
 void CollisionManager::CheckCollision()
 {
@@ -13,13 +66,35 @@ void CollisionManager::CheckCollision()
 		// 重複チェックを防ぐため、先頭位置は body_index + 1
 		for (int other_index = body_index + 1; other_index < bodies.size(); other_index++)
 		{
+			// ヒット確認
 			if (IsColliding(bodies[body_index], bodies[other_index]))
 			{
-
+				// ヒット時
+				// 前フレームで当たっていたかを確認
+				if (WasCollided(bodies[body_index], bodies[other_index]))
+				{
+					// 当たり継続
+					bodies[body_index]->OnCollisionStay(bodies[other_index]);
+					bodies[other_index]->OnCollisionStay(bodies[body_index]);
+				}
+				else
+				{
+					// 当たった瞬間
+					bodies[body_index]->OnCollisionEnter(bodies[other_index]);
+					bodies[other_index]->OnCollisionEnter(bodies[body_index]);
+					preCollided.push_back(std::make_pair(bodies[body_index], bodies[other_index]));
+				}
 			}
 			else
 			{
-
+				// 当たっていない場合
+				// 前フレームまで当たっていたかを確認
+				// 当たっていた場合、記録の除去も同時に実行
+				if (WasCollided(bodies[body_index], bodies[other_index], true))
+				{
+					bodies[body_index]->OnCollisionExit(bodies[other_index]);
+					bodies[other_index]->OnCollisionExit(bodies[body_index]);
+				}
 			}
 		}
 	}
@@ -261,5 +336,21 @@ bool CollisionManager::CheckOBBCrossVecSAT(Quartanion axes_list_[2], Vector3 ver
 		}
 	}
 
+	return false;
+}
+
+bool CollisionManager::WasCollided(const Collider* collider_01_, const Collider* collider_02_, bool does_erase_)
+{
+	for (auto itr = preCollided.begin(); itr != preCollided.end(); )
+	{
+		if ((*itr).first == collider_01_ && (*itr).second == collider_02_)
+		{
+			if (does_erase_)
+			{
+				itr = preCollided.erase(itr);
+			}
+			return true;
+		}
+	}
 	return false;
 }

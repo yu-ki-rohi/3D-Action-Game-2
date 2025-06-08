@@ -39,10 +39,20 @@ struct Quartanion;
 class CollisionManager : public std::enable_shared_from_this<CollisionManager>
 {
 public:
+	CollisionManager();
+public:
 	// 基本的にこれで取得したポインタを保持し続ける場合はweak_ptrにする
 	std::shared_ptr<ColliderRegisterInterface> GetRegisterInterface();
 
+	void RegisterBody(const Collider* collider_);
+	void RegisterTrigger(const Collider* collider_);
+
+	void ReleaseBody(const Collider* collider_);
+	void ReleaseTrigger(const Collider* collider_);
+
 	void CheckCollision();
+
+	
 
 private:
 	bool IsColliding(const Collider* collider_01_, const Collider* collider_02_);
@@ -59,9 +69,15 @@ private:
 	bool CheckOBBLoacalAxisSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8]);
 	bool CheckOBBCrossVecSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8]);
 
+	// 前のフレームで当たっていたか
+	// オプションとして、第三引数にtrueを渡すと該当のヒット記録を削除できる
+	bool WasCollided(const Collider* collider_01_, const Collider* collider_02_,bool does_erase_ = false);
+
 private:
+	// Colliderの登録・解除を行うインターフェース
 	std::shared_ptr<ColliderRegisterInterface> colliderRegisterInterface;
 
-	std::vector<Collider*> bodies;
-	std::vector<Collider*> triggers;
+	std::vector<const Collider*> bodies;
+	std::vector<const Collider*> triggers;
+	std::vector<std::pair<const Collider*, const Collider*>> preCollided;
 };
