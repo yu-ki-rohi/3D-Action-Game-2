@@ -74,6 +74,7 @@ void SceneManager::FixedUpdate()
 
 void SceneManager::FixedUpdate(float elapsed_time_)
 {
+	if (currentScene->GetCurrentStep() == SceneBase::Step::Load) { return; }
 	if (fixedUpdateTimer == nullptr)
 	{
 		fixedUpdateTimer = std::make_unique<Timer<SceneManager>>(Timer<SceneManager>(Time::FixedDeltaTime + excess, this, &SceneManager::FixedUpdate));
@@ -84,7 +85,15 @@ void SceneManager::FixedUpdate(float elapsed_time_)
 void SceneManager::Update(float elapsed_time_)
 {
 	if (currentScene == nullptr) return;
-	currentScene->Update(elapsed_time_);
+
+	if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
+	{
+		currentScene->UpdateInLoading(elapsed_time_);
+	}
+	else if (currentScene->GetCurrentStep() == SceneBase::Step::Update)
+	{
+		currentScene->Update(elapsed_time_);
+	}
 
 	profiler.Stamp(Profiler::Type::Update);
 
@@ -103,7 +112,16 @@ void SceneManager::Render()
 	ClearDrawScreen();
 
 	if (currentScene == nullptr) return;
-	currentScene->Render();
+
+	if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
+	{
+		currentScene->RenderInLoading();
+	}
+	else if (currentScene->GetCurrentStep() == SceneBase::Step::Update)
+	{
+		currentScene->Render();
+	}
+	
 	profiler.Render();
 
 	profiler.Stamp(Profiler::Type::Render);

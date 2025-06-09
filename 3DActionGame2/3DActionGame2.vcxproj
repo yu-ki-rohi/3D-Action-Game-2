@@ -179,6 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\App.h" />
+    <ClInclude Include="Src\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\Assets\ModelResource.h" />
     <ClInclude Include="Src\Collision\BoxCollider.h" />
     <ClInclude Include="Src\Collision\Collider.h" />
     <ClInclude Include="Src\Collision\ColliderRegisterInterface.h" />

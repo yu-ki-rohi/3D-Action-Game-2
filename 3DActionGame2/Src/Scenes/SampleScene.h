@@ -20,6 +20,9 @@ public:
 	void Update(float elapsed_time_) override;
 	void Render() override;
 
+	void UpdateInLoading(float elapsed_time_) override {};
+	void RenderInLoading() override {};
+
 	void Initialize() override;
 	Type Delete() override;
 

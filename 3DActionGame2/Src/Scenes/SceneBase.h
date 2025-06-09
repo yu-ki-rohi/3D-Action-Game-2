@@ -6,6 +6,7 @@ public:
 	enum class Step
 	{
 		Init,
+		Load,
 		Update,
 		Finish
 	};
@@ -27,6 +28,9 @@ public:
 	virtual void FixedUpdate() = 0;
 	virtual void Update(float elapsed_time_) = 0;
 	virtual void Render() = 0;
+
+	virtual void UpdateInLoading(float elapsed_time_) = 0;
+	virtual void RenderInLoading() = 0;
 
 	virtual void Initialize() = 0;
 

@@ -41,6 +41,16 @@ void TitleScene::TitleScene::Render()
 	}
 }
 
+void TitleScene::UpdateInLoading(float elapsed_time_)
+{
+
+}
+
+void TitleScene::RenderInLoading()
+{
+
+}
+
 void TitleScene::TitleScene::Initialize()
 {
 	if (objectFactory != nullptr)

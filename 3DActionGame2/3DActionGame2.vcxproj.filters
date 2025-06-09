@@ -32,6 +32,9 @@
     <Filter Include="Src\Debug">
       <UniqueIdentifier>{46eeb06c-e645-418f-9b8f-6614175471f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Assets">
+      <UniqueIdentifier>{9949b84d-2c28-4b5d-a3a9-74556d9af1b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\main.cpp">
@@ -281,6 +284,12 @@
     </ClInclude>
     <ClInclude Include="Src\Objects\Components\ComponentBase.h">
       <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Assets\AssetsManager.h">
+      <Filter>Src\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Assets\ModelResource.h">
+      <Filter>Src\Assets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

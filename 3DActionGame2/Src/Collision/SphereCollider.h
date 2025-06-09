@@ -25,6 +25,7 @@ public:
 	void DebugDrow();
 #endif
 private:
+	Vector3 localPosition;
 	Vector3 position;
 
 };
