@@ -28,7 +28,7 @@ std::shared_ptr<ObjectBase> ObjectFactory::Create()
 
 std::shared_ptr<ObjectBase> ObjectFactory::Create(Vector3 position_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_)
 {
-#if false
+#if true
 	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
 	if (object_manager == nullptr) return nullptr;
 	std::shared_ptr<ObjectBase> obj = std::make_shared<SampleStage>(position_, model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_);
@@ -40,7 +40,7 @@ std::shared_ptr<ObjectBase> ObjectFactory::Create(Vector3 position_, int model_h
 
 std::shared_ptr<SampleCamera> ObjectFactory::CreateCamera(Vector3 position_)
 {
-#if false
+#if true
 	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
 	if (object_manager == nullptr) return nullptr;
 	std::shared_ptr<SampleCamera> obj = std::make_shared<SampleCamera>(position_);
@@ -52,11 +52,12 @@ std::shared_ptr<SampleCamera> ObjectFactory::CreateCamera(Vector3 position_)
 
 std::shared_ptr<SampleCharacter> ObjectFactory::CreateCharacter(Vector3 position_, Vector3 scale_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_, int idle_anim_handle_, std::shared_ptr<SampleCamera> sample_camera_)
 {
-#if false
+#if true
 	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
 	if (object_manager == nullptr) return nullptr;
 	std::shared_ptr<SampleCharacter> obj = std::make_shared<SampleCharacter>(position_, scale_, model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_, idle_anim_handle_, sample_camera_);
 	object_manager->Register(obj);
+	obj->Start();
 	return obj;
 #endif
 	return nullptr;

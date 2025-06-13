@@ -68,7 +68,7 @@ void SceneManager::FixedUpdate()
 
 #ifdef DEBUG
 	fixedNum++;
-#endif
+#endif           
 	excess = fixedUpdateTimer->GetRemainingTime();
 	fixedUpdateTimer = nullptr;
 }

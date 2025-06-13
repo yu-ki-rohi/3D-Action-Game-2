@@ -6,6 +6,7 @@ class BoxCollider : public Collider
 {
 public:
 	// 回転はオイラー角、単位は度数
+	BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_);
 	BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, std::shared_ptr<ObjectBase> owner_);
 public:
 	Vector3 GetPosition() const override;

@@ -11,7 +11,7 @@ SampleCharacter::SampleCharacter(Vector3 position_, Vector3 scale_, int model_ha
 	transform(Transform(position_, scale_)),
 	renderer(Renderer(model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_)),
 	animator(Animator(idle_anim_handle_)),
-	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(135.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f,30.0f), shared_from_this())
+	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(135.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f,30.0f))
 {
 	so = std::make_shared<SimpleObserver>();
 	InputManager::Instance().AddObserver(InputManager::Stick::Left, so);
@@ -54,6 +54,11 @@ SampleCharacter::SampleCharacter(Vector3 position_, Vector3 scale_, int model_ha
 Vector3 SampleCharacter::GetPosition()
 {
 	return transform.Position;
+}
+
+void SampleCharacter::Start()
+{
+	attackCollider.SetOwner(shared_from_this());
 }
 
 void SampleCharacter::FixedUpdate()

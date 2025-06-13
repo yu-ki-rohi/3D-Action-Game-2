@@ -1,13 +1,19 @@
 #include "SphereCollider.h"
 #include "../Mathmatics/Quartanion.h"
 
+SphereCollider::SphereCollider(float radius_, Vector3 position_) :
+	Collider(radius_)
+{
+	position = position_;
+}
+
 SphereCollider::SphereCollider(float radius_, std::shared_ptr<ObjectBase> owner_) :
 	Collider(radius_, owner_)
 {
 	
 }
 
-SphereCollider::SphereCollider(float radius_, std::shared_ptr<ObjectBase> owner_, Vector3 position_) :
+SphereCollider::SphereCollider(float radius_, Vector3 position_, std::shared_ptr<ObjectBase> owner_) :
 	Collider(radius_, owner_)
 {
 	position = position_;

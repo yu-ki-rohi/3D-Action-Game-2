@@ -12,7 +12,8 @@ public:
 	{
 		Player,
 		Enemy,
-		Stage
+		Stage,
+		Camera
 	};
 
 public:
@@ -38,6 +39,9 @@ public:
 
 	virtual void SetMonochrome(float rate_) = 0;
 
+	// shared_from_this()‚ğg‚Á‚Ä¶¬’¼Œã‚É“n‚·‚½‚ß‚É—pˆÓ
+	// ¡‚Ì‚Æ‚±‚ëObjectFactory“à‚ÅŒÄ‚ñ‚Å‚¢‚é‚½‚ßAUnity‚Ì‚»‚ê‚Æ‚Í‹““®‚ªˆá‚¤•”•ª‚ª‚ ‚é‚±‚Æ‚É’ˆÓ
+	virtual void Start() = 0;
 
 	virtual void FixedUpdate() = 0;
 	virtual void Update(float elapsed_time) = 0;

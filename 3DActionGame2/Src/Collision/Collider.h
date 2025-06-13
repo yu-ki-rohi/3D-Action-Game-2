@@ -19,6 +19,7 @@ public:
 
 public:
 	Collider() = default;
+	Collider(float radius_) : 	radius(radius_) {}
 	Collider(float radius_, std::shared_ptr<ObjectBase> owner_) : 	radius(radius_), owner(owner_) {}
 
 public:
@@ -30,7 +31,12 @@ public:
 	virtual Type GetType() const = 0;
 
 	float GetRadius() const { return radius; }
-	std::shared_ptr<ObjectBase> GetOwner() const { return owner; }
+	std::shared_ptr<ObjectBase> GetOwner() const { return owner.lock(); }
+
+	void SetOwner(std::shared_ptr<ObjectBase> owner_)
+	{
+		owner = owner_;
+	}
 
 
 	// 親オブジェクトの行列によるTransformの更新
@@ -91,7 +97,7 @@ public:
 
 protected:
 	// コライダーの所有者
-	std::shared_ptr<ObjectBase> owner = nullptr;
+	std::weak_ptr<ObjectBase> owner;
 
 	// 球以外の場合は、その当たり判定を包含する球の半径(Bounding Sphere)
 	float radius = 1.0f;

@@ -45,7 +45,7 @@ bool App::InitApp()
 	SetJoypadDeadZone(DX_INPUT_PAD1, 0.3f);
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	sceneManager = std::make_unique<SceneManager>(SceneFactory::Create(SceneBase::Type::Game));
+	sceneManager = std::make_unique<SceneManager>(SceneFactory::Create(SceneBase::Type::Sample));
 
 	systemTime = GetNowHiPerformanceCount();
 
