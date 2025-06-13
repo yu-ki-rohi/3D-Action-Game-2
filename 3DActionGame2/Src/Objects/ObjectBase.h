@@ -21,6 +21,7 @@ public:
 public:
 	// アクセサ
 	virtual Tag GetTag() = 0;
+
 	// ChatGPTを使用して生成したコード
 	template<typename T>
 	std::shared_ptr<T> GetComponent()
@@ -34,6 +35,7 @@ public:
 		}
 		return nullptr;
 	}
+
 	virtual void SetMonochrome(float rate_) = 0;
 
 

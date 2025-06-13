@@ -4,12 +4,12 @@
 #include "../Mathmatics/Vector3.h"
 #include "../Mathmatics/Quartanion.h"
 
-void CollisionManager::RegisterBody(std::weak_ptr<ObjectBase> owner_, const Collider* collider_)
+void CollisionManager::RegisterBody(std::shared_ptr<ObjectBase> owner_, const Collider* collider_)
 {
 	bodies.push_back(std::make_pair(owner_, collider_));
 }
 
-void CollisionManager::RegisterTrigger(std::weak_ptr<ObjectBase> owner_, const Collider* collider_)
+void CollisionManager::RegisterTrigger(std::shared_ptr<ObjectBase> owner_, const Collider* collider_)
 {
 	triggers.push_back(std::make_pair(owner_, collider_));
 }

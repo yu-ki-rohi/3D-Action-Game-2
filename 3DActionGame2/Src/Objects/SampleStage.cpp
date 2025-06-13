@@ -6,12 +6,12 @@ SampleStage::SampleStage(Vector3 position_, int model_handle_, int vertex_shader
 	transform(Transform(position_)),
 	renderer(Renderer(model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_))
 {
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_RIGHT_SHOULDER,
 		InputManager::State::Hold,
 		std::make_shared<MemberFunctionPointerContainer<SampleStage>>(this, &SampleStage::IncreaseMonochrome));
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_LEFT_SHOULDER,
 		InputManager::State::Hold,

@@ -3,6 +3,7 @@
 
 class ObjectBase;
 class ObjectManager;
+class AssetsManager;
 
 class SampleCharacter;
 class SampleCamera;
@@ -12,7 +13,7 @@ struct Vector3;
 class ObjectFactory
 {
 public:
-	ObjectFactory(std::shared_ptr<ObjectManager> objManager_);
+	ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_);
 
 public:
 	std::shared_ptr<ObjectBase> Create();
@@ -23,4 +24,5 @@ public:
 
 private:
 	std::weak_ptr<ObjectManager> objectManager;
+	std::shared_ptr<AssetsManager> assetsManager;
 };

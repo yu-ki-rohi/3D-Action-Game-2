@@ -9,6 +9,7 @@ class ObjectManager;
 class ObjectFactory;
 class CollisionManager;
 class ColliderRegisterInterface;
+class AssetsManager;
 
 class GameScene : public SceneBase
 {
@@ -21,8 +22,8 @@ public:
 	void Update(float elapsed_time_) override;
 	void Render() override;
 
-	void UpdateInLoading(float elapsed_time_) override {};
-	void RenderInLoading() override {};
+	void UpdateInLoading(float elapsed_time_) override;
+	void RenderInLoading() override;
 
 	void Initialize() override;
 	Type Delete() override;
@@ -30,7 +31,6 @@ public:
 private:
 	void SetupLight();
 	void ASyncLoad();
-	void DeleteHandles();
 
 	void IncreaseIntensity();
 	void DecreaseIntensity();
@@ -38,18 +38,23 @@ private:
 	// デプスシャドウ描画の準備
 	void SetupDepthImage();
 
+	void GenerateObjects();
 
 	void SetMonochrome(float rate_);
 	void SetMonochrome(float rate_, ObjectBase::Tag type_);
 
 
 private:
-	// オブジェクトの管理
+	// オブジェクトの管理クラス
 	std::shared_ptr<ObjectManager> objectManager;
-	// オブジェクト生成
-	std::shared_ptr<ObjectFactory> objectFactory;
-	// 当たり判定を管理
+
+	// 当たり判定を管理クラス
 	std::shared_ptr<CollisionManager> collisionManager;
+
+	std::shared_ptr<AssetsManager> assetsManager;
+
+	// オブジェクト生成クラス
+	std::shared_ptr<ObjectFactory> objectFactory;
 	// Colliderの登録・解除を行うインターフェース
 	std::shared_ptr<ColliderRegisterInterface> colliderRegisterInterface;
 

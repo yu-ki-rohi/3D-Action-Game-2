@@ -6,7 +6,7 @@
 
 TitleScene::TitleScene() :
 	objectManager(std::make_shared<ObjectManager>()),
-	objectFactory(std::make_shared<ObjectFactory>(objectManager))
+	objectFactory(std::make_shared<ObjectFactory>(objectManager, nullptr))
 {
 
 }

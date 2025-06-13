@@ -11,33 +11,33 @@ SampleCharacter::SampleCharacter(Vector3 position_, Vector3 scale_, int model_ha
 	transform(Transform(position_, scale_)),
 	renderer(Renderer(model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_)),
 	animator(Animator(idle_anim_handle_)),
-	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(135.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f,30.0f))
+	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(135.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f,30.0f), shared_from_this())
 {
 	so = std::make_shared<SimpleObserver>();
 	InputManager::Instance().AddObserver(InputManager::Stick::Left, so);
 	
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_A,
 		InputManager::State::Press,
 		std::make_shared<MemberFunctionPointerContainer<SampleCharacter>>(this, &SampleCharacter::Attack));
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		InputManager::Stick::Left,
 		InputManager::State::Press,
 		std::make_shared<MemberFunctionPointerContainer<SampleCharacter>>(this, &SampleCharacter::Move));
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		InputManager::Stick::Left,
 		InputManager::State::Release,
 		std::make_shared<MemberFunctionPointerContainer<SampleCharacter>>(this, &SampleCharacter::Stop));
 
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_Y,
 		InputManager::State::Hold,
 		std::make_shared<MemberFunctionPointerContainer<SampleCharacter>>(this, &SampleCharacter::IncreaseMonochrome));
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_X,
 		InputManager::State::Hold,

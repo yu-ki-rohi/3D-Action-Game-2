@@ -6,8 +6,8 @@
 class SphereCollider : public Collider
 {
 public:
-	SphereCollider(float radius_);
-	SphereCollider(float radius_, Vector3 position_);
+	SphereCollider(float radius_, std::shared_ptr<ObjectBase> owner_);
+	SphereCollider(float radius_, std::shared_ptr<ObjectBase> owner_, Vector3 position_);
 public:
 	Vector3 GetPosition() const override;
 	Vector3 GetScale() const override;			// 全ての成分が半径であるベクトルを返す

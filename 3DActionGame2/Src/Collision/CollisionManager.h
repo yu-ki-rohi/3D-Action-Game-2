@@ -15,8 +15,8 @@ public:
 
 public:
 
-	void RegisterBody(std::weak_ptr<ObjectBase> owner_, const Collider* collider_);
-	void RegisterTrigger(std::weak_ptr<ObjectBase> owner_, const Collider* collider_);
+	void RegisterBody(std::shared_ptr<ObjectBase> owner_, const Collider* collider_);
+	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, const Collider* collider_);
 
 	void ReleaseBody(const Collider* collider_);
 	void ReleaseTrigger(const Collider* collider_);

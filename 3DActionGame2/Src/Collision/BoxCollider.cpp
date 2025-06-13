@@ -2,16 +2,14 @@
 
 #define VERTEX_NUM 8
 
-BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_)
+BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, std::shared_ptr<ObjectBase> owner_) :
+	Collider((localTransform.Scale * 0.5f).Length(), owner_)
 {
 	localTransform.Position = position_;
 	localTransform.Scale = scale_;
 
 	// Eular => Quartanion ‚Ì•ÏŠ·
 	localTransform.SetRotate(rotate_ * DX_PI / 180.0f);
-
-	// ’†S‚©‚çŠp‚Ü‚Å‚Ì‹——£‚ğ”¼Œa‚Æ‚µ‚Äˆµ‚¤
-	radius = (localTransform.Scale * 0.5f).Length();
 }
 
 Vector3 BoxCollider::GetPosition() const

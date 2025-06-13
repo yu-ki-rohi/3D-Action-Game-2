@@ -35,6 +35,9 @@
     <Filter Include="Src\Assets">
       <UniqueIdentifier>{9949b84d-2c28-4b5d-a3a9-74556d9af1b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\DataBase">
+      <UniqueIdentifier>{6a6d660f-d86e-466c-8fe6-ff17ac30495d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\main.cpp">
@@ -144,6 +147,15 @@
     </ClCompile>
     <ClCompile Include="Src\Debug\Profiler.cpp">
       <Filter>Src\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataBase\DataBase.cpp">
+      <Filter>Src\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Assets\AssetsManager.cpp">
+      <Filter>Src\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\KeyCofig.cpp">
+      <Filter>Src\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +302,33 @@
     </ClInclude>
     <ClInclude Include="Src\Assets\ModelResource.h">
       <Filter>Src\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Assets\AnimationResource.h">
+      <Filter>Src\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Assets\ShaderResource.h">
+      <Filter>Src\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\CharacterParameters.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\DataBase.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\DataKind.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\KeyConfig.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\ModelFileList.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\AnimationFileList.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\ShaderFileList.h">
+      <Filter>Src\DataBase</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

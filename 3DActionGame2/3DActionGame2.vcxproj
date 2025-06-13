@@ -141,16 +141,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\App.cpp" />
+    <ClCompile Include="Src\Assets\AssetsManager.cpp" />
     <ClCompile Include="Src\Collision\BoxCollider.cpp" />
     <ClCompile Include="Src\Collision\ColliderRegisterInterface.cpp" />
     <ClCompile Include="Src\Collision\CollisionManager.cpp" />
     <ClCompile Include="Src\Collision\SphereCollider.cpp" />
+    <ClCompile Include="Src\DataBase\DataBase.cpp" />
     <ClCompile Include="Src\Debug\DebugManager.cpp" />
     <ClCompile Include="Src\Debug\Profiler.cpp" />
     <ClCompile Include="Src\Input\ButtonBehavior.cpp" />
     <ClCompile Include="Src\Input\InputBehavior.cpp" />
     <ClCompile Include="Src\Input\InputBehaviorWithSubject.cpp" />
     <ClCompile Include="Src\Input\InputManager.cpp" />
+    <ClCompile Include="Src\Input\KeyCofig.cpp" />
     <ClCompile Include="Src\Input\StickBehavior.cpp" />
     <ClCompile Include="Src\Input\TriggerBehavior.cpp" />
     <ClCompile Include="Src\main.cpp" />
@@ -179,20 +182,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\App.h" />
+    <ClInclude Include="Src\Assets\AnimationResource.h" />
     <ClInclude Include="Src\Assets\AssetsManager.h" />
     <ClInclude Include="Src\Assets\ModelResource.h" />
+    <ClInclude Include="Src\Assets\ShaderResource.h" />
     <ClInclude Include="Src\Collision\BoxCollider.h" />
     <ClInclude Include="Src\Collision\Collider.h" />
     <ClInclude Include="Src\Collision\ColliderRegisterInterface.h" />
     <ClInclude Include="Src\Collision\CollisionManager.h" />
     <ClInclude Include="Src\Collision\SphereCollider.h" />
     <ClInclude Include="Src\Common.h" />
+    <ClInclude Include="Src\DataBase\AnimationFileList.h" />
+    <ClInclude Include="Src\DataBase\CharacterParameters.h" />
+    <ClInclude Include="Src\DataBase\DataBase.h" />
+    <ClInclude Include="Src\DataBase\DataKind.h" />
+    <ClInclude Include="Src\DataBase\ModelFileList.h" />
+    <ClInclude Include="Src\DataBase\ShaderFileList.h" />
     <ClInclude Include="Src\Debug\DebugManager.h" />
     <ClInclude Include="Src\Debug\Profiler.h" />
     <ClInclude Include="Src\Input\ButtonBehavior.h" />
     <ClInclude Include="Src\Input\InputBehavior.h" />
     <ClInclude Include="Src\Input\InputBehaviorWithSubject.h" />
     <ClInclude Include="Src\Input\InputManager.h" />
+    <ClInclude Include="Src\Input\KeyConfig.h" />
     <ClInclude Include="Src\Input\StickBehavior.h" />
     <ClInclude Include="Src\Input\TriggerBehavior.h" />
     <ClInclude Include="Src\Mathmatics\Quartanion.h" />

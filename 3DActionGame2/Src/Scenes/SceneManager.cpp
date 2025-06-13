@@ -28,6 +28,7 @@ bool SceneManager::CheckSceneStep()
 	if (currentScene->GetCurrentStep() == SceneBase::Step::Finish)
 	{
 		// ƒV[ƒ“I—¹
+		TimerManager::Instance().EraseAll();
 		SceneBase::Type next_scene_type = currentScene->Delete();
 		currentScene = SceneFactory::Create(next_scene_type);
 	}

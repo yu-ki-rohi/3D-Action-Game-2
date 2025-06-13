@@ -10,14 +10,14 @@
 
 SampleScene::SampleScene() :
 	objectManager(std::make_shared<ObjectManager>()),
-	objectFactory(std::make_shared<ObjectFactory>(objectManager))
+	objectFactory(std::make_shared<ObjectFactory>(objectManager, nullptr))
 {
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		InputManager::Trigger::Right,
 		InputManager::State::Hold,
 		std::make_shared<MemberFunctionPointerContainer<SampleScene>>(this, &SampleScene::IncreaseIntensity));
-	InputManager::Instance().RegisiterBehave(
+	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		InputManager::Trigger::Left,
 		InputManager::State::Hold,

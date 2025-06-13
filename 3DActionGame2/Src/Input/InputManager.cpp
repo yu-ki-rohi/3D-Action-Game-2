@@ -26,18 +26,23 @@ InputManager::~InputManager()
 
 }
 
-void InputManager::RegisiterBehave(Map map_, unsigned char buttonType_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
+void InputManager::RegisterBehave(Map map_, unsigned char buttonType_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
 {
 	if (buttonType_ >= BUTTON_NUM) return;
 	buttons[buttonType_]->Register(map_, state_, behavior_);
 }
 
-void InputManager::RegisiterBehave(Map map_, Stick stick_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
+void InputManager::RegisterBehave(Map map_, KeyConfig::Tag tag_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
+{
+	RegisterBehave(map_, config.GetConfig(tag_), state_, behavior_);
+}
+
+void InputManager::RegisterBehave(Map map_, Stick stick_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
 {
 	sticks[(int)stick_]->Register(map_, state_, behavior_);
 }
 
-void InputManager::RegisiterBehave(Map map_, Trigger trigger_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
+void InputManager::RegisterBehave(Map map_, Trigger trigger_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
 {
 	triggers[(int)trigger_]->Register(map_, state_, behavior_);
 }
