@@ -157,6 +157,36 @@
     <ClCompile Include="Src\Input\KeyCofig.cpp">
       <Filter>Src\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Objects\Player.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\CharacterBase.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\PlayerSaber.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\CameraTPS.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\CameraManager.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Enemy.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\CharacterStatus.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\PlayerStatus.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\EnemyStatus.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scenes\PlayerEventNotifier.cpp">
+      <Filter>Src\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\App.h">
@@ -329,6 +359,39 @@
     </ClInclude>
     <ClInclude Include="Src\DataBase\ShaderFileList.h">
       <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\CharacterStatus.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\CharacterBase.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Player.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\PlayerSaber.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\CameraBase.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\CameraManager.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\CameraTPS.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Enemy.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\PlayerStatus.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\EnemyStatus.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scenes\PlayerEventNotifier.h">
+      <Filter>Src\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

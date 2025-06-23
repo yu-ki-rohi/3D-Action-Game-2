@@ -29,7 +29,7 @@ void AssetsManager::Load()
 
 	LoadShader();
 
-	tmpScreenHandle = MakeScreen(WindowSettings::WindowWidth, WindowSettings::WindowHeight, FALSE);
+	MakeTmpScreen();
 
 	MakeShadowMap();
 }
@@ -90,11 +90,22 @@ void AssetsManager::LoadModel()
 	using namespace std;
 	// モデルファイル名読み込み
 	shared_ptr<ModelFileList> model_file_list = DataBase::Instance().GetModelFileList();
+
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
+
 	// モデルファイル名読み込み
 	for (const auto& model_file : model_file_list->ModelFiles)
 	{
+		if (modelHandles[model_file.first] == nullptr)
+		{
+			modelHandles[model_file.first] = make_shared <ModelResource>();
+		}
 		modelHandles[model_file.first]->Handle = MV1LoadModel(model_file.second);
 	}
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+
+	SetUseASyncLoadFlag(FALSE);
 }
 
 void AssetsManager::LoadAnimation()
@@ -102,12 +113,22 @@ void AssetsManager::LoadAnimation()
 	using namespace std;
 	// アニメーションファイル名読み込み
 	shared_ptr<AnimationFileList> animation_file_list = DataBase::Instance().GetAnimationFileList();
+
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
 	// アニメーションファイル読み込み
 	for (const auto& animation_file : animation_file_list->AnimationFiles)
 	{
 		// MKindごとの各AKindにアニメーションを読み込んで保存
+		if (animationHandles[animation_file.first] == nullptr)
+		{
+			animationHandles[animation_file.first] = make_shared <AnimationResource>();
+		}
 		animationHandles[animation_file.first]->Handles[animation_file.second.first] = MV1LoadModel(animation_file.second.second);
 	}
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+
+	SetUseASyncLoadFlag(FALSE);
 }
 
 void AssetsManager::LoadShader()
@@ -115,17 +136,39 @@ void AssetsManager::LoadShader()
 	using namespace std;
 	// シェーダーフィル名読み込み
 	shared_ptr<ShaderFileList> shader_file_list = DataBase::Instance().GetShaderFileList();
+
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
 	// 頂点シェーダー読み込み
 	for (const auto& vertex_shader_file : shader_file_list->VertexShaderFiles)
 	{
-		vertexShaderHandles[vertex_shader_file.first]->Handle = MV1LoadModel(vertex_shader_file.second);
+		if (vertexShaderHandles[vertex_shader_file.first] == nullptr)
+		{
+			vertexShaderHandles[vertex_shader_file.first] = make_shared<VertexShaderResource>();
+		}
+		vertexShaderHandles[vertex_shader_file.first]->Handle = LoadVertexShader(vertex_shader_file.second);
 	}
+
 	// ピクセルシェーダー読み込み
 	for (const auto& pixel_shader_file : shader_file_list->PixelShaderFiles)
 	{
-		pixelShaderHandles[pixel_shader_file.first]->Handle = MV1LoadModel(pixel_shader_file.second);
+		if (pixelShaderHandles[pixel_shader_file.first] == nullptr)
+		{
+			pixelShaderHandles[pixel_shader_file.first] = make_shared<PixelShaderResource>();
+		}
+		pixelShaderHandles[pixel_shader_file.first]->Handle = LoadPixelShader(pixel_shader_file.second);
 	}
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+	SetUseASyncLoadFlag(FALSE);
+}
 
+void AssetsManager::MakeTmpScreen()
+{
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
+	tmpScreenHandle = MakeScreen(WindowSettings::WindowWidth, WindowSettings::WindowHeight, FALSE);
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+	SetUseASyncLoadFlag(FALSE);
 }
 
 void AssetsManager::MakeShadowMap()
@@ -134,7 +177,12 @@ void AssetsManager::MakeShadowMap()
 	SetDrawValidFloatTypeGraphCreateFlag(TRUE);
 	SetCreateDrawValidGraphChannelNum(1);
 	SetCreateGraphColorBitDepth(16);
+
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
 	shadowMapHandle = MakeScreen(2048, 2048, FALSE);
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+	SetUseASyncLoadFlag(FALSE);
 
 	// 設定を元に戻す
 	SetDrawValidFloatTypeGraphCreateFlag(FALSE);

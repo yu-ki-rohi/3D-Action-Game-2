@@ -1,20 +1,25 @@
 #pragma once
-#include <DxLib.h>
 #include "../Common.h"
 
-#define STAMP_NUM 4
+#ifdef DEBUG
+
+#include <DxLib.h>
+
+#define STAMP_NUM 6
 
 class Profiler
 {
 public:
-	// ‘ÅŠÔ‚Ìí—Ş
+	// ‘ÅŠÔ‚Ì‹æ•ª
 	// —v‘f”‚ÍSTAMP_NUM‚Æ‡‚í‚¹‚é
 	enum class Type
 	{
 		FixedUpdate,
+		Input,
 		Update,
 		Render,
-		VSync
+		VSync,
+		Other
 	};
 
 
@@ -32,8 +37,10 @@ private:
 	LONGLONG previousSystemTime;
 
 	// “Y‚¦š‚ÍType‚Åw’è
-	float stampedTime[STAMP_NUM]{};
-	float showStampedTime[STAMP_NUM]{};
+	double stampedTime[STAMP_NUM]{};
+	double showStampedTime[STAMP_NUM]{};
 
 
 };
+
+#endif

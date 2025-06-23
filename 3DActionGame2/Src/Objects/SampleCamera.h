@@ -13,7 +13,7 @@ public:
 	Vector3 GetNearShadowAreaPos();
 	Vector3 GetForward();
 	Vector3 GetRight();
-	Tag GetTag() { return Tag::Camera; }
+	Tag GetTag() const override { return Tag::Camera; }
 
 public:
 	void Start() override {}
@@ -24,6 +24,7 @@ public:
 	void RenderShadow() override;
 
 	void SetMonochrome(float rate_) override {}
+	void SetLocalTimeScale(float time_scale_) override {}
 
 	void SetTarget(Transform* target_);
 

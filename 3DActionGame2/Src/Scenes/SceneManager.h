@@ -4,6 +4,7 @@
 #include "../Common.h"
 #include "../Debug/Profiler.h"
 
+#define VSYNC
 
 class SceneBase;
 
@@ -46,6 +47,7 @@ private:
 
 	// FixedUpdateを実行させるためのタイマー
 	std::unique_ptr<Timer<SceneManager>> fixedUpdateTimer = nullptr;
+	std::unique_ptr<Timer<SceneManager>> renderUpdateTimer = nullptr;
 
 	// 超過時間(次回FixedUpdateまでの補正のため)
 	float excess = 0.0f;

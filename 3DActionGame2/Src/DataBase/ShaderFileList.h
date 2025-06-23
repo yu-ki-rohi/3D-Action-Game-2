@@ -2,7 +2,8 @@
 #include <utility>
 #include "DataKind.h"
 
-
+// ファイル名とかの管理はもっといいやり方を模索したい
+// csvからの読み込みやVBAを使って生成するなど
 struct ShaderFileList
 {
 	using VertexShaderList = std::pair<VSKind, const char*>;

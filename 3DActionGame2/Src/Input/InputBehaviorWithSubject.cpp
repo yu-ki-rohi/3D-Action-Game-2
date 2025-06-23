@@ -1,16 +1,19 @@
 #include "InputBehaviorWithSubject.h"
 
-void InputBehaviorWithSubject::AddObserver(std::weak_ptr<ObserverBase> observer_)
+void InputBehaviorWithSubject::AddObserver(InputManager::Map map_, std::weak_ptr<ObserverBase> observer_)
 {
-	subject.AddObserver(observer_);
+	subjects[map_].AddObserver(observer_);
 }
 
-void InputBehaviorWithSubject::RemoveObserver(std::shared_ptr<ObserverBase> observer_)
+void InputBehaviorWithSubject::RemoveObserver(InputManager::Map map_, std::shared_ptr<ObserverBase> observer_)
 {
-	subject.RemoveObserver(observer_);
+	subjects[map_].RemoveObserver(observer_);
 }
 
 void InputBehaviorWithSubject::ClearObservers()
 {
-	subject.Clear();
+	for (auto& subject : subjects)
+	{
+		subject.second.Clear();
+	}
 }

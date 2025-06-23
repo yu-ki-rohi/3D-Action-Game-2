@@ -2,6 +2,8 @@
 #include <utility>
 #include "DataKind.h"
 
+// ファイル名とかの管理はもっといいやり方を模索したい
+// csvからの読み込みやVBAを使って生成するなど
 struct ModelFileList
 {
 	using ModelList = std::pair<MKind, const char*>;

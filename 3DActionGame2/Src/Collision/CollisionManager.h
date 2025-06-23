@@ -15,8 +15,8 @@ public:
 
 public:
 
-	void RegisterBody(std::shared_ptr<ObjectBase> owner_, const Collider* collider_);
-	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, const Collider* collider_);
+	void RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_);
+	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_);
 
 	void ReleaseBody(const Collider* collider_);
 	void ReleaseTrigger(const Collider* collider_);
@@ -50,7 +50,7 @@ private:
 	void CheckBodyAndTrigger();
 
 private:
-	std::vector<std::pair<std::weak_ptr<ObjectBase>, const Collider*>> bodies;
-	std::vector<std::pair<std::weak_ptr<ObjectBase>, const Collider*>> triggers;
+	std::vector<std::pair<std::weak_ptr<ObjectBase>, Collider*>> bodies;
+	std::vector<std::pair<std::weak_ptr<ObjectBase>, Collider*>> triggers;
 	std::vector<std::pair<const Collider*, const Collider*>> preCollided;
 };

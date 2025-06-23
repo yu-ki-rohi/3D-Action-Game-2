@@ -16,6 +16,8 @@ public:
 	~SampleScene();
 
 public:
+	void Start() override;
+
 	void FixedUpdate() override;
 	void Update(float elapsed_time_) override;
 	void Render() override;

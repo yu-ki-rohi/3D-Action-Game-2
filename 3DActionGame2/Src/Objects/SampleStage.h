@@ -9,7 +9,7 @@ class SampleStage : public ObjectBase
 public:
 	SampleStage(Vector3 position_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_);
 public:
-	Tag GetTag() { return Tag::Stage; }
+	Tag GetTag() const override { return Tag::Stage; }
 
 	void Start() override {}
 
@@ -18,7 +18,8 @@ public:
 	void Render() override;
 	void RenderShadow() override;
 
-	void SetMonochrome(float rate_) override {}
+	void SetMonochrome(float rate_) override { monochromeRate = rate_; }
+	void SetLocalTimeScale(float time_scale_) override {}
 
 	void IncreaseMonochrome();
 	void DecreaseMonochrome();

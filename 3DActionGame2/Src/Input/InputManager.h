@@ -65,10 +65,10 @@ public:
 	void Clear();
 
 	// “ü—Í’l‚Ì‘—Mæ‚ğ’Ç‰Á
-	void AddObserver(Stick stick_, std::weak_ptr<ObserverBase> observer_);
-	void AddObserver(Trigger trigger_, std::weak_ptr<ObserverBase> observer_);
-	void RemoveObserver(Stick stick_, std::shared_ptr<ObserverBase> observer_);
-	void RemoveObserver(Trigger trigger_, std::shared_ptr<ObserverBase> observer_);
+	void AddObserver(Stick stick_, Map map_, std::weak_ptr<ObserverBase> observer_);
+	void AddObserver(Trigger trigger_, Map map_, std::weak_ptr<ObserverBase> observer_);
+	void RemoveObserver(Stick stick_, Map map_, std::shared_ptr<ObserverBase> observer_);
+	void RemoveObserver(Trigger trigger_, Map map_, std::shared_ptr<ObserverBase> observer_);
 
 	// “ü—Íó‘Ô‚ÌŠm”F‹y‚Ñ“o˜^‚³‚ê‚½ˆ—‚ÌÀs
 	void CheckInput();

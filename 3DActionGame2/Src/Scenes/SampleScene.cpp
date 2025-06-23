@@ -10,7 +10,7 @@
 
 SampleScene::SampleScene() :
 	objectManager(std::make_shared<ObjectManager>()),
-	objectFactory(std::make_shared<ObjectFactory>(objectManager, nullptr))
+	objectFactory(std::make_shared<ObjectFactory>(objectManager, nullptr, nullptr))
 {
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
@@ -32,6 +32,13 @@ SampleScene::~SampleScene()
 	DeleteHandles();
 }
 
+void SampleScene::Start()
+{
+	if (objectManager != nullptr)
+	{
+		objectManager->Start();
+	}
+}
 
 void SampleScene::FixedUpdate()
 {
@@ -175,7 +182,7 @@ void SampleScene::SampleScene::Initialize()
 	if (objectFactory != nullptr)
 	{
 		// カメラ作成
-		sampleCamera = objectFactory->CreateCamera(Vector3(0.0f, 10.0f, 0.0f));
+		sampleCamera = objectFactory->CreateSampleCamera(Vector3(0.0f, 10.0f, 0.0f));
 
 		// ステージ作成
 		objectFactory->Create(Vector3(), stageHandle, normalVertexShaderHandle, pixelShaderHandle, skinnedShadowMapVSHandle);
@@ -336,7 +343,7 @@ void SampleScene::SetupDepthImage()
 	// 描画する奥行き範囲をセット
 	SetCameraNearFar(1.0f, 500.0f);
 
-	//sampleCamera->SetCameraInfo();
+	sampleCamera->SetCameraInfo();
 
 	// カメラの向きはライトの向き
 	Vector3 light_direction = Vector3::ConvertFromVECTOR(GetLightDirection());

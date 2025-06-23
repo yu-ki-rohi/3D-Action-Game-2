@@ -1,7 +1,6 @@
 #pragma once
 #include "Collider.h"
 #include "../Mathmatics/Vector3.h"
-#include "../Common.h"
 
 class SphereCollider : public Collider
 {
@@ -22,11 +21,12 @@ public:
 
 	void UpdatePosition(const Vector3& new_position_) override;
 
-#ifdef DEBUG
-	void DebugDrow();
-#endif
 private:
 	Vector3 localPosition;
 	Vector3 position;
 
+#ifdef DEBUG
+public:
+	void DebugDrow() override;
+#endif
 };

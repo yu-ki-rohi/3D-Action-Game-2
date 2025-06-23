@@ -7,14 +7,14 @@ ColliderRegisterInterface::ColliderRegisterInterface(std::shared_ptr<CollisionMa
 
 }
 
-void ColliderRegisterInterface::RegisterBody(std::shared_ptr<ObjectBase> owner_, const Collider* collider_)
+void ColliderRegisterInterface::RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
 {
 	std::shared_ptr<CollisionManager> collision_manager = collisionManager.lock();
 	if (collision_manager == nullptr) { return; }
 	collision_manager->RegisterBody(owner_, collider_);
 }
 
-void ColliderRegisterInterface::RegisterTrigger(std::shared_ptr<ObjectBase> owner_, const Collider* collider_)
+void ColliderRegisterInterface::RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
 {
 	std::shared_ptr<CollisionManager> collision_manager = collisionManager.lock();
 	if (collision_manager == nullptr) { return; }

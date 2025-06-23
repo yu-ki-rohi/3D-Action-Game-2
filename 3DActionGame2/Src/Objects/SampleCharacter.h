@@ -15,7 +15,7 @@ public:
 	SampleCharacter(Vector3 position_, Vector3 scale_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_, int idle_anim_handle_, std::shared_ptr<SampleCamera> sample_camera_);
 public:
 	Vector3 GetPosition();
-	Tag GetTag() { return Tag::Player; }
+	Tag GetTag() const override { return Tag::Player; }
 
 public:
 	void Start() override;
@@ -26,6 +26,7 @@ public:
 	void RenderShadow() override;
 
 	void SetMonochrome(float rate_) override {}
+	void SetLocalTimeScale(float time_scale_) override {}
 
 	void RegisterAnim(Animator::AnimType anim_type_, int anim_handle_);
 

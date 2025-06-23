@@ -1,6 +1,8 @@
 #pragma once
 #include "../Common.h"
 
+#ifdef DEBUG
+
 class DebugManager
 {
 public:
@@ -28,3 +30,4 @@ private:
 #pragma endregion
 
 };
+#endif

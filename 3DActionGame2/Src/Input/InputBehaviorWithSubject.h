@@ -8,10 +8,10 @@
 class InputBehaviorWithSubject : public InputBehavior
 {
 public:
-	void AddObserver(std::weak_ptr<ObserverBase> observer_);
-	void RemoveObserver(std::shared_ptr<ObserverBase> observer_);
+	void AddObserver(InputManager::Map map_, std::weak_ptr<ObserverBase> observer_);
+	void RemoveObserver(InputManager::Map map_, std::shared_ptr<ObserverBase> observer_);
 
 	void ClearObservers();
 protected:
-	Subject subject;
+	std::unordered_map<InputManager::Map, Subject> subjects;
 };

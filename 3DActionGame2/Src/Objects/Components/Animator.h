@@ -1,6 +1,10 @@
 #pragma once
 #include <unordered_map>
+#include <memory>
 #include "ComponentBase.h"
+#include "../../DataBase/DataKind.h"
+
+struct AnimationResource;
 
 class Animator : public ComponentBase
 {
@@ -26,8 +30,15 @@ public:
 
 public:
 	Animator(int idle_anim_handle_);
+	Animator(std::shared_ptr<AnimationResource> anim_resource_);
 
 public:
+	// アニメーションがどこまで進んでいるかを取得
+	float GetAnimationProgressPercentage();
+
+	// アニメーションの全体の時間に引数を掛けたものを取得
+	float GetAnimationTimeByNormalizedValue(float normalized_value_);
+
 	// animHandlesにキャッシュとして登録
 	void RegisterAnim(AnimType anim_type_, int anim_handle_);
 
@@ -41,6 +52,8 @@ public:
 	/// <param name="is_loop_">次のアニメーションをループさせるか否か</param>
 	void SetNextAnim(AnimType anim_type_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
 
+	void SetNextAnim(AKind anim_kind_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
+
 	void SetAnimSpeed(float anim_speed_);
 
 public:
@@ -50,15 +63,21 @@ public:
 
 	void Update(float elapsed_time_);
 
+public:
+	// Animationの遷移を即座に開始される時のために
+	// 思ったよりも即座に切り替えたいということの方が多かったので用意
+	static constexpr float Immediately = 0.0f;
+
 private:
 	// AnimTypeごとのハンドル
 	std::unordered_map<AnimType, int> animHandles;
+
+	std::shared_ptr<AnimationResource> animResource;
 
 	// nextXXはアニメーション遷移先を予約するために使用
 	// (アニメーションの線形補間のため)
 
 	// 再生するアニメーションのハンドル
-	// AnimTypeを控えておく方法でもいいかも
 	int currentAnimHandle = -1;
 	int nextAnimHandle = -1;
 
@@ -75,7 +94,9 @@ private:
 	// TODO アニメーションごとに設定できるようにする
 	float animSpeed = 30.0f;
 
+	// アニメーション遷移を始める時間
 	float startChangingTime = 0.0f;
+	// アニメーション遷移にかける時間
 	float changingTime = 0.1f;
 
 	bool isLoop = true;

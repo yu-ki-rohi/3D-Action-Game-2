@@ -45,26 +45,37 @@ bool SceneManager::CheckSceneStep()
 
 void SceneManager::Main(float elapsed_time_)
 {
+	if (currentScene == nullptr) return;
+
+	// 新規に追加されたObjectの開始処理
+	currentScene->Start();
+
 	// タイマー更新
 	TimerManager::Instance().Update(elapsed_time_ * Time::TimeScale);
 
+	// VSync - FixedUpdate の間の処理時間を記録
+	profiler.Stamp(Profiler::Type::Other);
+
+	// 固定フレームの更新処理
 	FixedUpdate(elapsed_time_ * Time::TimeScale);
 
 	// コントローラーの入力状況確認
 	InputManager::Instance().CheckInput();
 
+	// Input の処理時間を記録
+	profiler.Stamp(Profiler::Type::Input);
+
+	// フレーム毎の更新処理
 	Update(elapsed_time_ * Time::TimeScale);
 
+	// 描画処理
 	Render();
 
 }
 
 void SceneManager::FixedUpdate()
 {
-	if (currentScene == nullptr) return;
 	currentScene->FixedUpdate();
-
-	profiler.Stamp(Profiler::Type::FixedUpdate);
 
 #ifdef DEBUG
 	fixedNum++;
@@ -75,18 +86,20 @@ void SceneManager::FixedUpdate()
 
 void SceneManager::FixedUpdate(float elapsed_time_)
 {
-	if (currentScene->GetCurrentStep() == SceneBase::Step::Load) { return; }
+	if (currentScene->GetCurrentStep() != SceneBase::Step::Update) { return; }
 	if (fixedUpdateTimer == nullptr)
 	{
 		fixedUpdateTimer = std::make_unique<Timer<SceneManager>>(Timer<SceneManager>(Time::FixedDeltaTime + excess, this, &SceneManager::FixedUpdate));
 	}
 	fixedUpdateTimer->Update(elapsed_time_);
+
+#ifdef DEBUG
+	profiler.Stamp(Profiler::Type::FixedUpdate);
+#endif       
 }
 
 void SceneManager::Update(float elapsed_time_)
 {
-	if (currentScene == nullptr) return;
-
 	if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
 	{
 		currentScene->UpdateInLoading(elapsed_time_);
@@ -112,8 +125,6 @@ void SceneManager::Render()
 {
 	ClearDrawScreen();
 
-	if (currentScene == nullptr) return;
-
 	if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
 	{
 		currentScene->RenderInLoading();
@@ -123,13 +134,13 @@ void SceneManager::Render()
 		currentScene->Render();
 	}
 	
+#ifdef DEBUG
 	profiler.Render();
 
-	profiler.Stamp(Profiler::Type::Render);
-#ifdef DEBUG
 	DrawFormatString(0, 10, GetColor(255, 255, 255), "FixedFPS : %d", fixedNumView);
 	DrawFormatString(0, 30, GetColor(255, 255, 255), "FPS      : %d", numView);
 #endif
+	profiler.Stamp(Profiler::Type::Render);
 	ScreenFlip();
 	profiler.Stamp(Profiler::Type::VSync);
 }

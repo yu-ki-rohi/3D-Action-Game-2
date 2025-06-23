@@ -4,6 +4,7 @@
 #include <DxLib.h>
 
 Renderer::Renderer(int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_) :
+	IsRenderingShadow(false),
 	modelHandle(model_handle_),
 	vertexShaderHandle(vertex_shader_handle_),
 	pixelShaderHandle(pixel_shader_handle_),
@@ -34,12 +35,31 @@ int Renderer::GetShadowVSHandle()
 
 void Renderer::Render(const Transform& transform_)
 {
+	/*if (!IsRenderingShadow)
+	{
+		SetUseVertexShader(vertexShaderHandle);
+		SetUsePixelShader(pixelShaderHandle);
+	}
+	else
+	{
+		SetUseVertexShader(shadowVSHandle);
+	}*/
 	SetupModelInfo(transform_);
 	MV1DrawModel(modelHandle);
 }
 
 void Renderer::Render(const Transform& transform_, Animator& animator_)
 {
+	int ch1 = 0, ch2 = 0;
+	if (!IsRenderingShadow)
+	{
+		ch1 = SetUseVertexShader(vertexShaderHandle);
+		ch2 = SetUsePixelShader(pixelShaderHandle);
+	}
+	else 
+	{
+		ch1 = SetUseVertexShader(shadowVSHandle);
+	}
 	SetupModelInfo(transform_, animator_);
 	MV1DrawModel(modelHandle);
 	animator_.DetachAnim(modelHandle);

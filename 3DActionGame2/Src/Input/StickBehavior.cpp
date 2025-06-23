@@ -19,9 +19,14 @@ void StickBehavior::CheckInput(InputManager::Map map_, short x_, short y_)
 
 	float border = 0.3f;
 
+	for (auto& subject : subjects)
+	{
+		subject.second.NotifyObservers(0.0f, 0.0f);
+	}
+
 	if (currentSqrDepth > border)
 	{
-		subject.NotifyObservers(x, y);
+		subjects[map_].NotifyObservers(x, y);
 	}
 
 	if (currentSqrDepth > border && pastSqrDepth <= border)

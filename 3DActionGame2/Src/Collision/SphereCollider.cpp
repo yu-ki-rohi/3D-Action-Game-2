@@ -56,8 +56,16 @@ void SphereCollider::UpdatePosition(const Vector3& new_position_)
 #ifdef DEBUG
 void SphereCollider::DebugDrow()
 {
+	unsigned int color;
+	if (IsEnabled())
+	{
+		color = GetColor(255, 255, 255);
+	}
+	else
+	{
+		color = GetColor(155, 155, 155);
+	}
 	int div_num = 32;
-	unsigned int white = GetColor(255, 255, 255);
-	DrawSphere3D(position.ToVECTOR(), radius, div_num, white, white, FALSE);
+	DrawSphere3D(position.ToVECTOR(), radius, div_num, color, color, FALSE);
 }
 #endif

@@ -15,17 +15,18 @@ public:
 		Stage,
 		Camera
 	};
-
 public:
-	bool IsActive() { return isActive; }
+	ObjectBase() : isActive(true) {}
+	~ObjectBase() = default;
 
 public:
 	// アクセサ
-	virtual Tag GetTag() = 0;
+	virtual Tag GetTag() const = 0;
+	bool IsActive() const { return isActive; }
 
 	// ChatGPTを使用して生成したコード
 	template<typename T>
-	std::shared_ptr<T> GetComponent()
+	std::shared_ptr<T> GetComponent() const
 	{
 		for (auto& comp : components)
 		{
@@ -38,9 +39,9 @@ public:
 	}
 
 	virtual void SetMonochrome(float rate_) = 0;
+	virtual void SetLocalTimeScale(float time_scale_) = 0;
 
-	// shared_from_this()を使って生成直後に渡すために用意
-	// 今のところObjectFactory内で呼んでいるため、Unityのそれとは挙動が違う部分があることに注意
+	// 生成直後にshared_from_this()を使って渡すために用意
 	virtual void Start() = 0;
 
 	virtual void FixedUpdate() = 0;
@@ -48,9 +49,14 @@ public:
 	virtual void Render() = 0;
 	virtual void RenderShadow() = 0;
 
-
+protected:
+	void AddComponent(std::shared_ptr<ComponentBase> component_)
+	{
+		components.push_back(component_);
+	}
 
 protected:
-	bool isActive = true;
+	bool isActive;
+	// 他者に渡すことがあるコンポーネントをここに格納
 	std::vector<std::shared_ptr<ComponentBase>> components;
 };

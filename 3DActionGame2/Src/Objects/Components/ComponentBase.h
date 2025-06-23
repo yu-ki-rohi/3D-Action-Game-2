@@ -5,13 +5,13 @@ class Collider;
 class ComponentBase
 {
 public:
-	// “–‚½‚è”»’èEŠî’ê‚Å‚Í‹óŠÖ”
-	virtual void OnTriggerEnter(const Collider* other_) {}
-	virtual void OnTriggerStay(const Collider* other_) {}
-	virtual void OnTriggerExit(const Collider* other_) {}
+	// “–‚½‚è”»’è
+	virtual void OnTriggerEnter(Collider* other_) {}
+	virtual void OnTriggerStay(Collider* other_){}
+	virtual void OnTriggerExit(Collider* other_){}
 
-	virtual void OnCollisionEnter(const Collider* other_) {}
-	virtual void OnCollisionStay(const Collider* other_) {}
-	virtual void OnCollisionExit(const Collider* other_) {}
+	virtual void OnCollisionEnter(Collider* other_){}
+	virtual void OnCollisionStay(Collider* other_){}
+	virtual void OnCollisionExit(Collider* other_){}
 
 };

@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "../Objects/Components/ComponentBase.h"
+#include "../Common.h"
 
 struct Vector3;
 struct Quartanion;
@@ -18,9 +19,9 @@ public:
 	};
 
 public:
-	Collider() = default;
-	Collider(float radius_) : 	radius(radius_) {}
-	Collider(float radius_, std::shared_ptr<ObjectBase> owner_) : 	radius(radius_), owner(owner_) {}
+	Collider() : radius(1.0f), isEnabled(true) {}
+	Collider(float radius_) : 	radius(radius_), isEnabled(true) {}
+	Collider(float radius_, std::shared_ptr<ObjectBase> owner_) : 	radius(radius_), isEnabled(true), owner(owner_) {}
 
 public:
 	// アクセサ
@@ -31,7 +32,13 @@ public:
 	virtual Type GetType() const = 0;
 
 	float GetRadius() const { return radius; }
+	bool IsEnabled() const { return isEnabled; }
 	std::shared_ptr<ObjectBase> GetOwner() const { return owner.lock(); }
+
+	void SetIsEnabled(bool is_enabled_)
+	{
+		isEnabled = is_enabled_;
+	}
 
 	void SetOwner(std::shared_ptr<ObjectBase> owner_)
 	{
@@ -51,58 +58,66 @@ public:
 	}
 
 	// 各種当たり時に呼び出す
-	void OnTriggerEnter(const Collider* other_) const
+	void OnTriggerEnter(Collider* other_)
 	{
-		for (auto obeserver : observers)
+		for (auto& obeserver : observers)
 		{
 			obeserver->OnTriggerEnter(other_);
 		}
 	}
-	void OnTriggerStay(const Collider* other_) const
+	void OnTriggerStay(Collider* other_)
 	{
-		for (auto obeserver : observers)
+		for (auto& obeserver : observers)
 		{
 			obeserver->OnTriggerStay(other_);
 		}
 	}
-	void OnTriggerExit(const Collider* other_) const
+	void OnTriggerExit(Collider* other_)
 	{
-		for (auto obeserver : observers)
+		for (auto& obeserver : observers)
 		{
 			obeserver->OnTriggerExit(other_);
 		}
 	}
 
-	void OnCollisionEnter(const Collider* other_) const
+	void OnCollisionEnter(Collider* other_)
 	{
-		for (auto obeserver : observers)
+		for (auto& obeserver : observers)
 		{
 			obeserver->OnCollisionEnter(other_);
 		}
 	}
-	void OnCollisionStay(const Collider* other_) const
+	void OnCollisionStay(Collider* other_)
 	{
-		for (auto obeserver : observers)
+		for (auto& obeserver : observers)
 		{
 			obeserver->OnCollisionStay(other_);
 		}
 	}
-	void OnCollisionExit(const Collider* other_) const
+	void OnCollisionExit(Collider* other_)
 	{
-		for (auto obeserver : observers)
+		for (auto& obeserver : observers)
 		{
 			obeserver->OnCollisionExit(other_);
 		}
 	}
 
 protected:
-	// コライダーの所有者
-	std::weak_ptr<ObjectBase> owner;
 
 	// 球以外の場合は、その当たり判定を包含する球の半径(Bounding Sphere)
-	float radius = 1.0f;
+	float radius;
 
+	bool isEnabled;
+
+	// コライダーの所有者
+	std::weak_ptr<ObjectBase> owner;
 private:
 	// 当たりを通知する相手
 	std::vector<std::shared_ptr<ComponentBase>> observers;
+
+
+#ifdef DEBUG
+public:
+	virtual void DebugDrow() = 0;
+#endif
 };

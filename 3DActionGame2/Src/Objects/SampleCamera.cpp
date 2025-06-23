@@ -8,7 +8,7 @@ SampleCamera::SampleCamera(Vector3 position_) :
 	transform(Transform(position_))
 {
 	so = std::make_shared<SimpleObserver>();
-	InputManager::Instance().AddObserver(InputManager::Stick::Right, so);
+	InputManager::Instance().AddObserver(InputManager::Stick::Right, InputManager::Map::Menu, so);
 }
 
 Vector3 SampleCamera::GetNearShadowAreaPos()

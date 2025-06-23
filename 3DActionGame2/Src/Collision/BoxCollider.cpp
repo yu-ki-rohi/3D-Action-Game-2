@@ -1,4 +1,5 @@
 #include "BoxCollider.h"
+#include "../Objects/ObjectBase.h"
 
 #define VERTEX_NUM 8
 
@@ -65,6 +66,11 @@ void BoxCollider::UpdatePosition(const Vector3& new_position_)
 	transform.Position = new_position_;
 }
 
+void BoxCollider::UpdateRadius()
+{
+	radius = (transform.Scale * 0.5f).Length();
+}
+
 #ifdef DEBUG
 void BoxCollider::DebugDrow()
 {
@@ -110,7 +116,16 @@ void BoxCollider::DebugDrow()
 		{ vertices[3], vertices[7] },
 	};
 
-	unsigned int color = GetColor(255, 255, 255);
+	unsigned int color;
+	if (IsEnabled())
+	{
+		color = GetColor(255, 255, 255);
+	}
+	else
+	{
+		color = GetColor(155, 155, 155);
+	}
+
 	for (const auto& pair : line_list)
 	{
 		DrawLine3D(pair.first.ToVECTOR(), pair.second.ToVECTOR(), color);

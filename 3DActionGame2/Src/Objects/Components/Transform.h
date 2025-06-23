@@ -13,7 +13,7 @@
 // TODO
 // ŠK‘w\‘¢‚ÌÀ‘•(—Dæ“x:’á)
 
-struct Transform : public ComponentBase
+class Transform : public ComponentBase
 {
 public:
 	Vector3 Position = Vector3::ZERO;

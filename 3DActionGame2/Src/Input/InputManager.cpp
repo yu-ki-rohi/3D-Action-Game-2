@@ -65,24 +65,24 @@ void InputManager::Clear()
 	}
 }
 
-void InputManager::AddObserver(Stick stick_, std::weak_ptr<ObserverBase> observer_)
+void InputManager::AddObserver(Stick stick_, Map map_, std::weak_ptr<ObserverBase> observer_)
 {
-	sticks[(int)stick_]->AddObserver(observer_);
+	sticks[(int)stick_]->AddObserver(map_, observer_);
 }
 
-void InputManager::AddObserver(Trigger trigger_, std::weak_ptr<ObserverBase> observer_)
+void InputManager::AddObserver(Trigger trigger_, Map map_, std::weak_ptr<ObserverBase> observer_)
 {
-	triggers[(int)trigger_]->AddObserver(observer_);
+	triggers[(int)trigger_]->AddObserver(map_, observer_);
 }
 
-void InputManager::RemoveObserver(Stick stick_, std::shared_ptr<ObserverBase> observer_)
+void InputManager::RemoveObserver(Stick stick_, Map map_, std::shared_ptr<ObserverBase> observer_)
 {
-	sticks[(int)stick_]->RemoveObserver(observer_);
+	sticks[(int)stick_]->RemoveObserver(map_, observer_);
 }
 
-void InputManager::RemoveObserver(Trigger trigger_, std::shared_ptr<ObserverBase> observer_)
+void InputManager::RemoveObserver(Trigger trigger_, Map map_, std::shared_ptr<ObserverBase> observer_)
 {
-	triggers[(int)trigger_]->RemoveObserver(observer_);
+	triggers[(int)trigger_]->RemoveObserver(map_, observer_);
 }
 
 void InputManager::CheckInput()

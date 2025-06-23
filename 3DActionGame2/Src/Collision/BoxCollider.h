@@ -23,13 +23,17 @@ public:
 
 	void UpdatePosition(const Vector3& new_position_) override;
 
-#ifdef DEBUG
-	void DebugDrow();
-#endif
+	void UpdateRadius();
 
 private:
 	// 親オブジェクトに対するTransform
 	Transform localTransform;
 	// World空間におけるTransform
 	Transform transform;
+
+#ifdef DEBUG
+public:
+	void DebugDrow() override;
+#endif
+
 };

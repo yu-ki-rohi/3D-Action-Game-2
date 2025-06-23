@@ -10,8 +10,8 @@ public:
 	ColliderRegisterInterface(std::shared_ptr<CollisionManager> collision_manager_);
 
 public:
-	void RegisterBody(std::shared_ptr<ObjectBase> owner_, const Collider* collider_);
-	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, const Collider* collider_);
+	void RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_);
+	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_);
 
 	void ReleaseBody(const Collider* collider_);
 	void ReleaseTrigger(const Collider* collider_);

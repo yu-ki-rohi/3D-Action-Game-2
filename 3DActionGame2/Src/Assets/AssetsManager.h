@@ -40,6 +40,7 @@ private:
 	void LoadModel();
 	void LoadAnimation();
 	void LoadShader();
+	void MakeTmpScreen();
 	void MakeShadowMap();
 
 private:

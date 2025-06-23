@@ -1,8 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-
-class ObjectBase;
+#include "ObjectBase.h"
 
 class ObjectManager
 {
@@ -11,10 +10,20 @@ public:
 	void Erase();
 	void EraseAll();
 
+	void Start();
+
 	void FixedUpdate();
 	void Update(float elapsed_time);
 	void Render();
 	void RenderShadow();
+
+public:
+	void SetMonochrome(float rate_);
+	void SetMonochrome(float rate_, ObjectBase::Tag type_);
+	void SetLocalTimeScale(float time_scale_);
+	void SetLocalTimeScale(float time_scale_, ObjectBase::Tag type_);
+
 private:
 	std::vector<std::shared_ptr<ObjectBase>> objects;
+	std::vector<std::shared_ptr<ObjectBase>> pendingStartObjects;
 };

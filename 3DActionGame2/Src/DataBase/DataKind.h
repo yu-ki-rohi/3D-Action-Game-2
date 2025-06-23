@@ -17,6 +17,7 @@ enum class AKind
 	WalkR,
 	WalkB,
 	Run,
+	Avoid,
 	Attack00,
 	Attack01,
 	Attack02,

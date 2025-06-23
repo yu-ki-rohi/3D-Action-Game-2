@@ -14,7 +14,7 @@ SampleCharacter::SampleCharacter(Vector3 position_, Vector3 scale_, int model_ha
 	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(135.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f,30.0f))
 {
 	so = std::make_shared<SimpleObserver>();
-	InputManager::Instance().AddObserver(InputManager::Stick::Left, so);
+	InputManager::Instance().AddObserver(InputManager::Stick::Left, InputManager::Map::Menu, so);
 	
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
@@ -80,12 +80,15 @@ void SampleCharacter::Update(float elapsed_time_)
 
 		float x, y;
 		so->GetFloatx2(x, y);
+		if (x != 0.0f && y != 0.0f)
+		{
+			float speed = 30.0f;
+			Vector3 move_vec = forward * y + right * x;
+			transform.Position += move_vec * elapsed_time_ * speed;
 
-		float speed = 30.0f;
-		Vector3 move_vec = forward * y + right * x;
-		transform.Position += move_vec * elapsed_time_ * speed;
+			transform.SetForward(-move_vec);
+		}
 
-		transform.SetForward(-move_vec);
 
 		renderer.SetupModelInfo(transform, animator);
 		MATRIX frame_matrix = MV1GetFrameLocalWorldMatrix(renderer.GetModelHandle(), 34);

@@ -1,7 +1,7 @@
 #pragma once
 #include "ComponentBase.h"
 
-struct Transform;
+class Transform;
 class Animator;
 
 // –¼‘O‚ÌŠ„‚è‚É”Ä—p«‚ª’á‚»‚¤
@@ -29,6 +29,9 @@ public:
 
 	void SetupModelInfo(const Transform& transform_);
 	void SetupModelInfo(const Transform& transform_, Animator& animator_);
+
+public:
+	bool IsRenderingShadow;
 
 private:
 	const int modelHandle;

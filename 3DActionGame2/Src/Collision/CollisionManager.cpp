@@ -4,12 +4,12 @@
 #include "../Mathmatics/Vector3.h"
 #include "../Mathmatics/Quartanion.h"
 
-void CollisionManager::RegisterBody(std::shared_ptr<ObjectBase> owner_, const Collider* collider_)
+void CollisionManager::RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
 {
 	bodies.push_back(std::make_pair(owner_, collider_));
 }
 
-void CollisionManager::RegisterTrigger(std::shared_ptr<ObjectBase> owner_, const Collider* collider_)
+void CollisionManager::RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
 {
 	triggers.push_back(std::make_pair(owner_, collider_));
 }
@@ -94,8 +94,9 @@ bool CollisionManager::IsCollidingSphereAndSphere(const Collider* collider_01_, 
 	if (collider_01_ == nullptr || collider_02_ == nullptr) { return false; }
 
 	float radius_sum = collider_01_->GetRadius() + collider_02_->GetRadius();
+	float distance = (collider_01_->GetPosition() - collider_02_->GetPosition()).Length();
 
-	if ((collider_01_->GetPosition() - collider_01_->GetPosition()).sqrLength() < radius_sum * radius_sum)
+	if (distance < radius_sum)
 	{
 		return true;
 	}
@@ -104,7 +105,7 @@ bool CollisionManager::IsCollidingSphereAndSphere(const Collider* collider_01_, 
 
 bool CollisionManager::IsCollidingBoxAndSphere(const Collider* box_collider_, const Collider* sphere_collider_)
 {
-	// 先に SphereAndSphere の方を通っているので、ここでは判定不要だが念のため
+	// 先に SphereAndSphere の方を通っているので、ここでは判定不要だろうが念のため
 	if (box_collider_ == nullptr || sphere_collider_ == nullptr) { return false; }
 
 	// Boxから見た、Sphereの中心の座標を取得
@@ -157,14 +158,14 @@ bool CollisionManager::IsCollidingBoxAndBox(const Collider* collider_01_, const 
 	auto get_vertices = [&vertices_list](const Collider* collider_, int index)
 	{
 		if (index < 0 || index > 2) { return; }
-		vertices_list[index][0] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 手前右上
-		vertices_list[index][1] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 手前右下
-		vertices_list[index][2] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 手前左下
-		vertices_list[index][3] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 手前左上
-		vertices_list[index][4] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 奥右上
-		vertices_list[index][5] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 奥右下
-		vertices_list[index][6] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 奥左下
-		vertices_list[index][7] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f;	// 奥左上	
+		vertices_list[index][0] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左上
+		vertices_list[index][1] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前右上
+		vertices_list[index][2] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前右下
+		vertices_list[index][3] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左下
+		vertices_list[index][4] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 左上	
+		vertices_list[index][5] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 右上
+		vertices_list[index][6] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 右下
+		vertices_list[index][7] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 左下
 	};
 
 	get_vertices(collider_01_, 0);
@@ -289,7 +290,15 @@ bool CollisionManager::WasCollided(const Collider* collider_01_, const Collider*
 			{
 				itr = preCollided.erase(itr);
 			}
+			else
+			{
+				itr++;
+			}
 			return true;
+		}
+		else
+		{
+			itr++;
 		}
 	}
 	return false;
@@ -344,30 +353,35 @@ void CollisionManager::EraseColliderPair(const Collider* collider_)
 
 void CollisionManager::CheckBodyAndBody()
 {
+	const int body_size = bodies.size();
 	// 同じ相手との重複チェックは不要
 	// 最後尾は確認不要なので bodies.size() - 1
-	for (int body_index = 0; body_index < bodies.size() - 1; body_index++)
+	for (int body_index = 0; body_index < body_size - 1; body_index++)
 	{
 		// 重複チェックを防ぐため、先頭位置は body_index + 1
-		for (int other_index = body_index + 1; other_index < bodies.size(); other_index++)
+		for (int other_index = body_index + 1; other_index < body_size; other_index++)
 		{
+			// いずれかのColliderが有効でない場合はスキップ
+			if (!bodies[body_index].second->IsEnabled() ||
+				!bodies[other_index].second->IsEnabled()){ continue; }
+
 			// ヒット確認
 			if (IsColliding(bodies[body_index].second, bodies[other_index].second))
 			{
 				// ヒット時
 				// 前フレームで当たっていたかを確認
-				if (WasCollided(bodies[body_index].second, bodies[other_index].second))
-				{
-					// 当たり継続
-					bodies[body_index].second->OnCollisionStay(bodies[other_index].second);
-					bodies[other_index].second->OnCollisionStay(bodies[body_index].second);
-				}
-				else
+				if (!WasCollided(bodies[body_index].second, bodies[other_index].second))
 				{
 					// 当たった瞬間
 					bodies[body_index].second->OnCollisionEnter(bodies[other_index].second);
 					bodies[other_index].second->OnCollisionEnter(bodies[body_index].second);
 					preCollided.push_back(std::make_pair(bodies[body_index].second, bodies[other_index].second));
+				}
+				else
+				{
+					// 当たり継続
+					bodies[body_index].second->OnCollisionStay(bodies[other_index].second);
+					bodies[other_index].second->OnCollisionStay(bodies[body_index].second);
 				}
 			}
 			else
@@ -391,20 +405,26 @@ void CollisionManager::CheckBodyAndTrigger()
 	{
 		for (auto trigger : triggers)
 		{
+			// いずれかのColliderが有効でない場合はスキップ
+			if (!body.second->IsEnabled() ||
+				!trigger.second->IsEnabled()) {
+				continue;
+			}
+
 			if (IsColliding(body.second, trigger.second))
 			{
 				// ヒット時
 				// 前フレームで当たっていたかを確認
-				if (WasCollided(body.second, trigger.second))
+				if (!WasCollided(body.second, trigger.second))
 				{
-					// 当たり継続
-					trigger.second->OnTriggerStay(body.second);
+					// 当たった瞬間
+					trigger.second->OnTriggerEnter(body.second);
+					preCollided.push_back(std::make_pair(body.second, trigger.second));
 				}
 				else
 				{
-					// 当たった瞬間
-					trigger.second->OnCollisionEnter(body.second);
-					preCollided.push_back(std::make_pair(body.second, trigger.second));
+					// 当たり継続
+					trigger.second->OnTriggerStay(body.second);
 				}
 			}
 			else
