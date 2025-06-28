@@ -54,7 +54,8 @@ public:
 
 	void SetNextAnim(AKind anim_kind_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
 
-	void SetAnimSpeed(float anim_speed_);
+	void SetAnimTimerAdjuster(float value_);
+
 
 public:
 
@@ -87,12 +88,17 @@ private:
 	float currentAnimTimer = 0.0f;
 	float nextAnimTimer = 0.0f;
 
+	// アニメーションの再生時間をずらす際に使用
+	// 当たり判定の付け方を少し先の再生時間にする、などの用途
+	float animTimerAdjuster = 0.0f;
+
 	// 現在アニメーションのトータル時間
 	float animTime = 0.0f;
 
 	// 一旦固定値
 	// TODO アニメーションごとに設定できるようにする
-	float animSpeed = 30.0f;
+	float currentAnimSpeed = 30.0f;
+	float nextAnimSpeed = 30.0f;
 
 	// アニメーション遷移を始める時間
 	float startChangingTime = 0.0f;

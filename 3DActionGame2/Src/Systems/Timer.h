@@ -25,7 +25,7 @@ public:
 		// ストップ中や生存フラグが切られているときは更新しない
 		if (IsStop || !isActive) return;
 		elapsedTime += elapsedTime_;
-		if (elapsedTime > TIME)
+		if (elapsedTime > time)
 		{
 			memberFunctionPointerContainer.CallFunction();
 			isActive = false;

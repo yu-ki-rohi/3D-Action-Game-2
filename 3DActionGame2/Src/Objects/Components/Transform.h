@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Mathmatics/Vector3.h"
-#include "../../Mathmatics/Quartanion.h"
+#include "../../Mathmatics/Quaternion.h"
 #include "../../Common.h"
 #include <memory>
 #include <vector>
@@ -34,7 +34,7 @@ public:
 	MATRIX GetRotateMat() const;
 	MATRIX GetScaleMat() const;
 
-	const Quartanion& GetQuartanion() const;
+	const Quaternion& GetQuaternion() const;
 
 public:
 	// ワールド空間における上方向を上向きとして回転
@@ -42,6 +42,9 @@ public:
 
 	// オイラー角で回転を設定
 	void SetRotate(const Vector3& rotate_);
+
+	// 直接代入する必要があるとき
+	void SetQuaternion(const Quaternion& quaternion_);
 
 	// transform行列を用いて位置、回転、拡縮を設定
 	void UpdateFromMatrix(const MATRIX& transform_mat_);
@@ -76,7 +79,7 @@ private:
 	Vector3 rotateAngle = Vector3::ZERO;
 
 	// こちらが回転情報の本体
-	Quartanion quartanion = Quartanion::IDENTITY;
+	Quaternion quaternion = Quaternion::IDENTITY;
 
 	// いずれ階層構造を実装するとき用
 	//std::vector<std::shared_ptr<Transform>> children;

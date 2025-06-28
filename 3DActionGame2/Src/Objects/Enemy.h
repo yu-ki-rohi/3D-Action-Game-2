@@ -2,6 +2,8 @@
 #include "CharacterBase.h"
 #include "../Collision/BoxCollider.h"
 
+class JustAvoidIgnition;
+
 class Enemy : public CharacterBase
 {
 public:
@@ -22,5 +24,7 @@ protected:
 private:
 	BoxCollider attackCollider;
 	BoxCollider bodyCollider;
+	BoxCollider justAvoidIgnitionCollider;
 
+	std::shared_ptr<JustAvoidIgnition> justAvoidIgnition;
 };

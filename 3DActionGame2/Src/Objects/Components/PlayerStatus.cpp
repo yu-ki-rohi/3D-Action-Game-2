@@ -2,29 +2,31 @@
 #include "../../Collision/Collider.h"
 #include "../ObjectBase.h"
 #include "../../Scenes/PlayerEventNotifier.h"
+#include "../ObjectFactory.h"
+#include "../../Mathmatics/Vector3.h"
 
-PlayerStatus::PlayerStatus(std::shared_ptr<PlayerEventNotifier> notifier_) :
-	notifier(notifier_)
+PlayerStatus::PlayerStatus(std::shared_ptr<PlayerEventNotifier> notifier_, std::shared_ptr<ObjectFactory> object_factory_) :
+	notifier(notifier_),
+	objectFactory(object_factory_)
 {
 
 }
 
-void PlayerStatus::Damage(int attack_)
+int  PlayerStatus::Damage(int attack_)
 {
 	if (isInvincible)
 	{
 		auto event_notifier = notifier.lock();
-		if (!event_notifier) { return; }
+		if (!event_notifier) { return 0; }
 		event_notifier->SuccessJustAvoid();
-		return;
+		return 0;
 	}
-	CharacterStatus::Damage(attack_);
+	return CharacterStatus::Damage(attack_);
 }
 
 
 void PlayerStatus::OnTriggerEnter(Collider* other_)
 {
-	// ownerの取得をに2度やっているのは少し気になるので、後で修正したい
 	auto owner = other_->GetOwner();
 	if (!owner) { return; }
 
@@ -32,6 +34,17 @@ void PlayerStatus::OnTriggerEnter(Collider* other_)
 
 	if (other_tag == ObjectBase::Tag::Enemy)
 	{
-		CharacterStatus::OnTriggerEnter(other_);
+		auto other_status = owner->GetComponent<CharacterStatus>();
+		if (!other_status) { return; }
+
+		// 実行に関してのみなので、一旦引数は適当に
+		int damage = other_status->Damage(1);
+		if (damage > 0)
+		{
+			auto object_factory = objectFactory.lock();
+			if (!object_factory) { return; }
+			// 引数は一旦適当に
+			object_factory->CreateSlashEffect(other_->GetHitPosition(), 30.0f, 0.0f);
+		}
 	}
 }

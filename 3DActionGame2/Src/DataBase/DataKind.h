@@ -45,3 +45,9 @@ enum class PSKind
 	ShadowMap,
 	PostEffect
 };
+
+// Effect ‚ÌŽí—Þ
+enum class EKind
+{
+	HitSlash
+};

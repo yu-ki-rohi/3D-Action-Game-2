@@ -12,20 +12,17 @@ public:
 	Vector3 GetPosition() const override;
 	Vector3 GetScale() const  override;
 	Vector3 GetRotate() const override;
-	Quartanion GetQuartanion() const override;
-
-	// ※中心から角(最も遠い位置)までの距離を半径として扱う
-	//float GetRadius() const;
+	Quaternion GetQuaternion() const override;
 
 	Type GetType() const override;
 
-	void UpdateFromParentMat(const MATRIX& parent_mat_) override;
+	virtual void UpdateFromParentMat(const MATRIX& parent_mat_) override;
 
 	void UpdatePosition(const Vector3& new_position_) override;
 
-	void UpdateRadius();
+	virtual void UpdateRadius();
 
-private:
+protected:
 	// 親オブジェクトに対するTransform
 	Transform localTransform;
 	// World空間におけるTransform

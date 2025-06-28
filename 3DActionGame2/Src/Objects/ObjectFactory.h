@@ -18,10 +18,13 @@ class CameraBase;
 class Player;
 class Enemy;
 
-class ObjectFactory
+class ObjectFactory : public std::enable_shared_from_this<ObjectFactory>
 {
 public:
 	ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_, std::shared_ptr<ColliderRegisterInterface> collider_register_interface_);
+
+public:
+	void SetIsJustAvoidTime(bool is_just_avoid_time_);
 
 public:
 	std::shared_ptr<ObjectBase> Create();
@@ -35,8 +38,13 @@ public:
 	std::shared_ptr<Enemy> CreateEnemy();
 	std::shared_ptr<ObjectBase> CreateStage();
 
+	std::shared_ptr<ObjectBase> CreateSlashEffect(Vector3 position_, float size_, float rotation_);
+
 private:
 	std::weak_ptr<ObjectManager> objectManager;
 	std::weak_ptr<AssetsManager> assetsManager;
 	std::weak_ptr<ColliderRegisterInterface> colliderRegisterInterface;
+
+private:
+	bool isJustAvoidTime;
 };

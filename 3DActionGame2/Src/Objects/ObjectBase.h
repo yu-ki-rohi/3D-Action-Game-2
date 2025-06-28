@@ -10,10 +10,11 @@ class ObjectBase : public std::enable_shared_from_this<ObjectBase>
 public:
 	enum class Tag
 	{
-		Player,
-		Enemy,
-		Stage,
-		Camera
+		Player = 1 << 0,
+		Enemy = 1 << 1,
+		Stage = 1 << 2,
+		Camera = 1 << 3,
+		Effect = 1 << 4
 	};
 public:
 	ObjectBase() : isActive(true) {}

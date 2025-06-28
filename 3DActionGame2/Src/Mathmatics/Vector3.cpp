@@ -1,6 +1,6 @@
 #include "Vector3.h"
 #include <math.h>
-#include "Quartanion.h"
+#include "Quaternion.h"
 
 const Vector3 Vector3::FORWARD = Vector3(0, 0, -1);
 
@@ -39,9 +39,9 @@ Vector3 Vector3::BasisTransformation(const Vector3& vector_, Vector3 axis_01_, V
 	float m[COMPONENTS_NUM][COMPONENTS_NUM];	//äÓíÍïœä∑çsóÒ
 	for (int i = 0; i < COMPONENTS_NUM; i++)
 	{
-		m[0][i] = axes[i]->x;
-		m[1][i] = axes[i]->y;
-		m[2][i] = axes[i]->z;
+		m[i][0] = axes[i]->x;
+		m[i][1] = axes[i]->y;
+		m[i][2] = axes[i]->z;
 	}
 
 	// ãtçsóÒÇÃåvéZ
@@ -119,9 +119,9 @@ Vector3 Vector3::BasisTransformation(const Vector3& vector_, Vector3 axis_01_, V
 }
 
 
-Vector3 Vector3::BasisTransformation(const Vector3& vector_, const Quartanion& quartanion_, Vector3 origin_)
+Vector3 Vector3::BasisTransformation(const Vector3& vector_, const Quaternion& quaternion_, Vector3 origin_)
 {
-	return BasisTransformation(vector_, quartanion_.GetForward(), quartanion_.GetUp(), quartanion_.GetRight(), origin_);
+	return BasisTransformation(vector_, quaternion_.GetForward(), quaternion_.GetUp(), quaternion_.GetRight(), origin_);
 }
 
 Vector3 Vector3::ConvertFromVECTOR(const VECTOR& vector_)

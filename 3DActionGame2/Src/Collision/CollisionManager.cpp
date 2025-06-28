@@ -2,7 +2,7 @@
 #include "Collider.h"
 #include "ColliderRegisterInterface.h"
 #include "../Mathmatics/Vector3.h"
-#include "../Mathmatics/Quartanion.h"
+#include "../Mathmatics/Quaternion.h"
 
 void CollisionManager::RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
 {
@@ -109,7 +109,7 @@ bool CollisionManager::IsCollidingBoxAndSphere(const Collider* box_collider_, co
 	if (box_collider_ == nullptr || sphere_collider_ == nullptr) { return false; }
 
 	// Boxから見た、Sphereの中心の座標を取得
-	Vector3 relative_position = Vector3::BasisTransformation(sphere_collider_->GetPosition(), box_collider_->GetQuartanion(), box_collider_->GetPosition());
+	Vector3 relative_position = Vector3::BasisTransformation(sphere_collider_->GetPosition(), box_collider_->GetQuaternion(), box_collider_->GetPosition());
 
 	// rp : relative position の頭文字
 	float rp_components[Vector3::COMPONENTS_NUM];
@@ -158,14 +158,14 @@ bool CollisionManager::IsCollidingBoxAndBox(const Collider* collider_01_, const 
 	auto get_vertices = [&vertices_list](const Collider* collider_, int index)
 	{
 		if (index < 0 || index > 2) { return; }
-		vertices_list[index][0] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左上
-		vertices_list[index][1] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前右上
-		vertices_list[index][2] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前右下
-		vertices_list[index][3] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y + collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左下
-		vertices_list[index][4] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 左上	
-		vertices_list[index][5] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x + collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 右上
-		vertices_list[index][6] = (collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 右下
-		vertices_list[index][7] = (-collider_->GetQuartanion().GetRight() * collider_->GetScale().x - collider_->GetQuartanion().GetUp() * collider_->GetScale().y - collider_->GetQuartanion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 左下
+		vertices_list[index][0] = (-collider_->GetQuaternion().GetRight() * collider_->GetScale().x + collider_->GetQuaternion().GetUp() * collider_->GetScale().y + collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左上
+		vertices_list[index][1] = (collider_->GetQuaternion().GetRight() * collider_->GetScale().x + collider_->GetQuaternion().GetUp() * collider_->GetScale().y + collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前右上
+		vertices_list[index][2] = (collider_->GetQuaternion().GetRight() * collider_->GetScale().x - collider_->GetQuaternion().GetUp() * collider_->GetScale().y + collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前右下
+		vertices_list[index][3] = (-collider_->GetQuaternion().GetRight() * collider_->GetScale().x - collider_->GetQuaternion().GetUp() * collider_->GetScale().y + collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左下
+		vertices_list[index][4] = (-collider_->GetQuaternion().GetRight() * collider_->GetScale().x + collider_->GetQuaternion().GetUp() * collider_->GetScale().y - collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 左上	
+		vertices_list[index][5] = (collider_->GetQuaternion().GetRight() * collider_->GetScale().x + collider_->GetQuaternion().GetUp() * collider_->GetScale().y - collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 右上
+		vertices_list[index][6] = (collider_->GetQuaternion().GetRight() * collider_->GetScale().x - collider_->GetQuaternion().GetUp() * collider_->GetScale().y - collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 右下
+		vertices_list[index][7] = (-collider_->GetQuaternion().GetRight() * collider_->GetScale().x - collider_->GetQuaternion().GetUp() * collider_->GetScale().y - collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	//  奥 左下
 	};
 
 	get_vertices(collider_01_, 0);
@@ -174,7 +174,7 @@ bool CollisionManager::IsCollidingBoxAndBox(const Collider* collider_01_, const 
 
 
 
-	Quartanion axes[2] = { collider_01_->GetQuartanion(), collider_02_->GetQuartanion() };
+	Quaternion axes[2] = { collider_01_->GetQuaternion(), collider_02_->GetQuaternion() };
 
 	// OBBのローカル軸でSATを行う
 	if (CheckOBBLoacalAxisSAT(axes, vertices_list) == true)
@@ -239,7 +239,7 @@ bool CollisionManager::IsFindOBBSparationAxis(const Vector3& axis_, Vector3 vert
 }
 
 // OBBのローカル軸でSATを行う
-bool CollisionManager::CheckOBBLoacalAxisSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8])
+bool CollisionManager::CheckOBBLoacalAxisSAT(Quaternion axes_list_[2], Vector3 vertices_list_[2][8])
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -258,7 +258,7 @@ bool CollisionManager::CheckOBBLoacalAxisSAT(Quartanion axes_list_[2], Vector3 v
 }
 
 // OBBのローカル軸同士で外積を行い、そのベクトルでSATを行う
-bool CollisionManager::CheckOBBCrossVecSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8])
+bool CollisionManager::CheckOBBCrossVecSAT(Quaternion axes_list_[2], Vector3 vertices_list_[2][8])
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -369,6 +369,8 @@ void CollisionManager::CheckBodyAndBody()
 			if (IsColliding(bodies[body_index].second, bodies[other_index].second))
 			{
 				// ヒット時
+				SetHitPosition(bodies[body_index].second, bodies[other_index].second);
+
 				// 前フレームで当たっていたかを確認
 				if (!WasCollided(bodies[body_index].second, bodies[other_index].second))
 				{
@@ -414,6 +416,8 @@ void CollisionManager::CheckBodyAndTrigger()
 			if (IsColliding(body.second, trigger.second))
 			{
 				// ヒット時
+				SetHitPosition(body.second, trigger.second);
+				
 				// 前フレームで当たっていたかを確認
 				if (!WasCollided(body.second, trigger.second))
 				{
@@ -439,4 +443,25 @@ void CollisionManager::CheckBodyAndTrigger()
 			}
 		}
 	}
+}
+
+void CollisionManager::SetHitPosition(Collider* collider_01_, Collider* collider_02_)
+{
+	// とりあえず一旦簡易的な実装
+	Vector3 hit_position = Vector3::ZERO;
+	float radius_01, radius_02;
+	radius_01 = collider_01_->GetRadius();
+	radius_02 = collider_02_->GetRadius();
+
+	if(radius_01 + radius_02 == 0)
+	{
+		hit_position = collider_01_->GetPosition();
+	}
+	else
+	{
+		float ratio_01 = radius_01 / (radius_01 + radius_02);
+		hit_position = collider_01_->GetPosition() * (1.0f - ratio_01) + collider_02_->GetPosition() * ratio_01;
+	}
+	collider_01_->SetHitPosition(hit_position);
+	collider_02_->SetHitPosition(hit_position);
 }

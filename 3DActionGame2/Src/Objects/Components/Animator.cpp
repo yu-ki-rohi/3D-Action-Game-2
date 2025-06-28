@@ -66,14 +66,15 @@ void Animator::SetNextAnim(AKind anim_kind_, float start_changing_time_, float c
 	if (changing_time_ < minChangingTime) { changing_time_ = minChangingTime; }
 
 	nextAnimHandle = animResource->Handles[anim_kind_];
+	nextAnimSpeed = animResource->AnimSpeed[anim_kind_];
 	startChangingTime = start_changing_time_;
 	changingTime = changing_time_;
 	nextIsLoop = is_loop_;
 }
 
-void Animator::SetAnimSpeed(float anim_speed_)
+void Animator::SetAnimTimerAdjuster(float value_)
 {
-	animSpeed = anim_speed_;
+	animTimerAdjuster = value_;
 }
 
 void Animator::SetupRenderAnim(int model_handle_)
@@ -82,7 +83,7 @@ void Animator::SetupRenderAnim(int model_handle_)
 
 	// アニメーションのアタッチ
 	currentAttachIndex = MV1AttachAnim(model_handle_, anim_index, currentAnimHandle);
-	MV1SetAttachAnimTime(model_handle_, currentAttachIndex, currentAnimTimer);
+	MV1SetAttachAnimTime(model_handle_, currentAttachIndex, currentAnimTimer + animTimerAdjuster);
 	
 	// アニメーション遷移しない場合はここで終了
 	if (currentAnimTimer < startChangingTime ||
@@ -94,7 +95,7 @@ void Animator::SetupRenderAnim(int model_handle_)
 
 	// 遷移先アニメーションのアタッチ
 	nextAttachIndex = MV1AttachAnim(model_handle_, anim_index, nextAnimHandle);
-	MV1SetAttachAnimTime(model_handle_, nextAttachIndex, nextAnimTimer);
+	MV1SetAttachAnimTime(model_handle_, nextAttachIndex, nextAnimTimer + animTimerAdjuster);
 
 	float nextRate = nextAnimTimer / changingTime;
 
@@ -117,10 +118,10 @@ void Animator::Update(float elapsed_time_)
 {
 	// アニメーション遷移が始まった瞬間かどうかを判定
 	float evaluation = currentAnimTimer - startChangingTime;
-	evaluation *= evaluation + elapsed_time_ * animSpeed;
+	evaluation *= evaluation + elapsed_time_ * currentAnimSpeed;
 	isStartChangeAnimNow = evaluation > 0 ? false : true;
 
-	currentAnimTimer += elapsed_time_ * animSpeed;
+	currentAnimTimer += elapsed_time_ * currentAnimSpeed;
 
 	// アニメーションループ処理
 	if (currentAnimTimer >= animTime &&
@@ -134,11 +135,12 @@ void Animator::Update(float elapsed_time_)
 	if (currentAnimTimer < startChangingTime ||
 		nextAnimHandle == -1) return;
 
-	nextAnimTimer += elapsed_time_ * animSpeed;
+	nextAnimTimer += elapsed_time_ * nextAnimSpeed;
 
 	if (nextAnimTimer / changingTime < 1.0f) return;
 	currentAnimHandle = nextAnimHandle;
 	currentAnimTimer = nextAnimTimer;
+	currentAnimSpeed = nextAnimSpeed;
 
 	int anim_index = 0;
 	animTime = MV1GetAnimTotalTime(currentAnimHandle, anim_index);

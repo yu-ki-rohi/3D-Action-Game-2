@@ -5,4 +5,5 @@
 struct AnimationResource
 {
 	std::unordered_map<AKind, int> Handles;
+	std::unordered_map<AKind, float> AnimSpeed;
 };

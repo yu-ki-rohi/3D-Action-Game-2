@@ -15,8 +15,9 @@
 
 PlayerSaber::PlayerSaber(std::shared_ptr<CameraManager> camera_manager_) :
 	Player(camera_manager_),
-	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(135.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f, 30.0f)),
-	bodyCollider(Vector3(0.0f, -5.0f, -15.0f), Vector3(45.0f, 150.0f, 45.0f), Vector3(0.0f, 0.0f, 0.0f))
+	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(145.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f, 30.0f)),
+	bodyCollider(Vector3(0.0f, -5.0f, -15.0f), Vector3(45.0f, 150.0f, 45.0f), Vector3(0.0f, 0.0f, 0.0f)),
+	attackStep(0)
 {
 
 }
@@ -26,11 +27,11 @@ void PlayerSaber::Start()
 	CharacterBase::Start();
 
 	if (!IsActive()) { return; }
-	attackCollider.SetIsEnabled(false);
+	//attackCollider.SetIsEnabled(false);
 	attackCollider.SetOwner(shared_from_this());
 	bodyCollider.SetOwner(shared_from_this());
 
-	bodyCollider.AddObserver(characterStatus);
+	attackCollider.AddObserver(characterStatus);
 
 	UpdateCollider();
 
@@ -47,31 +48,14 @@ void PlayerSaber::Start()
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Player,
 		XINPUT_BUTTON_A,
-		InputManager::State::Press,
+		InputManager::State::Hold,
 		std::make_shared<MemberFunctionPointerContainer<PlayerSaber>>(this, &PlayerSaber::IgnitAttackAnimation));
 
-	InputManager::Instance().RegisterBehave(
-		InputManager::Map::Player,
-		XINPUT_BUTTON_B,
-		InputManager::State::Press,
-		std::make_shared<MemberFunctionPointerContainer<PlayerSaber>>(this, &PlayerSaber::IgnitRollAnimation));
-
-	InputManager::Instance().RegisterBehave(
-		InputManager::Map::Player,
-		InputManager::Stick::Left,
-		InputManager::State::Press,
-		std::make_shared<MemberFunctionPointerContainer<PlayerSaber>>(this, &PlayerSaber::IgnitWalkAnimation));
-
-	InputManager::Instance().RegisterBehave(
-		InputManager::Map::Player,
-		InputManager::Stick::Left,
-		InputManager::State::Release,
-		std::make_shared<MemberFunctionPointerContainer<PlayerSaber>>(this, &PlayerSaber::IgnitIdleAnimation));
 }
 
 void PlayerSaber::FixedUpdate()
 {
-
+	CharacterBase::FixedUpdate();
 }
 
 void PlayerSaber::Render()
@@ -105,42 +89,43 @@ void PlayerSaber::UpdateCollider()
 	animator->DetachAnim(renderer->GetModelHandle());
 }
 
-void PlayerSaber::IgnitIdleAnimation()
-{
-	if (!canMove) { return; }
-	if (!animator) { return; }
-	animator->SetNextAnim(AKind::Idle, 0.0f, 4.6f, true);
-}
-
-void PlayerSaber::IgnitWalkAnimation()
-{
-	if (!canMove) { return; }
-	if (!animator) { return; }
-	animator->SetNextAnim(AKind::WalkF, 0.0f, 4.6f, true);
-}
-
 void PlayerSaber::IgnitAttackAnimation()
 {
+	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
-	animator->SetNextAnim(AKind::Attack00, 0.0f, 4.6f);
+	float motion_time = 0.7f;
+	switch (attackStep)
+	{
+	case 0:
+		animator->SetNextAnim(AKind::Attack00, 0.0f, 4.6f);
+		break;
+	case 1:
+		animator->SetNextAnim(AKind::Attack01, 0.0f, 4.6f);
+		motion_time = 0.8f;
+		break;
+	case 2:
+		animator->SetNextAnim(AKind::Attack02, 0.0f, 4.6f);
+		motion_time = 0.8f;
+		break;
+	case 3:
+		animator->SetNextAnim(AKind::Attack03, 0.0f, 4.6f);
+		motion_time = 1.1f;
+		attackStep = -1;
+		break;
+	default:
+		animator->SetNextAnim(AKind::Attack00, 0.0f, 4.6f);
+		break;
+	}
+	attackStep++;
 	canMove = false;
-	TimerFactory::CreateTimer(1.0f, this, &PlayerSaber::FinishAttack);
+	TimerFactory::CreateTimer(motion_time, this, &PlayerSaber::FinishAttack);
+	TimerFactory::CreateTimer(motion_time + 0.2f, this, &PlayerSaber::ResetAttackStep);
 }
 
-void PlayerSaber::IgnitRollAnimation()
-{
-	if (!canMove) { return; }
-	if (!animator) { return; }
-	animator->SetNextAnim(AKind::Avoid, 0.0f, 4.6f);
-	characterStatus->SetIsInvincible(true);
-	//canMove = false;
-	TimerFactory::CreateTimer(1.0f, this, &PlayerSaber::FinishAttack);
-}
 
 void PlayerSaber::FinishAttack()
 {
 	canMove = true;
-	characterStatus->SetIsInvincible(false);
 	float x, y;
 	so->GetFloatx2(x, y);
 	if (x != 0.0f && y != 0.0f)
@@ -149,6 +134,13 @@ void PlayerSaber::FinishAttack()
 	}
 	else
 	{
-		animator->SetNextAnim(AKind::Idle, Animator::Immediately, 4.6f, true);
+		float changing_time_parcentage = 0.95f;
+		animator->SetNextAnim(AKind::Idle, animator->GetAnimationTimeByNormalizedValue(changing_time_parcentage), animator->GetAnimationTimeByNormalizedValue(1.0f - changing_time_parcentage), true);
 	}
+}
+
+void PlayerSaber::ResetAttackStep()
+{
+	if (!canMove) { return; }
+	attackStep = 0;
 }

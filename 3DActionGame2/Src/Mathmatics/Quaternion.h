@@ -4,7 +4,7 @@
 
 struct Vector3;
 
-struct Quartanion
+struct Quaternion
 {
 public:
 	float x;
@@ -14,23 +14,25 @@ public:
 
 public:
 	// 単位元 (つまりクォータニオンにおいて、実数における1に相当するもの)
-	static const Quartanion IDENTITY;
+	static const Quaternion IDENTITY;
 
 public:
 	// 任意軸で回転させるクォータニオンを返す
 	// 角度の単位は度数
-	static Quartanion GetRotateQuartanion(float degree_, Vector3 axis_);
+	static Quaternion GetRotateQuaternion(float degree_, Vector3 axis_);
+
+	static Quaternion Slearp(const Quaternion& q_00_, Quaternion q_01_, float t_);
 
 	// オイラー角からクォータニオンへの変換
 	// 回転順はXYZ
-	static Quartanion ConvertFromEular(const Vector3& eular_);
+	static Quaternion ConvertFromEular(const Vector3& eular_);
 
 	// 回転行列からクォータニオンへの変換
 	// 回転行列は列ベクトルを3つ並べたものとして扱う
-	static Quartanion ConvertFrom3x3Matrix(const Vector3& col_00_, const Vector3& col_01_, const Vector3& col_02_);
+	static Quaternion ConvertFrom3x3Matrix(const Vector3& col_00_, const Vector3& col_01_, const Vector3& col_02_);
 
 public:
-	Quartanion(float x_, float y_, float z_, float w_);
+	Quaternion(float x_, float y_, float z_, float w_);
 
 public:
 	// クォータニオンから回転行列の一部へ変換
@@ -44,6 +46,6 @@ public:
 	Vector3 ToEuler() const;
 
 public:
-	Quartanion operator*(const Quartanion& other);
-	Quartanion& operator*=(const Quartanion& other);
+	Quaternion operator*(const Quaternion& other);
+	Quaternion& operator*=(const Quaternion& other);
 };

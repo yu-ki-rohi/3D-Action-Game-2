@@ -12,7 +12,7 @@ public:
 	Vector3 GetPosition() const override;
 	Vector3 GetScale() const override;			// 全ての成分が半径であるベクトルを返す
 	Vector3 GetRotate() const override;			// 全ての成分が0であるベクトルを返す
-	Quartanion GetQuartanion() const override;	// 単位元を返す
+	Quaternion GetQuaternion() const override;	// 単位元を返す
 
 	Type GetType() const override;
 

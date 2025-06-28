@@ -17,17 +17,17 @@ protected:
 	void UpdateCollider() override;
 
 private:
-	void IgnitIdleAnimation();
-	void IgnitWalkAnimation();
 	void IgnitAttackAnimation();
-	void IgnitRollAnimation();
 
 private:
 	void FinishAttack();
+	void ResetAttackStep();
 
 private:
-	BoxCollider attackCollider;
+	FlexibleBoxCollider attackCollider;
 	BoxCollider bodyCollider;
+
+	char attackStep;
 
 private:
 

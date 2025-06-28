@@ -9,6 +9,7 @@
 #include "../Mathmatics/Vector3.h"
 #include "../Common.h"
 #include "../Systems/TimerFactory.h"
+#include "../Systems/Time.h"
 #include "PlayerEventNotifier.h"
 
 #include "../Objects/Player.h"
@@ -36,6 +37,11 @@ GameScene::GameScene() :
 GameScene::~GameScene()
 {
 
+}
+
+bool GameScene::IsJustAvoidTime()
+{
+	return isJustAvoidTime;
 }
 
 void GameScene::Start()
@@ -185,13 +191,22 @@ void GameScene::SuccessJustAvoid()
 
 	if (objectManager)
 	{
-		objectManager->SetMonochrome(0.6f, ObjectBase::Tag::Stage);
-		objectManager->SetLocalTimeScale(0.05f, ObjectBase::Tag::Enemy);
+		int mask = (int)ObjectBase::Tag::Stage;
+		objectManager->SetMonochrome(0.9f, mask);
+		mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
+		objectManager->SetLocalTimeScale(JustAvoidLocalTimeScale, mask);
+	}
+
+	if (objectFactory)
+	{
+		objectFactory->SetIsJustAvoidTime(true);
 	}
 
 	intensity = 0.03f;
 
-	TimerFactory::CreateTimer<GameScene>(3.0f, this, &GameScene::FinishJustAvoid);
+	Time::TimeScale = 0.1f;
+	TimerFactory::CreateTimer<GameScene>(0.08f, this, &GameScene::ResetTimeScale);
+	TimerFactory::CreateTimer<GameScene>(4.0f, this, &GameScene::FinishJustAvoidTime);
 
 	isJustAvoidTime = true;
 }
@@ -361,14 +376,25 @@ void GameScene::GenerateObjects()
 	cameraManager->RegisterCamera(camera_tps);
 }
 
-void GameScene::FinishJustAvoid()
+void GameScene::ResetTimeScale()
+{
+	Time::TimeScale = 1.0f;
+}
+
+void GameScene::FinishJustAvoidTime()
 {
 	if (objectManager)
 	{
-		objectManager->SetMonochrome(0.0f, ObjectBase::Tag::Stage);
-		objectManager->SetLocalTimeScale(1.0f, ObjectBase::Tag::Enemy);
+		int mask = (int)ObjectBase::Tag::Stage;
+		objectManager->SetMonochrome(0.0f, mask);
+		mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
+		objectManager->SetLocalTimeScale(1.0f, mask);
 	}
 
+	if (objectFactory)
+	{
+		objectFactory->SetIsJustAvoidTime(false);
+	}
 	intensity = 0.0f;
 
 	isJustAvoidTime = false;

@@ -6,7 +6,7 @@
 class Collider;
 class ObjectBase;
 struct Vector3;
-struct Quartanion;
+struct Quaternion;
 
 class CollisionManager
 {
@@ -37,17 +37,25 @@ private:
 
 	// IsCollidingBoxAndBoxの中で呼び出される関数
 	bool IsFindOBBSparationAxis(const Vector3& axis_, Vector3 vertices_01_[8], Vector3 vertices_02_[8]);
-	bool CheckOBBLoacalAxisSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8]);
-	bool CheckOBBCrossVecSAT(Quartanion axes_list_[2], Vector3 vertices_list_[2][8]);
+	bool CheckOBBLoacalAxisSAT(Quaternion axes_list_[2], Vector3 vertices_list_[2][8]);
+	bool CheckOBBCrossVecSAT(Quaternion axes_list_[2], Vector3 vertices_list_[2][8]);
 
 	// 前のフレームで当たっていたか
 	// オプションとして、第三引数にtrueを渡すと該当のヒット記録を削除できる
-	bool WasCollided(const Collider* collider_01_, const Collider* collider_02_,bool does_erase_ = false);
+	bool WasCollided(const Collider* collider_01_, const Collider* collider_02_, bool does_erase_ = false);
 
+	// Ownerが既にいないコライダーの消去
 	void EraseColliderPtrWhoseOwnerHasVanished();
+
+	// ヒットコライダーペアの消去
 	void EraseColliderPair(const Collider* collider_);
+
+
 	void CheckBodyAndBody();
 	void CheckBodyAndTrigger();
+
+	// Hitした位置をコライダーに設定
+	void SetHitPosition(Collider* collider_01_, Collider* collider_02_);
 
 private:
 	std::vector<std::pair<std::weak_ptr<ObjectBase>, Collider*>> bodies;

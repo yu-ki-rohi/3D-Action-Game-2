@@ -19,6 +19,9 @@ public:
 	~GameScene();
 
 public:
+	bool IsJustAvoidTime();
+
+public:
 	void Start() override;
 
 	void FixedUpdate() override;
@@ -38,6 +41,9 @@ public:
 public:
 	void SuccessJustAvoid() override;
 
+public:
+	static constexpr float JustAvoidLocalTimeScale = 0.05f;
+
 private:
 	void SetupLight();
 	void ASyncLoad();
@@ -49,7 +55,8 @@ private:
 
 	void GenerateObjects();
 
-	void FinishJustAvoid();
+	void ResetTimeScale();
+	void FinishJustAvoidTime();
 
 private:
 	// オブジェクトの管理クラス

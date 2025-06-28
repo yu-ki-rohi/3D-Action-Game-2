@@ -4,14 +4,20 @@
 
 struct AnimationFileList;
 struct ModelFileList;
+struct EffectFileList;
 struct ShaderFileList;
+
+struct AnimationSpeedList;
 
 class DataBase
 {
 public:
 	std::shared_ptr<AnimationFileList> GetAnimationFileList();
 	std::shared_ptr<ModelFileList> GetModelFileList();
+	std::shared_ptr<EffectFileList> GetEffectFileList();
 	std::shared_ptr<ShaderFileList> GetShaderFileList();
+
+	std::shared_ptr<AnimationSpeedList> GetAnimationSpeedList();
 
 private:
 

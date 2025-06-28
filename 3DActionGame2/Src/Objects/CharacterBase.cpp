@@ -27,11 +27,15 @@ void CharacterBase::Start()
 	}
 }
 
+void  CharacterBase::FixedUpdate()
+{
+	UpdateCollider();
+}
+
 void CharacterBase::Update(float elapsed_time_)
 {
 	UpdateBehavior(elapsed_time_ * localTimeScale);
 	animator->Update(elapsed_time_ * localTimeScale);
-	UpdateCollider();
 }
 
 void CharacterBase::Render()

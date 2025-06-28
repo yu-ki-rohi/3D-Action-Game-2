@@ -13,9 +13,10 @@ void CharacterStatus::SetIsInvincible(bool is_invincible_)
 	isInvincible = is_invincible_;
 }
 
-void CharacterStatus::Damage(int attack)
+int CharacterStatus::Damage(int attack_)
 {
-	if (isInvincible) { return; }
+	if (isInvincible) { return 0; }
+	return attack_;
 }
 
 void CharacterStatus::OnTriggerEnter(Collider* other_)

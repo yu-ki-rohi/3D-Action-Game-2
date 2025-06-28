@@ -1,11 +1,11 @@
-#include "Quartanion.h"
+#include "Quaternion.h"
 #include "Vector3.h"
 #include <math.h>
 #include <DxLib.h>
 
-const Quartanion Quartanion::IDENTITY = Quartanion(0, 0, 0, 1);
+const Quaternion Quaternion::IDENTITY = Quaternion(0, 0, 0, 1);
 
-Quartanion Quartanion::GetRotateQuartanion(float degree_, Vector3 axis_)
+Quaternion Quaternion::GetRotateQuaternion(float degree_, Vector3 axis_)
 {
 	if (axis_.sqrLength() != 1.0f)
 	{
@@ -14,20 +14,96 @@ Quartanion Quartanion::GetRotateQuartanion(float degree_, Vector3 axis_)
 	float theta = degree_ * (float)DX_PI / 180.0f;
 	float sin = sinf(theta  * 0.5f);
 	float cos = cosf(theta  * 0.5f);
-	return Quartanion(axis_.x * sin, axis_.y * sin, axis_.z * sin, cos);
+	return Quaternion(axis_.x * sin, axis_.y * sin, axis_.z * sin, cos);
 }
 
-Quartanion Quartanion::ConvertFromEular(const Vector3& eular_)
+Quaternion Quaternion::Slearp(const Quaternion& q_00_, Quaternion q_01_, float t_)
+{
+	// クォータニオンの補間についてChatGPTに確認し、提示されたソースをベースにしています
+	// ベクトル的な演算を作っていなかったので、かなり冗長です
+
+	// 内積
+	float dot = q_00_.x * q_01_.x + q_00_.y * q_01_.y + q_00_.z * q_01_.z + q_00_.w * q_01_.w;
+
+	if (dot < 0.0f)
+	{
+		q_01_.x *= -1.0f;
+		q_01_.y *= -1.0f;
+		q_01_.z *= -1.0f;
+		q_01_.w *= -1.0f;
+
+		dot *= -1.0f;
+	}
+
+	// sinが0に近い場合は線形補間で代用
+	const float DOT_THRESHOLD = 0.9995f;
+	if (dot > DOT_THRESHOLD) {
+		// イメージ Quaternion result = q_00_ + t_ * (q_01_ - q_00_);
+		float x, y, z, w;
+
+		x = q_01_.x - q_00_.x;
+		y = q_01_.y - q_00_.y;
+		z = q_01_.z - q_00_.z;
+		w = q_01_.w - q_00_.w;
+
+		x *= t_;
+		y *= t_;
+		z *= t_;
+		w *= t_;
+
+		x += q_00_.x;
+		y += q_00_.y;
+		z += q_00_.z;
+		w += q_00_.w;
+
+		
+		// イメージ　return Normalize(result);
+		float length = x * x + y * y + z * z + w * w;
+		length = sqrtf(length);
+		if (length == 0) { return Quaternion::IDENTITY; }
+
+		x /= length;
+		y /= length;
+		z /= length;
+		w /= length;
+
+		return Quaternion(x, y, z, w);
+
+	}
+
+	float theta_0 = acos(dot);        // 角度
+	float theta = theta_0 * t_;
+	float sin_theta = sin(theta);
+	float sin_theta_0 = sin(theta_0);
+
+	float s0 = cos(theta) - dot * sin_theta / sin_theta_0;
+	float s1 = sin_theta / sin_theta_0;
+
+	float x0, y0, z0, w0, x1, y1, z1, w1;
+	x0 = s0 * q_00_.x;
+	y0 = s0 * q_00_.y;
+	z0 = s0 * q_00_.z;
+	w0 = s0 * q_00_.w;
+
+	x1 = s1 * q_01_.x;
+	y1 = s1 * q_01_.y;
+	z1 = s1 * q_01_.z;
+	w1 = s1 * q_01_.w;
+
+	return Quaternion(x0 + x1, y0 + y1, z0 + z1, w0 + w1);
+}
+
+Quaternion Quaternion::ConvertFromEular(const Vector3& eular_)
 {
 	float x, y, z, w;
 	x =  cosf(eular_.x  * 0.5f) * sinf(eular_.y  * 0.5f) * sinf(eular_.z  * 0.5f) + sinf(eular_.x  * 0.5f) * cosf(eular_.y  * 0.5f) * cosf(eular_.z  * 0.5f);
 	y = -sinf(eular_.x  * 0.5f) * cosf(eular_.y  * 0.5f) * sinf(eular_.z  * 0.5f) + cosf(eular_.x  * 0.5f) * sinf(eular_.y  * 0.5f) * cosf(eular_.z  * 0.5f);
 	z =  cosf(eular_.x  * 0.5f) * cosf(eular_.y  * 0.5f) * sinf(eular_.z  * 0.5f) + sinf(eular_.x  * 0.5f) * sinf(eular_.y  * 0.5f) * cosf(eular_.z  * 0.5f);
 	w = -sinf(eular_.x  * 0.5f) * sinf(eular_.y  * 0.5f) * sinf(eular_.z  * 0.5f) + cosf(eular_.x  * 0.5f) * cosf(eular_.y  * 0.5f) * cosf(eular_.z  * 0.5f);
-	return Quartanion(x, y, z, w);
+	return Quaternion(x, y, z, w);
 }
 
-Quartanion Quartanion::ConvertFrom3x3Matrix(const Vector3& col_00_, const Vector3& col_01_, const Vector3& col_02_)
+Quaternion Quaternion::ConvertFrom3x3Matrix(const Vector3& col_00_, const Vector3& col_01_, const Vector3& col_02_)
 {
 	float m00, m11, m22;	// 名前短縮のためにローカル変数に入れる
 	m00 = col_00_.x;
@@ -83,16 +159,16 @@ Quartanion Quartanion::ConvertFrom3x3Matrix(const Vector3& col_00_, const Vector
 		w = (col_00_.y - col_01_.x) * tmp_inv;
 	}
 
-	return Quartanion(x, y, z, w);
+	return Quaternion(x, y, z, w);
 }
 
-Quartanion::Quartanion(float x_, float y_, float z_, float w_) :
+Quaternion::Quaternion(float x_, float y_, float z_, float w_) :
 	x(x_), y(y_), z(z_), w(w_)
 {
 
 }
 
-Vector3 Quartanion::GetForward() const
+Vector3 Quaternion::GetForward() const
 {
 	return -Vector3(
 		2 * x * z + 2 * y * w,
@@ -101,7 +177,7 @@ Vector3 Quartanion::GetForward() const
 	);
 }
 
-Vector3 Quartanion::GetUp() const
+Vector3 Quaternion::GetUp() const
 {
 	return Vector3(
 		2 * x * y - 2 * z * w,
@@ -110,7 +186,7 @@ Vector3 Quartanion::GetUp() const
 	);
 }
 
-Vector3 Quartanion::GetRight() const
+Vector3 Quaternion::GetRight() const
 {
 	return -Vector3(
 		2 * w * w + 2 * x * x - 1,
@@ -119,7 +195,7 @@ Vector3 Quartanion::GetRight() const
 	);
 }
 
-Vector3 Quartanion::ToEuler() const
+Vector3 Quaternion::ToEuler() const
 {
 	Vector3 forward, up, right;
 
@@ -156,9 +232,9 @@ Vector3 Quartanion::ToEuler() const
 }
 
 // 回転 * 被回転
-Quartanion Quartanion::operator*(const Quartanion& other)
+Quaternion Quaternion::operator*(const Quaternion& other)
 {
-	return Quartanion(
+	return Quaternion(
 		 w * other.x - z * other.y + y * other.z + x * other.w,
 		 z * other.x + w * other.y - x * other.z + y * other.w,
 		-y * other.x + x * other.y + w * other.z + z * other.w,
@@ -166,7 +242,7 @@ Quartanion Quartanion::operator*(const Quartanion& other)
 	);
 }
 
-Quartanion& Quartanion::operator*=(const Quartanion& other)
+Quaternion& Quaternion::operator*=(const Quaternion& other)
 {
 	*this = *this * other;
 	return *this;

@@ -35,7 +35,7 @@ private:
 private:
 	// transformの扱いが通常のオブジェクトと違う
 	// transform.Position   : 注視点の座標を補正
-	// transform.quartanion : カメラの位置(注視点に対してカメラがある方向) 
+	// transform.Quaternion : カメラの位置(注視点に対してカメラがある方向) 
 	Transform transform;
 	Transform* target = nullptr;
 

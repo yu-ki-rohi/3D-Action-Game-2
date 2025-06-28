@@ -1,5 +1,5 @@
 #include "SphereCollider.h"
-#include "../Mathmatics/Quartanion.h"
+#include "../Mathmatics/Quaternion.h"
 
 SphereCollider::SphereCollider(float radius_, Vector3 position_) :
 	Collider(radius_)
@@ -32,9 +32,9 @@ Vector3 SphereCollider::SphereCollider::GetRotate() const
 	return Vector3::ZERO;
 }
 
-Quartanion SphereCollider::GetQuartanion() const
+Quaternion SphereCollider::GetQuaternion() const
 {
-	return Quartanion::IDENTITY;
+	return Quaternion::IDENTITY;
 }
 
 Collider::Type SphereCollider::GetType() const

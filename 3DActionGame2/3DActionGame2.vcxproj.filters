@@ -115,7 +115,7 @@
     <ClCompile Include="Src\Objects\Components\Transform.cpp">
       <Filter>Src\Objects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Mathmatics\Quartanion.cpp">
+    <ClCompile Include="Src\Mathmatics\Quaternion.cpp">
       <Filter>Src\Mathmatics</Filter>
     </ClCompile>
     <ClCompile Include="Src\Objects\Components\Animator.cpp">
@@ -186,6 +186,18 @@
     </ClCompile>
     <ClCompile Include="Src\Scenes\PlayerEventNotifier.cpp">
       <Filter>Src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\Components\JustAvoidIgnition.cpp">
+      <Filter>Src\Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\FlashEffect.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\EffectBase.cpp">
+      <Filter>Src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\FlexibleBoxCollider.cpp">
+      <Filter>Src\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,7 +300,7 @@
     <ClInclude Include="Src\Objects\Components\Transform.h">
       <Filter>Src\Objects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Mathmatics\Quartanion.h">
+    <ClInclude Include="Src\Mathmatics\Quaternion.h">
       <Filter>Src\Mathmatics</Filter>
     </ClInclude>
     <ClInclude Include="Src\Objects\Components\Animator.h">
@@ -351,13 +363,13 @@
     <ClInclude Include="Src\Input\KeyConfig.h">
       <Filter>Src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Src\DataBase\ModelFileList.h">
+    <ClInclude Include="Src\DataBase\ModelData.h">
       <Filter>Src\DataBase</Filter>
     </ClInclude>
-    <ClInclude Include="Src\DataBase\AnimationFileList.h">
+    <ClInclude Include="Src\DataBase\AnimationData.h">
       <Filter>Src\DataBase</Filter>
     </ClInclude>
-    <ClInclude Include="Src\DataBase\ShaderFileList.h">
+    <ClInclude Include="Src\DataBase\ShaderData.h">
       <Filter>Src\DataBase</Filter>
     </ClInclude>
     <ClInclude Include="Src\Objects\Components\CharacterStatus.h">
@@ -392,6 +404,24 @@
     </ClInclude>
     <ClInclude Include="Src\Scenes\PlayerEventNotifier.h">
       <Filter>Src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\JustAvoidIgnition.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Assets\EffectResource.h">
+      <Filter>Src\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\EffectData.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\EffectBase.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\FlashEffect.h">
+      <Filter>Src\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\FlexibleBoxCollider.h">
+      <Filter>Src\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

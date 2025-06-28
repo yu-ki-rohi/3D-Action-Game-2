@@ -3,7 +3,7 @@
 #include <DxLib.h>
 #include <DirectXMath.h>
 
-struct Quartanion;
+struct Quaternion;
 
 struct Vector3
 {
@@ -29,7 +29,7 @@ public:
 	// 第二～四引数 変換先の基底(軸) X, Y, Z の順　(または右、上、前)
 	// 第五引数     原点座標(デフォルトではワールド座標系の原点)
 	static Vector3 BasisTransformation(const Vector3& vector_, Vector3 axis_01_, Vector3 axis_02_, Vector3 axis_03_, Vector3 origin_ = Vector3::ZERO);
-	static Vector3 BasisTransformation(const Vector3& vector_, const Quartanion& quartanion_, Vector3 origin_ = Vector3::ZERO);
+	static Vector3 BasisTransformation(const Vector3& vector_, const Quaternion& quaternion_, Vector3 origin_ = Vector3::ZERO);
 
 	static Vector3 ConvertFromVECTOR(const VECTOR& vector_);
 	static Vector3 ConvertFromXMFLOTA3(const DirectX::XMFLOAT3& xmfloat3_);

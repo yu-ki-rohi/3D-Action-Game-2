@@ -52,9 +52,10 @@ void SceneManager::Main(float elapsed_time_)
 
 	// タイマー更新
 	TimerManager::Instance().Update(elapsed_time_ * Time::TimeScale);
-
+#ifdef DEBUG
 	// VSync - FixedUpdate の間の処理時間を記録
 	profiler.Stamp(Profiler::Type::Other);
+#endif
 
 	// 固定フレームの更新処理
 	FixedUpdate(elapsed_time_ * Time::TimeScale);
@@ -62,8 +63,10 @@ void SceneManager::Main(float elapsed_time_)
 	// コントローラーの入力状況確認
 	InputManager::Instance().CheckInput();
 
+#ifdef DEBUG
 	// Input の処理時間を記録
 	profiler.Stamp(Profiler::Type::Input);
+#endif
 
 	// フレーム毎の更新処理
 	Update(elapsed_time_ * Time::TimeScale);
@@ -109,9 +112,9 @@ void SceneManager::Update(float elapsed_time_)
 		currentScene->Update(elapsed_time_);
 	}
 
+#ifdef DEBUG
 	profiler.Stamp(Profiler::Type::Update);
 
-#ifdef DEBUG
 	num++;
 	if (debugTimer == nullptr)
 	{
@@ -139,10 +142,12 @@ void SceneManager::Render()
 
 	DrawFormatString(0, 10, GetColor(255, 255, 255), "FixedFPS : %d", fixedNumView);
 	DrawFormatString(0, 30, GetColor(255, 255, 255), "FPS      : %d", numView);
-#endif
 	profiler.Stamp(Profiler::Type::Render);
+#endif
 	ScreenFlip();
+#ifdef DEBUG
 	profiler.Stamp(Profiler::Type::VSync);
+#endif
 }
 
 

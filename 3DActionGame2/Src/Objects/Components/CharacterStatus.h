@@ -12,7 +12,7 @@ public:
 public:
 	void SetIsInvincible(bool is_invincible_);
 
-	virtual void Damage(int attack);
+	virtual int Damage(int attack_);
 
 	// “–‚½‚è”»’è
 	virtual void OnTriggerEnter(Collider* other_) override;

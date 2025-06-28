@@ -52,12 +52,13 @@ private:
 	// 超過時間(次回FixedUpdateまでの補正のため)
 	float excess = 0.0f;
 
+
+#ifdef DEBUG
 	// テストのために一旦こちらで直接保持
 	// TODO
 	// 最終的にはDebugManagerにまとめる
 	Profiler profiler;
 
-#ifdef DEBUG
 	int num = 0;
 	int numView = 0;
 	int fixedNum = 0;

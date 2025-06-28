@@ -4,7 +4,7 @@ class TimerBase
 {
 public:
 	TimerBase(const float time_) :
-		TIME(time_)
+		time(time_)
 	{
 
 	}
@@ -20,7 +20,7 @@ public:
 	// Žc‚èŽžŠÔ
 	float GetRemainingTime()
 	{
-		return TIME - elapsedTime;
+		return time - elapsedTime;
 	}
 
 	bool IsActive()
@@ -41,12 +41,17 @@ public:
 		isActive = false;
 	}
 
+	void ResizeTime(float time_)
+	{
+		time = time_;
+	}
+
 public:
 	bool IsStop = false;
 
 protected:
 	bool isActive = true;
 
-	const float TIME;
+	float time;
 	float elapsedTime = 0.0f;
 };

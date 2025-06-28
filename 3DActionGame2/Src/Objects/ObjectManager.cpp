@@ -79,11 +79,11 @@ void ObjectManager::SetMonochrome(float rate_)
 		obj->SetMonochrome(rate_);
 	}
 }
-void ObjectManager::SetMonochrome(float rate_, ObjectBase::Tag type_)
+void ObjectManager::SetMonochrome(float rate_, int mask_)
 {
 	for (auto& obj : objects)
 	{
-		if (obj->GetTag() != type_) { continue; }
+		if (((int)obj->GetTag() & mask_) == 0) { continue; }
 		obj->SetMonochrome(rate_);
 	}
 }
@@ -96,11 +96,11 @@ void ObjectManager::SetLocalTimeScale(float time_scale_)
 	}
 }
 
-void ObjectManager::SetLocalTimeScale(float time_scale_, ObjectBase::Tag type_)
+void ObjectManager::SetLocalTimeScale(float time_scale_, int mask_)
 {
 	for (auto& obj : objects)
 	{
-		if (obj->GetTag() != type_) { continue; }
+		if (((int)obj->GetTag() & mask_) == 0) { continue; }
 		obj->SetLocalTimeScale(time_scale_);
 	}
 }

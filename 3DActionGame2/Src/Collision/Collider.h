@@ -4,9 +4,9 @@
 #include <vector>
 #include "../Objects/Components/ComponentBase.h"
 #include "../Common.h"
+#include "../Mathmatics/Vector3.h"
 
-struct Vector3;
-struct Quartanion;
+struct Quaternion;
 class ObjectBase;
 
 class Collider
@@ -19,19 +19,22 @@ public:
 	};
 
 public:
-	Collider() : radius(1.0f), isEnabled(true) {}
-	Collider(float radius_) : 	radius(radius_), isEnabled(true) {}
-	Collider(float radius_, std::shared_ptr<ObjectBase> owner_) : 	radius(radius_), isEnabled(true), owner(owner_) {}
+	Collider() : radius(1.0f), isEnabled(true), hitPosition(Vector3::ZERO) {}
+	Collider(float radius_) : 	radius(radius_), isEnabled(true), hitPosition(Vector3::ZERO) {}
+	Collider(float radius_, std::shared_ptr<ObjectBase> owner_) : 	radius(radius_), isEnabled(true), owner(owner_), hitPosition(Vector3::ZERO) {}
 
 public:
 	// アクセサ
 	virtual Vector3 GetPosition() const = 0;
 	virtual Vector3 GetScale() const = 0;
 	virtual Vector3 GetRotate() const = 0;
-	virtual Quartanion GetQuartanion() const = 0;
+	virtual Quaternion GetQuaternion() const = 0;
 	virtual Type GetType() const = 0;
 
 	float GetRadius() const { return radius; }
+
+	Vector3 GetHitPosition() const { return hitPosition; }
+
 	bool IsEnabled() const { return isEnabled; }
 	std::shared_ptr<ObjectBase> GetOwner() const { return owner.lock(); }
 
@@ -45,6 +48,10 @@ public:
 		owner = owner_;
 	}
 
+	void SetHitPosition(Vector3 hit_position_)
+	{
+		hitPosition = hit_position_;
+	}
 
 	// 親オブジェクトの行列によるTransformの更新
 	virtual void UpdateFromParentMat(const MATRIX& parent_mat_) = 0;
@@ -115,6 +122,7 @@ private:
 	// 当たりを通知する相手
 	std::vector<std::shared_ptr<ComponentBase>> observers;
 
+	Vector3 hitPosition;
 
 #ifdef DEBUG
 public:

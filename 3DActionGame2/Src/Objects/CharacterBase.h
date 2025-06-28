@@ -33,6 +33,7 @@ public:
 	// transform, renderer, animator
 	virtual void Start() override;
 
+	virtual void FixedUpdate() override;
 	virtual void Update(float elapsed_time_) override;
 	virtual void Render() override;
 	void RenderShadow() override;

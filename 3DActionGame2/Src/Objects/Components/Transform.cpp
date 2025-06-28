@@ -9,17 +9,17 @@ Vector3 Transform::GetRotation() const
 
 Vector3 Transform::GetForward() const
 {
-	return quartanion.GetForward();
+	return quaternion.GetForward();
 }
 
 Vector3 Transform::GetUp() const
 {
-	return quartanion.GetUp();
+	return quaternion.GetUp();
 }
 
 Vector3 Transform::GetRight() const
 {
-	return quartanion.GetRight();
+	return quaternion.GetRight();
 }
 
 MATRIX Transform::GetTranslateMat() const
@@ -43,9 +43,9 @@ MATRIX Transform::GetScaleMat() const
 	return scaleMat;
 }
 
-const Quartanion& Transform::GetQuartanion() const
+const Quaternion& Transform::GetQuaternion() const
 {
-	return quartanion;
+	return quaternion;
 }
 
 void Transform::SetForward(const Vector3& forward_)
@@ -53,19 +53,24 @@ void Transform::SetForward(const Vector3& forward_)
 	float virtical_theta = asinf(forward_.y);
 	float horizontal_theta = atan2f(forward_.x, forward_.z);
 
-	quartanion =
-		Quartanion::GetRotateQuartanion(horizontal_theta * 180.0f / (float)DX_PI, Vector3::UP) *
-		Quartanion::GetRotateQuartanion(virtical_theta * 180.0f / (float)DX_PI, Vector3::RIGHT);
+	quaternion =
+		Quaternion::GetRotateQuaternion(horizontal_theta * 180.0f / (float)DX_PI, Vector3::UP) *
+		Quaternion::GetRotateQuaternion(virtical_theta * 180.0f / (float)DX_PI, Vector3::RIGHT);
 
-	rotateAngle = quartanion.ToEuler();
+	rotateAngle = quaternion.ToEuler();
 }
 
 void Transform::SetRotate(const Vector3& rotate_)
 {
 	rotateAngle = rotate_;
-	quartanion = Quartanion::ConvertFromEular(rotate_);
+	quaternion = Quaternion::ConvertFromEular(rotate_);
 }
 
+void Transform::SetQuaternion(const Quaternion& quaternion_)
+{
+	quaternion = quaternion_;
+	rotateAngle = quaternion.ToEuler();
+}
 
 void Transform::UpdateFromMatrix(const MATRIX& transform_mat_)
 {
@@ -91,7 +96,7 @@ void Transform::UpdateFromMatrix(const MATRIX& transform_mat_)
 
 	// 回転代入
 	// colを並べたものが回転行列なので、ここではクォータニオンへの変換をする。
-	quartanion = Quartanion::ConvertFrom3x3Matrix(col[0], col[1], col[2]);
+	quaternion = Quaternion::ConvertFrom3x3Matrix(col[0], col[1], col[2]);
 
 }
 
@@ -99,45 +104,45 @@ void Transform::RotateAxisX(float angle_)
 {
 	if (angle_ == 0.0f) return;
 
-	Quartanion new_quartanion = Quartanion::GetRotateQuartanion(angle_, Vector3::RIGHT);
-	new_quartanion *= quartanion;
-	quartanion = new_quartanion;
-	rotateAngle = quartanion.ToEuler();
+	Quaternion new_quaternion = Quaternion::GetRotateQuaternion(angle_, Vector3::RIGHT);
+	new_quaternion *= quaternion;
+	quaternion = new_quaternion;
+	rotateAngle = quaternion.ToEuler();
 }
 
 void Transform::RotateAxisY(float angle_)
 {
 	if (angle_ == 0.0f) return;
-	Quartanion new_quartanion = Quartanion::GetRotateQuartanion(angle_, Vector3::UP);
-	new_quartanion *= quartanion;
-	quartanion = new_quartanion;
-	rotateAngle = quartanion.ToEuler();
+	Quaternion new_quaternion = Quaternion::GetRotateQuaternion(angle_, Vector3::UP);
+	new_quaternion *= quaternion;
+	quaternion = new_quaternion;
+	rotateAngle = quaternion.ToEuler();
 }
 
 void Transform::RotateAxisZ(float angle_)
 {
 	if (angle_ == 0.0f) return;
-	Quartanion new_quartanion = Quartanion::GetRotateQuartanion(angle_, Vector3::FORWARD);
-	new_quartanion *= quartanion;
-	quartanion = new_quartanion;
-	rotateAngle = quartanion.ToEuler();
+	Quaternion new_quaternion = Quaternion::GetRotateQuaternion(angle_, Vector3::FORWARD);
+	new_quaternion *= quaternion;
+	quaternion = new_quaternion;
+	rotateAngle = quaternion.ToEuler();
 }
 
 void Transform::RotateAxisRight(float angle_)
 {
 	if (angle_ == 0.0f) return;
-	Quartanion new_quartanion = Quartanion::GetRotateQuartanion(angle_, GetRight());
-	new_quartanion *= quartanion;
-	quartanion = new_quartanion;
+	Quaternion new_quaternion = Quaternion::GetRotateQuaternion(angle_, GetRight());
+	new_quaternion *= quaternion;
+	quaternion = new_quaternion;
 
-	rotateAngle = quartanion.ToEuler();
+	rotateAngle = quaternion.ToEuler();
 }
 
 void Transform::Translate(const Vector3& vec_)
 {
-	Position += quartanion.GetForward() * vec_.z;
-	Position += quartanion.GetUp() * vec_.y;
-	Position += quartanion.GetRight() * vec_.x;
+	Position += quaternion.GetForward() * vec_.z;
+	Position += quaternion.GetUp() * vec_.y;
+	Position += quaternion.GetRight() * vec_.x;
 }
 
 Transform::Transform(Vector3 position_) :

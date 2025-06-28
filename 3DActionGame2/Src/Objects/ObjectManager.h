@@ -19,9 +19,9 @@ public:
 
 public:
 	void SetMonochrome(float rate_);
-	void SetMonochrome(float rate_, ObjectBase::Tag type_);
+	void SetMonochrome(float rate_, int mask_);
 	void SetLocalTimeScale(float time_scale_);
-	void SetLocalTimeScale(float time_scale_, ObjectBase::Tag type_);
+	void SetLocalTimeScale(float time_scale_, int mask_);
 
 private:
 	std::vector<std::shared_ptr<ObjectBase>> objects;

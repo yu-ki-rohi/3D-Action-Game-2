@@ -1,6 +1,6 @@
 #pragma once
 #include "CharacterBase.h"
-#include "../Collision/BoxCollider.h"
+#include "../Collision/FlexibleBoxCollider.h"
 
 class CameraManager;
 class SimpleObserver;
@@ -18,8 +18,23 @@ protected:
 	virtual void UpdateBehavior(float elapsed_time_) override;
 
 
+	void IgnitIdleAnimation();
+	void IgnitWalkAnimation();
+	void IgnitRolling();
+
+private:
+	void ProceedToNextRollingStep();
+	void FinishRolling();
+
 protected:
 	bool canMove;
+	// ‰ñ“]‰ñ”ğ‚Ì‹““®’iŠK
+	// -1:‰ñ“]‰ñ”ğó‘Ô‚Å‚Í‚È‚¢
+	//  0:”ò‚Ñ‚İó‘Ô
+	//  1:’…’nó‘Ô
+	char rollingStep;
+	std::shared_ptr<Vector3> rollingDirection;
+
 	std::shared_ptr<SimpleObserver> so;
 
 private:
