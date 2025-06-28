@@ -1,5 +1,6 @@
 #pragma once
 #include "MemberFunctionPointerContainerBase.h"
+#include <memory>
 /*
 	「メンバ関数の関数ポインタを他のクラスに渡し、そこから実行する方法」について、
 	ChatGPTにサンプルコードの提示を依頼し、
@@ -12,27 +13,31 @@
 // サンプルテンプレート引数のため
 class App;
 
-template <class T>
+template <class T, class V>
 class MemberFunctionPointerContainer : public MemberFunctionPointerContainerBase
 {
 public:
 	// メンバ関数ポインタ型の定義
 	using MemberFunctionPointer = void (T::*)();
 
-	MemberFunctionPointerContainer(T* obj_, MemberFunctionPointer func_) :
+	MemberFunctionPointerContainer(std::shared_ptr<V> existence_, T* obj_, MemberFunctionPointer func_) :
 		targetObj(obj_),
-		targetFunc(func_)
+		targetFunc(func_),
+		targetExistence(existence_)
 	{
 
 	}
 
 	void CallFunction() override
 	{
-		if (!targetObj || !targetFunc) return;
+		// 対象の生存確認及びNullチェック
+		auto target_existence = targetExistence.lock();
+		if (!target_existence || !targetObj || !targetFunc) return;
 		(targetObj->*targetFunc)();
 	}
 
 private:
 	T* targetObj = nullptr;
 	MemberFunctionPointer targetFunc = nullptr;
+	std::weak_ptr<V> targetExistence;
 };

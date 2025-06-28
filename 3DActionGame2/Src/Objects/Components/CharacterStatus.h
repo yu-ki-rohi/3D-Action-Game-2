@@ -14,7 +14,7 @@ public:
 
 	virtual int Damage(int attack_);
 
-	// “–‚½‚è”»’è
+	// “–‚½‚èŽž
 	virtual void OnTriggerEnter(Collider* other_) override;
 
 protected:

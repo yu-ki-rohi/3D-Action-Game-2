@@ -16,6 +16,7 @@ public:
 
 	void SetMonochrome(float rate_) override {}
 	void SetLocalTimeScale(float time_scale_) override;
+	void MultiplyLocalTimeScaleBy(float multiplier_) override;
 
 	void Start() override;
 
@@ -28,6 +29,7 @@ protected:
 
 private:
 	void ToTheNextImage();
+	void ResizeTimer(float past_local_time_scale_);
 
 protected:
 	std::shared_ptr<EffectResource> effectResource;

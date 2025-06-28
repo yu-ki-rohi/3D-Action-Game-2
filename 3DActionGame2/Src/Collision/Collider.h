@@ -21,7 +21,14 @@ public:
 public:
 	Collider() : radius(1.0f), isEnabled(true), hitPosition(Vector3::ZERO) {}
 	Collider(float radius_) : 	radius(radius_), isEnabled(true), hitPosition(Vector3::ZERO) {}
-	Collider(float radius_, std::shared_ptr<ObjectBase> owner_) : 	radius(radius_), isEnabled(true), owner(owner_), hitPosition(Vector3::ZERO) {}
+	// 攻撃判定など、同じ相手に連続では当たらないようにしたい場合は第二引数にtrueを渡す
+	Collider(float radius_, bool is_collide_once_) : 	radius(radius_), isEnabled(true), hitPosition(Vector3::ZERO)
+	{
+		if (is_collide_once_)
+		{
+			haveHitObjects = std::make_unique<HaveHitObjects>();
+		}
+	}
 
 public:
 	// アクセサ
@@ -64,9 +71,16 @@ public:
 		observers.push_back(observer_);
 	}
 
+	void ClearHasHit()
+	{
+		if (!haveHitObjects) { return; }
+		haveHitObjects->clear();
+	}
+
 	// 各種当たり時に呼び出す
 	void OnTriggerEnter(Collider* other_)
 	{
+		if (HasHit(other_)) { return; }
 		for (auto& obeserver : observers)
 		{
 			obeserver->OnTriggerEnter(other_);
@@ -89,6 +103,7 @@ public:
 
 	void OnCollisionEnter(Collider* other_)
 	{
+		if (HasHit(other_)) { return; }
 		for (auto& obeserver : observers)
 		{
 			obeserver->OnCollisionEnter(other_);
@@ -108,6 +123,24 @@ public:
 			obeserver->OnCollisionExit(other_);
 		}
 	}
+	
+private:
+	bool HasHit(Collider* other_)
+	{
+		if (!haveHitObjects) { return false; }
+		auto other_owner = other_->GetOwner();
+		if (!other_owner) { return false; }
+
+		for (auto hit_obj : *haveHitObjects)
+		{
+			auto hit_object = hit_obj.lock();
+			if (hit_object == other_owner) { return true; }
+		}
+
+		haveHitObjects->push_back(other_owner);
+		return false;
+	}
+
 
 protected:
 
@@ -121,6 +154,10 @@ protected:
 private:
 	// 当たりを通知する相手
 	std::vector<std::shared_ptr<ComponentBase>> observers;
+
+	using HaveHitObjects = std::vector<std::weak_ptr<ObjectBase>>;
+	// 既に当たっているオブジェクト
+	std::unique_ptr<HaveHitObjects> haveHitObjects;
 
 	Vector3 hitPosition;
 

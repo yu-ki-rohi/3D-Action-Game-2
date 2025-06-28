@@ -8,14 +8,14 @@
 
 #include "../Input/InputManager.h"
 #include "../Systems/SimpleObserver.h"
-#include "../Systems/MemberFunctionPointerContainer.h"
+#include "../Systems/MFPCFactory.h"
 
 #include "../Systems/TimerFactory.h"
 
 
 PlayerSaber::PlayerSaber(std::shared_ptr<CameraManager> camera_manager_) :
 	Player(camera_manager_),
-	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(145.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f, 30.0f)),
+	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(145.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f, 30.0f), true),
 	bodyCollider(Vector3(0.0f, -5.0f, -15.0f), Vector3(45.0f, 150.0f, 45.0f), Vector3(0.0f, 0.0f, 0.0f)),
 	attackStep(0)
 {
@@ -24,7 +24,7 @@ PlayerSaber::PlayerSaber(std::shared_ptr<CameraManager> camera_manager_) :
 
 void PlayerSaber::Start()
 {
-	CharacterBase::Start();
+	Player::Start();
 
 	if (!IsActive()) { return; }
 	//attackCollider.SetIsEnabled(false);
@@ -49,7 +49,7 @@ void PlayerSaber::Start()
 		InputManager::Map::Player,
 		XINPUT_BUTTON_A,
 		InputManager::State::Hold,
-		std::make_shared<MemberFunctionPointerContainer<PlayerSaber>>(this, &PlayerSaber::IgnitAttackAnimation));
+		MFPCFactory::CreateMFPC(shared_from_this(), this, &PlayerSaber::IgnitAttackAnimation));
 
 }
 
@@ -93,7 +93,7 @@ void PlayerSaber::IgnitAttackAnimation()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
-	float motion_time = 0.7f;
+	float motion_time = 0.9f;
 	switch (attackStep)
 	{
 	case 0:
@@ -101,15 +101,15 @@ void PlayerSaber::IgnitAttackAnimation()
 		break;
 	case 1:
 		animator->SetNextAnim(AKind::Attack01, 0.0f, 4.6f);
-		motion_time = 0.8f;
+		motion_time = 0.95f;
 		break;
 	case 2:
 		animator->SetNextAnim(AKind::Attack02, 0.0f, 4.6f);
-		motion_time = 0.8f;
+		motion_time = 0.95f;
 		break;
 	case 3:
 		animator->SetNextAnim(AKind::Attack03, 0.0f, 4.6f);
-		motion_time = 1.1f;
+		motion_time = 1.2f;
 		attackStep = -1;
 		break;
 	default:
@@ -118,14 +118,16 @@ void PlayerSaber::IgnitAttackAnimation()
 	}
 	attackStep++;
 	canMove = false;
-	TimerFactory::CreateTimer(motion_time, this, &PlayerSaber::FinishAttack);
-	TimerFactory::CreateTimer(motion_time + 0.2f, this, &PlayerSaber::ResetAttackStep);
+	PrepareTimer(finishAttackTimer, motion_time, this, &PlayerSaber::FinishAttack);
+	PrepareTimer(resetAttackStepTimer, motion_time + 0.4f, this, &PlayerSaber::ResetAttackStep);
 }
 
 
 void PlayerSaber::FinishAttack()
 {
 	canMove = true;
+	attackCollider.ClearHasHit();
+
 	float x, y;
 	so->GetFloatx2(x, y);
 	if (x != 0.0f && y != 0.0f)
@@ -134,7 +136,7 @@ void PlayerSaber::FinishAttack()
 	}
 	else
 	{
-		float changing_time_parcentage = 0.95f;
+		float changing_time_parcentage = 0.875f;
 		animator->SetNextAnim(AKind::Idle, animator->GetAnimationTimeByNormalizedValue(changing_time_parcentage), animator->GetAnimationTimeByNormalizedValue(1.0f - changing_time_parcentage), true);
 	}
 }

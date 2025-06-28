@@ -13,8 +13,8 @@ BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_) :
 	localTransform.SetRotate(rotate_ * DX_PI / 180.0f);
 }
 
-BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, std::shared_ptr<ObjectBase> owner_) :
-	Collider((localTransform.Scale * 0.5f).Length(), owner_)
+BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, bool is_collide_once_) :
+	Collider((localTransform.Scale * 0.5f).Length(), is_collide_once_)
 {
 	localTransform.Position = position_;
 	localTransform.Scale = scale_;

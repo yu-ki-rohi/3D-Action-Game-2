@@ -4,8 +4,10 @@
 #include "../../Scenes/PlayerEventNotifier.h"
 #include "../ObjectFactory.h"
 #include "../../Mathmatics/Vector3.h"
+#include "../Player.h"
 
-PlayerStatus::PlayerStatus(std::shared_ptr<PlayerEventNotifier> notifier_, std::shared_ptr<ObjectFactory> object_factory_) :
+PlayerStatus::PlayerStatus(std::shared_ptr<Player> owner_, std::shared_ptr<PlayerEventNotifier> notifier_, std::shared_ptr<ObjectFactory> object_factory_) :
+	owner(owner_),
 	notifier(notifier_),
 	objectFactory(object_factory_)
 {
@@ -27,14 +29,14 @@ int  PlayerStatus::Damage(int attack_)
 
 void PlayerStatus::OnTriggerEnter(Collider* other_)
 {
-	auto owner = other_->GetOwner();
-	if (!owner) { return; }
+	auto other_owner = other_->GetOwner();
+	if (!other_owner) { return; }
 
-	auto other_tag = owner->GetTag();
+	auto other_tag = other_owner->GetTag();
 
 	if (other_tag == ObjectBase::Tag::Enemy)
 	{
-		auto other_status = owner->GetComponent<CharacterStatus>();
+		auto other_status = other_owner->GetComponent<CharacterStatus>();
 		if (!other_status) { return; }
 
 		// ŽÀs‚ÉŠÖ‚µ‚Ä‚Ì‚Ý‚È‚Ì‚ÅAˆê’Uˆø”‚Í“K“–‚É
@@ -46,5 +48,9 @@ void PlayerStatus::OnTriggerEnter(Collider* other_)
 			// ˆø”‚Íˆê’U“K“–‚É
 			object_factory->CreateSlashEffect(other_->GetHitPosition(), 30.0f, 0.0f);
 		}
+
+		auto player = owner.lock();
+		if (!player) { return; }
+		player->HitStop();
 	}
 }

@@ -46,8 +46,9 @@ private:
 	std::shared_ptr<SceneBase> currentScene;
 
 	// FixedUpdateを実行させるためのタイマー
-	std::unique_ptr<Timer<SceneManager>> fixedUpdateTimer = nullptr;
-	std::unique_ptr<Timer<SceneManager>> renderUpdateTimer = nullptr;
+	// SceneManagerは存在しないことがまずないので、特例でダミーのsharedとしてSceneBaseを渡しておく
+	std::unique_ptr<Timer<SceneManager, SceneBase>> fixedUpdateTimer = nullptr;
+	std::unique_ptr<Timer<SceneManager, SceneBase>> renderUpdateTimer = nullptr;
 
 	// 超過時間(次回FixedUpdateまでの補正のため)
 	float excess = 0.0f;

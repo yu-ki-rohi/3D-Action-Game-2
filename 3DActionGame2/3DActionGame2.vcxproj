@@ -260,6 +260,7 @@
     <ClInclude Include="Src\Scenes\TitleScene.h" />
     <ClInclude Include="Src\Systems\MemberFunctionPointerContainer.h" />
     <ClInclude Include="Src\Systems\MemberFunctionPointerContainerBase.h" />
+    <ClInclude Include="Src\Systems\MFPCFactory.h" />
     <ClInclude Include="Src\Systems\ObserverBase.h" />
     <ClInclude Include="Src\Systems\SimpleObserver.h" />
     <ClInclude Include="Src\Systems\Subject.h" />

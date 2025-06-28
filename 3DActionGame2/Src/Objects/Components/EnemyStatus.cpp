@@ -3,6 +3,12 @@
 #include "../ObjectBase.h"
 
 
+EnemyStatus::EnemyStatus(std::shared_ptr<Enemy> owner_) :
+	owner(owner_)
+{
+
+}
+
 void EnemyStatus::OnTriggerEnter(Collider* other_)
 {
 	// owner‚Ìæ“¾‚ğ‚É2“x‚â‚Á‚Ä‚¢‚é‚Ì‚Í­‚µ‹C‚É‚È‚é‚Ì‚ÅAŒã‚ÅC³‚µ‚½‚¢

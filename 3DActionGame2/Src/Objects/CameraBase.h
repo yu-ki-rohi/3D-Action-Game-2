@@ -31,6 +31,7 @@ public:
 
 	void SetMonochrome(float rate_) override {}
 	void SetLocalTimeScale(float time_scale_) override {}
+	void MultiplyLocalTimeScaleBy(float multiplier_) override {}
 
 	void SetTransform(std::shared_ptr<Transform> transform_)
 	{

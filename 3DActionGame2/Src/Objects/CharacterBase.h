@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjectBase.h"
+#include "../Systems/TimerFactory.h"
 
 struct Vector3;
 
@@ -7,6 +8,7 @@ class Transform;
 class Renderer;
 class Animator;
 class CharacterStatus;
+
 //class Collider;
 class ColliderRegisterInterface;
 
@@ -26,7 +28,8 @@ public:
 	void SetColliderRegisterInterface(std::shared_ptr<ColliderRegisterInterface> collider_register_interface_);
 
 	void SetMonochrome(float rate_) override;
-	void SetLocalTimeScale(float time_scale_) override;
+	virtual void SetLocalTimeScale(float time_scale_) override;
+	virtual void MultiplyLocalTimeScaleBy(float multiplier_) override;
 
 
 	// Startが呼び出されるまでに以下のポインタが指す実体がない場合、そのObjectは破棄
@@ -41,6 +44,20 @@ public:
 protected:
 	virtual void UpdateBehavior(float elapsed_time_) = 0;
 	virtual void UpdateCollider() = 0;
+
+	using MyTimer = std::shared_ptr<TimerBase>;
+	template <class T>
+	void PrepareTimer(MyTimer& my_timer_,float time_, T* obj_, void (T::* func_)())
+	{
+		// my_timer_がnullptrでない場合生存フラグを切る
+		if (my_timer_)
+		{
+			my_timer_->Erase();
+		}
+		my_timer_ = TimerFactory::CreateTimer(time_, shared_from_this(), obj_, func_);
+
+		my_timer_->SetLocalTimeScale(localTimeScale);
+	}
 
 protected:
 

@@ -119,7 +119,7 @@ std::shared_ptr<Player> ObjectFactory::CreatePlayer(std::shared_ptr <PlayerEvent
 		assets_manager->GetVertexShader(VSKind::SkinnedMeshShadow)->Handle
 	));
 	obj->SetComponent(std::make_shared<Animator>(assets_manager->GetAnimation(MKind::Player)));
-	obj->SetComponent(std::make_shared<PlayerStatus>(notifier_,shared_from_this()));
+	obj->SetComponent(std::make_shared<PlayerStatus>(obj, notifier_,shared_from_this()));
 
 	obj->SetColliderRegisterInterface(collider_interface);
 
@@ -143,7 +143,7 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy()
 		assets_manager->GetVertexShader(VSKind::SkinnedMeshShadow)->Handle
 	));
 	obj->SetComponent(std::make_shared<Animator>(assets_manager->GetAnimation(MKind::Enemy)));
-	obj->SetComponent(std::make_shared<EnemyStatus>());
+	obj->SetComponent(std::make_shared<EnemyStatus>(obj));
 	obj->SetColliderRegisterInterface(collider_interface);
 
 	object_manager->Register(obj);

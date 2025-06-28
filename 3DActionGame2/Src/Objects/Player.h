@@ -14,7 +14,12 @@ public:
 public:
 	Tag GetTag() const override;
 
+	virtual void Start() override;
+
+	void HitStop();
+
 protected:
+
 	virtual void UpdateBehavior(float elapsed_time_) override;
 
 
@@ -25,6 +30,7 @@ protected:
 private:
 	void ProceedToNextRollingStep();
 	void FinishRolling();
+	void FinishHitStop();
 
 protected:
 	bool canMove;
@@ -36,8 +42,12 @@ protected:
 	std::shared_ptr<Vector3> rollingDirection;
 
 	std::shared_ptr<SimpleObserver> so;
-
 private:
 	std::weak_ptr<CameraManager> cameraManager;
+
+private:
+	static constexpr float hitStopTimeScale = 0.01;
+	static constexpr float hitStopTimeScaleInv = 1.0f / hitStopTimeScale;
+	static constexpr float hitStopTime = 0.15f;
 
 };

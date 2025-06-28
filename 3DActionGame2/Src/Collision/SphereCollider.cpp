@@ -7,14 +7,14 @@ SphereCollider::SphereCollider(float radius_, Vector3 position_) :
 	position = position_;
 }
 
-SphereCollider::SphereCollider(float radius_, std::shared_ptr<ObjectBase> owner_) :
-	Collider(radius_, owner_)
+SphereCollider::SphereCollider(float radius_, bool is_collide_once_) :
+	Collider(radius_, is_collide_once_)
 {
 	
 }
 
-SphereCollider::SphereCollider(float radius_, Vector3 position_, std::shared_ptr<ObjectBase> owner_) :
-	Collider(radius_, owner_)
+SphereCollider::SphereCollider(float radius_, Vector3 position_, bool is_collide_once_) :
+	Collider(radius_, is_collide_once_)
 {
 	position = position_;
 }

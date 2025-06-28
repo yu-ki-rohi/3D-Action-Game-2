@@ -23,18 +23,24 @@ void EffectBase::SetLocalTimeScale(float time_scale_)
 	localTimeScale = time_scale_;
 
 	// updateTimerが存在するなら時間をリサイズする
-	if (!updateTimer) { return; }
+	ResizeTimer(past_local_time_scale);
+	
+}
 
-	float remaining_time = updateTimer->GetRemainingTime();
-	remaining_time *= past_local_time_scale;
+void EffectBase::MultiplyLocalTimeScaleBy(float multiplier_)
+{
+	float past_local_time_scale = localTimeScale;
+	localTimeScale *= multiplier_;
 
-	float time_magni = 1.0f;
-	if (localTimeScale != 0.0f)
+	// 誤差修正
+	const float error = 0.001f;
+	if (fabsf(1.0f - localTimeScale) < error)
 	{
-		time_magni /= localTimeScale;
+		localTimeScale = 1.0f;
 	}
 
-	updateTimer->ResizeTime(remaining_time * time_magni);
+	// updateTimerが存在するなら時間をリサイズする
+	ResizeTimer(past_local_time_scale);
 }
 
 void EffectBase::Start()
@@ -65,10 +71,23 @@ std::shared_ptr<TimerBase> EffectBase::CreateUpdateTimer(float time_)
 	{
 		time_magni /= localTimeScale;
 	}
-	return TimerFactory::CreateTimer(time_ * time_magni, this, &EffectBase::ToTheNextImage);
+	return TimerFactory::CreateTimer(time_ * time_magni, shared_from_this(), this, &EffectBase::ToTheNextImage);
 }
 
 void EffectBase::ToTheNextImage()
 {
 	index++;
+}
+
+void EffectBase::ResizeTimer(float past_local_time_scale_)
+{
+	if (localTimeScale == 0.0f) { return; }
+	if (!updateTimer) { return; }
+
+	float remaining_time = updateTimer->GetRemainingTime();
+	remaining_time *= past_local_time_scale_;
+
+	float time_magni = 1.0f;
+	time_magni /= localTimeScale;
+	updateTimer->ResizeTime(remaining_time * time_magni);
 }

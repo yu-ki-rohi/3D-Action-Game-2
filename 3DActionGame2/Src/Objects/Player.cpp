@@ -5,7 +5,7 @@
 
 #include "../Input/InputManager.h"
 #include "../Systems/SimpleObserver.h"
-#include "../Systems/MemberFunctionPointerContainer.h"
+#include "../Systems/MFPCFactory.h"
 #include "../Systems/TimerFactory.h"
 #include "../Common.h"
 #include "CameraManager.h"
@@ -15,6 +15,20 @@ Player::Player(std::shared_ptr<CameraManager> camera_manager_) :
 	rollingStep(-1),
 	cameraManager(camera_manager_)
 {
+	
+}
+
+ObjectBase::Tag Player::GetTag() const
+{
+	return Tag::Player;
+}
+
+void Player::Start()
+{
+	CharacterBase::Start();
+
+	if (!IsActive()) { return; }
+
 	so = std::make_shared<SimpleObserver>();
 	InputManager::Instance().AddObserver(InputManager::Stick::Left, InputManager::Map::Player, so);
 
@@ -23,24 +37,25 @@ Player::Player(std::shared_ptr<CameraManager> camera_manager_) :
 		InputManager::Map::Player,
 		XINPUT_BUTTON_B,
 		InputManager::State::Press,
-		std::make_shared<MemberFunctionPointerContainer<Player>>(this, &Player::IgnitRolling));
+		MFPCFactory::CreateMFPC(shared_from_this(), this, &Player::IgnitRolling));
 
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Player,
 		InputManager::Stick::Left,
 		InputManager::State::Press,
-		std::make_shared<MemberFunctionPointerContainer<Player>>(this, &Player::IgnitWalkAnimation));
+		MFPCFactory::CreateMFPC(shared_from_this(), this, &Player::IgnitWalkAnimation));
 
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Player,
 		InputManager::Stick::Left,
 		InputManager::State::Release,
-		std::make_shared<MemberFunctionPointerContainer<Player>>(this, &Player::IgnitIdleAnimation));
+		MFPCFactory::CreateMFPC(shared_from_this(), this, &Player::IgnitIdleAnimation));
 }
 
-ObjectBase::Tag Player::GetTag() const
+void Player::HitStop()
 {
-	return Tag::Player;
+	MultiplyLocalTimeScaleBy(hitStopTimeScale); 
+	TimerFactory::CreateTimer(hitStopTime, shared_from_this(), this, &Player::FinishHitStop);
 }
 
 void Player::UpdateBehavior(float elapsed_time_)
@@ -133,8 +148,9 @@ void Player::IgnitRolling()
 	rollingStep = 0;
 	Vector3 dir = transform->GetForward();
 	rollingDirection = std::make_shared<Vector3>(dir.x, dir.y, dir.z);
-	TimerFactory::CreateTimer(0.32f, this, &Player::ProceedToNextRollingStep);
-	TimerFactory::CreateTimer(0.78f, this, &Player::FinishRolling);
+	// ˆê’U”’l‚Í“K“–‚É
+	TimerFactory::CreateTimer(0.32f, shared_from_this(), this, &Player::ProceedToNextRollingStep);
+	TimerFactory::CreateTimer(0.78f, shared_from_this(), this, &Player::FinishRolling);
 }
 void Player::ProceedToNextRollingStep()
 {
@@ -156,4 +172,10 @@ void Player::FinishRolling()
 	{
 		animator->SetNextAnim(AKind::Idle, Animator::Immediately, 4.6f, true);
 	}
+}
+
+
+void Player::FinishHitStop()
+{
+	MultiplyLocalTimeScaleBy(hitStopTimeScaleInv);
 }

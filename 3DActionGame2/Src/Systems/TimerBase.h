@@ -4,12 +4,12 @@ class TimerBase
 {
 public:
 	TimerBase(const float time_) :
-		time(time_)
+		time(time_),
+		elapsedTime(0.0f),
+		localTimeScale(1.0f)
 	{
 
 	}
-
-#pragma region アクセサ
 
 	// 経過時間
 	float GetElapsedTime()
@@ -28,7 +28,10 @@ public:
 		return isActive;
 	}
 
-#pragma endregion
+	void SetLocalTimeScale(float local_time_scale_)
+	{
+		localTimeScale = local_time_scale_;
+	}
 
 	virtual void Update(float elapsedTime_) = 0;
 
@@ -53,5 +56,7 @@ protected:
 	bool isActive = true;
 
 	float time;
-	float elapsedTime = 0.0f;
+	float elapsedTime;
+
+	float localTimeScale;
 };

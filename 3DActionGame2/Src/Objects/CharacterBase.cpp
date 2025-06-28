@@ -99,3 +99,15 @@ void CharacterBase::SetLocalTimeScale(float time_scale_)
 {
 	localTimeScale = time_scale_;
 }
+
+void  CharacterBase::MultiplyLocalTimeScaleBy(float multiplier_)
+{
+	localTimeScale *= multiplier_;
+
+	// åÎç∑èCê≥
+	const float error = 0.001f;
+	if (fabsf(1.0f - localTimeScale) < error)
+	{
+		localTimeScale = 1.0f;
+	}
+}

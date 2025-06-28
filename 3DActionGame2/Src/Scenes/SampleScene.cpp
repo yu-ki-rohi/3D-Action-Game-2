@@ -12,7 +12,7 @@ SampleScene::SampleScene() :
 	objectManager(std::make_shared<ObjectManager>()),
 	objectFactory(std::make_shared<ObjectFactory>(objectManager, nullptr, nullptr))
 {
-	InputManager::Instance().RegisterBehave(
+	/*InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		InputManager::Trigger::Right,
 		InputManager::State::Hold,
@@ -21,7 +21,7 @@ SampleScene::SampleScene() :
 		InputManager::Map::Menu,
 		InputManager::Trigger::Left,
 		InputManager::State::Hold,
-		std::make_shared<MemberFunctionPointerContainer<SampleScene>>(this, &SampleScene::DecreaseIntensity));
+		std::make_shared<MemberFunctionPointerContainer<SampleScene>>(this, &SampleScene::DecreaseIntensity));*/
 
 	lightCameraProjectionMatrix = MGetIdent();
 	lightCameraViewMatrix = MGetIdent();

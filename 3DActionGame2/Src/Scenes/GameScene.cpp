@@ -194,7 +194,7 @@ void GameScene::SuccessJustAvoid()
 		int mask = (int)ObjectBase::Tag::Stage;
 		objectManager->SetMonochrome(0.9f, mask);
 		mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
-		objectManager->SetLocalTimeScale(JustAvoidLocalTimeScale, mask);
+		objectManager->MultiplyLocalTimeScaleBy(JustAvoidLocalTimeScale, mask);
 	}
 
 	if (objectFactory)
@@ -205,8 +205,8 @@ void GameScene::SuccessJustAvoid()
 	intensity = 0.03f;
 
 	Time::TimeScale = 0.1f;
-	TimerFactory::CreateTimer<GameScene>(0.08f, this, &GameScene::ResetTimeScale);
-	TimerFactory::CreateTimer<GameScene>(4.0f, this, &GameScene::FinishJustAvoidTime);
+	TimerFactory::CreateTimer<GameScene>(0.08f, shared_from_this(), this, &GameScene::ResetTimeScale);
+	TimerFactory::CreateTimer<GameScene>(4.0f, shared_from_this(), this, &GameScene::FinishJustAvoidTime);
 
 	isJustAvoidTime = true;
 }
@@ -388,7 +388,7 @@ void GameScene::FinishJustAvoidTime()
 		int mask = (int)ObjectBase::Tag::Stage;
 		objectManager->SetMonochrome(0.0f, mask);
 		mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
-		objectManager->SetLocalTimeScale(1.0f, mask);
+		objectManager->MultiplyLocalTimeScaleBy(1.0f / JustAvoidLocalTimeScale, mask);;
 	}
 
 	if (objectFactory)

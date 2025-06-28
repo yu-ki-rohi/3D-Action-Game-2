@@ -6,6 +6,12 @@ FlexibleBoxCollider::FlexibleBoxCollider(Vector3 position_, Vector3 scale_, Vect
 
 }
 
+FlexibleBoxCollider::FlexibleBoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, bool is_collide_once_) :
+	BoxCollider(position_, scale_, rotate_, is_collide_once_)
+{
+
+}
+
 void FlexibleBoxCollider::UpdateFromParentMat(const MATRIX& parent_mat_)
 {
 	// çXêVëOÇÃboxTransformÇï€ë∂

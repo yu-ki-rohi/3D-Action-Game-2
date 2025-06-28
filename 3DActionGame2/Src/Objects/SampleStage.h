@@ -20,6 +20,7 @@ public:
 
 	void SetMonochrome(float rate_) override { monochromeRate = rate_; }
 	void SetLocalTimeScale(float time_scale_) override {}
+	void MultiplyLocalTimeScaleBy(float multiplier_) override {}
 
 	void IncreaseMonochrome();
 	void DecreaseMonochrome();

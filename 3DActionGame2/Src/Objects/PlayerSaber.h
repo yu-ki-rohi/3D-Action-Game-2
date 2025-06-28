@@ -1,6 +1,8 @@
 #pragma once
 #include "Player.h"
 
+class TimerBase;
+
 class PlayerSaber : public Player
 {
 public:
@@ -28,6 +30,12 @@ private:
 	BoxCollider bodyCollider;
 
 	char attackStep;
+
+	MyTimer enableAttackColliderTimer;
+	MyTimer disableAttackColliderTimer;
+	MyTimer finishAttackTimer;
+	MyTimer resetAttackStepTimer;
+	
 
 private:
 

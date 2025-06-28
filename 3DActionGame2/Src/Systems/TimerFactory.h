@@ -6,9 +6,9 @@
 class TimerFactory
 {
 public:
-	template <class T>
-	static std::shared_ptr<TimerBase> CreateTimer(float time_, T* obj_, void (T::* func_)())
+	template <class T, class V>
+	static std::shared_ptr<TimerBase> CreateTimer(float time_, std::shared_ptr<V> existence_, T* obj_, void (T::* func_)())
 	{
-		return TimerManager::Instance().Add(std::make_shared<Timer<T>>(time_, obj_, func_));
+		return TimerManager::Instance().Add(std::make_shared<Timer<T,V>>(time_, existence_, obj_, func_));
 	}
 };

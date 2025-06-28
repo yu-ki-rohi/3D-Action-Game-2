@@ -104,3 +104,20 @@ void ObjectManager::SetLocalTimeScale(float time_scale_, int mask_)
 		obj->SetLocalTimeScale(time_scale_);
 	}
 }
+
+void ObjectManager::MultiplyLocalTimeScaleBy(float multiplier_)
+{
+	for (auto& obj : objects)
+	{
+		obj->MultiplyLocalTimeScaleBy(multiplier_);
+	}
+}
+
+void ObjectManager::MultiplyLocalTimeScaleBy(float multiplier_, int mask_)
+{
+	for (auto& obj : objects)
+	{
+		if (((int)obj->GetTag() & mask_) == 0) { continue; }
+		obj->MultiplyLocalTimeScaleBy(multiplier_);
+	}
+}

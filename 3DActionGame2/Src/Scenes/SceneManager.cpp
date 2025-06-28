@@ -92,7 +92,7 @@ void SceneManager::FixedUpdate(float elapsed_time_)
 	if (currentScene->GetCurrentStep() != SceneBase::Step::Update) { return; }
 	if (fixedUpdateTimer == nullptr)
 	{
-		fixedUpdateTimer = std::make_unique<Timer<SceneManager>>(Timer<SceneManager>(Time::FixedDeltaTime + excess, this, &SceneManager::FixedUpdate));
+		fixedUpdateTimer = std::make_unique<Timer<SceneManager,SceneBase>>(Timer<SceneManager, SceneBase>(Time::FixedDeltaTime + excess, currentScene, this, &SceneManager::FixedUpdate));
 	}
 	fixedUpdateTimer->Update(elapsed_time_);
 

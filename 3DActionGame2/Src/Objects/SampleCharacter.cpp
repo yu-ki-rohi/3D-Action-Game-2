@@ -15,7 +15,7 @@ SampleCharacter::SampleCharacter(Vector3 position_, Vector3 scale_, int model_ha
 {
 	so = std::make_shared<SimpleObserver>();
 	InputManager::Instance().AddObserver(InputManager::Stick::Left, InputManager::Map::Menu, so);
-	
+	/*
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_A,
@@ -41,7 +41,7 @@ SampleCharacter::SampleCharacter(Vector3 position_, Vector3 scale_, int model_ha
 		InputManager::Map::Menu,
 		XINPUT_BUTTON_X,
 		InputManager::State::Hold,
-		std::make_shared<MemberFunctionPointerContainer<SampleCharacter>>(this, &SampleCharacter::DecreaseMonochrome));
+		std::make_shared<MemberFunctionPointerContainer<SampleCharacter>>(this, &SampleCharacter::DecreaseMonochrome));*/
 
 	transform.RotateAxisY(-160.0f);
 	if (sample_camera_ != nullptr)
