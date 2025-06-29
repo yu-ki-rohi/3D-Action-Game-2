@@ -64,6 +64,6 @@ private:
 	int numView = 0;
 	int fixedNum = 0;
 	int fixedNumView = 0;
-	std::unique_ptr<Timer<SceneManager>> debugTimer = nullptr;
+	std::unique_ptr<Timer<SceneManager, SceneBase>> debugTimer = nullptr;
 #endif
 };

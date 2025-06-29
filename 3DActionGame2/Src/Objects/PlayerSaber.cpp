@@ -27,7 +27,7 @@ void PlayerSaber::Start()
 	Player::Start();
 
 	if (!IsActive()) { return; }
-	//attackCollider.SetIsEnabled(false);
+	attackCollider.SetIsEnabled(false);
 	attackCollider.SetOwner(shared_from_this());
 	bodyCollider.SetOwner(shared_from_this());
 
@@ -67,6 +67,19 @@ void PlayerSaber::Render()
 #endif
 }
 
+void PlayerSaber::HitStop()
+{
+	Player::HitStop();
+	// Timer‚ÉlocalTimeScale‚ð”½‰f
+	for (auto my_timer : myTimers)
+	{
+		if (my_timer.second)
+		{
+			my_timer.second->SetLocalTimeScale(localTimeScale);
+		}
+	}
+}
+
 void PlayerSaber::UpdateBehavior(float elapsed_time_)
 {
 	Player::UpdateBehavior(elapsed_time_);
@@ -89,11 +102,29 @@ void PlayerSaber::UpdateCollider()
 	animator->DetachAnim(renderer->GetModelHandle());
 }
 
+void PlayerSaber::FinishHitStop()
+{
+	Player::FinishHitStop();
+	// Timer‚ÉlocalTimeScale‚ð”½‰f
+	for (auto my_timer : myTimers)
+	{
+		if (my_timer.second)
+		{
+			my_timer.second->SetLocalTimeScale(localTimeScale);
+		}
+	}
+	
+}
+
 void PlayerSaber::IgnitAttackAnimation()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
+
+	float enable_time = 0.38f;
+	float disable_time = 0.85f;
 	float motion_time = 0.9f;
+
 	switch (attackStep)
 	{
 	case 0:
@@ -118,10 +149,21 @@ void PlayerSaber::IgnitAttackAnimation()
 	}
 	attackStep++;
 	canMove = false;
-	PrepareTimer(finishAttackTimer, motion_time, this, &PlayerSaber::FinishAttack);
-	PrepareTimer(resetAttackStepTimer, motion_time + 0.4f, this, &PlayerSaber::ResetAttackStep);
+	PrepareTimer(myTimers[TimerKind::EnableAttackCollider], enable_time, this, &PlayerSaber::EnableAttackCollider);
+	PrepareTimer(myTimers[TimerKind::DisableAttackCollider], disable_time, this, &PlayerSaber::DisableAttackCollider);
+	PrepareTimer(myTimers[TimerKind::FinishAttack], motion_time, this, &PlayerSaber::FinishAttack);
+	PrepareTimer(myTimers[TimerKind::ResetAttackStep], motion_time + 0.4f, this, &PlayerSaber::ResetAttackStep);
 }
 
+void PlayerSaber::EnableAttackCollider()
+{
+	attackCollider.SetIsEnabled(true);
+}
+
+void PlayerSaber::DisableAttackCollider()
+{
+	attackCollider.SetIsEnabled(false);
+}
 
 void PlayerSaber::FinishAttack()
 {
@@ -143,6 +185,5 @@ void PlayerSaber::FinishAttack()
 
 void PlayerSaber::ResetAttackStep()
 {
-	if (!canMove) { return; }
 	attackStep = 0;
 }

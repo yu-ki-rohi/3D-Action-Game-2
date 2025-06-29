@@ -118,7 +118,7 @@ void SceneManager::Update(float elapsed_time_)
 	num++;
 	if (debugTimer == nullptr)
 	{
-		debugTimer = std::make_unique<Timer<SceneManager>>(Timer<SceneManager>(1.0f, this, &SceneManager::DebugView));
+		debugTimer = std::make_unique<Timer<SceneManager, SceneBase>>(Timer<SceneManager, SceneBase>(1.0f, currentScene, this, &SceneManager::DebugView));
 	}
 	debugTimer->Update(elapsed_time_ * Time::TimeScale);
 #endif

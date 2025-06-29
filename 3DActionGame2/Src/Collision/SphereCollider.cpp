@@ -63,7 +63,7 @@ void SphereCollider::DebugDrow()
 	}
 	else
 	{
-		color = GetColor(155, 155, 155);
+		color = GetColor(185, 185, 185);
 	}
 	int div_num = 32;
 	DrawSphere3D(position.ToVECTOR(), radius, div_num, color, color, FALSE);

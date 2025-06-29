@@ -16,7 +16,7 @@ public:
 
 	virtual void Start() override;
 
-	void HitStop();
+	virtual void HitStop();
 
 protected:
 
@@ -27,10 +27,11 @@ protected:
 	void IgnitWalkAnimation();
 	void IgnitRolling();
 
+	virtual void FinishHitStop();
+
 private:
 	void ProceedToNextRollingStep();
 	void FinishRolling();
-	void FinishHitStop();
 
 protected:
 	bool canMove;

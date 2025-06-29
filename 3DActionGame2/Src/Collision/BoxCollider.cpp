@@ -123,7 +123,7 @@ void BoxCollider::DebugDrow()
 	}
 	else
 	{
-		color = GetColor(155, 155, 155);
+		color = GetColor(185, 185, 185);
 	}
 
 	for (const auto& pair : line_list)

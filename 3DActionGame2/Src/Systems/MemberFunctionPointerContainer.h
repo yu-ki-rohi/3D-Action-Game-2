@@ -33,6 +33,7 @@ public:
 		// 対象の生存確認及びNullチェック
 		auto target_existence = targetExistence.lock();
 		if (!target_existence || !targetObj || !targetFunc) return;
+		// 保持している関数を呼び出し
 		(targetObj->*targetFunc)();
 	}
 
