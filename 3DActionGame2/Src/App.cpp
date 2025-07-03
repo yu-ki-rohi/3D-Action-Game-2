@@ -46,7 +46,7 @@ bool App::InitApp()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// ‹N“®‚ÌƒV[ƒ“‚ğİ’è
-	sceneManager = std::make_unique<SceneManager>(SceneFactory::Create(SceneBase::Type::Game));
+	sceneManager = std::make_unique<SceneManager>(SceneFactory::Create(SceneBase::Type::Title));
 
 	systemTime = GetNowHiPerformanceCount();
 

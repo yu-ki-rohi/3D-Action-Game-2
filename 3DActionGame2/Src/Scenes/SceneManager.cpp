@@ -69,7 +69,7 @@ void SceneManager::Main(float elapsed_time_)
 #endif
 
 	// フレーム毎の更新処理
-	Update(elapsed_time_ * Time::TimeScale);
+	Update(elapsed_time_);
 
 	// 描画処理
 	Render();
@@ -84,13 +84,12 @@ void SceneManager::FixedUpdate()
 	fixedNum++;
 #endif           
 	excess = fixedUpdateTimer->GetRemainingTime();
-	fixedUpdateTimer = nullptr;
 }
 
 void SceneManager::FixedUpdate(float elapsed_time_)
 {
 	if (currentScene->GetCurrentStep() != SceneBase::Step::Update) { return; }
-	if (fixedUpdateTimer == nullptr)
+	if (fixedUpdateTimer == nullptr || !fixedUpdateTimer->IsActive())
 	{
 		fixedUpdateTimer = std::make_unique<Timer<SceneManager,SceneBase>>(Timer<SceneManager, SceneBase>(Time::FixedDeltaTime + excess, currentScene, this, &SceneManager::FixedUpdate));
 	}
@@ -105,22 +104,22 @@ void SceneManager::Update(float elapsed_time_)
 {
 	if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
 	{
-		currentScene->UpdateInLoading(elapsed_time_);
+		currentScene->UpdateInLoading(elapsed_time_ * Time::TimeScale);
 	}
 	else if (currentScene->GetCurrentStep() == SceneBase::Step::Update)
 	{
-		currentScene->Update(elapsed_time_);
+		currentScene->Update(elapsed_time_ * Time::TimeScale);
 	}
 
 #ifdef DEBUG
 	profiler.Stamp(Profiler::Type::Update);
 
 	num++;
-	if (debugTimer == nullptr)
+	if (debugTimer == nullptr || !debugTimer->IsActive())
 	{
 		debugTimer = std::make_unique<Timer<SceneManager, SceneBase>>(Timer<SceneManager, SceneBase>(1.0f, currentScene, this, &SceneManager::DebugView));
 	}
-	debugTimer->Update(elapsed_time_ * Time::TimeScale);
+	debugTimer->Update(elapsed_time_);
 #endif
 }
 
@@ -160,6 +159,5 @@ void SceneManager::DebugView()
 	fixedNumView = fixedNum;
 	num = 0;
 	fixedNum = 0;
-	debugTimer = nullptr;
 }
 #endif

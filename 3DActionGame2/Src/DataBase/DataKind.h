@@ -51,3 +51,13 @@ enum class EKind
 {
 	HitSlash
 };
+
+enum class BGMKind
+{
+	Main
+};
+
+enum class SEKind
+{
+	HitSlash
+};

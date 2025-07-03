@@ -35,7 +35,7 @@ void Player::Start()
 
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Player,
-		XINPUT_BUTTON_B,
+		KeyConfig::Tag::Avoid,
 		InputManager::State::Press,
 		MFPCFactory::CreateMFPC(shared_from_this(), this, &Player::IgnitRolling));
 

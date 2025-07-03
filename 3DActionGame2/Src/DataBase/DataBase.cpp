@@ -3,6 +3,7 @@
 #include "ModelData.h"
 #include "EffectData.h"
 #include "ShaderData.h"
+#include "AudioData.h"
 
 std::shared_ptr<AnimationFileList> DataBase::GetAnimationFileList()
 {
@@ -22,6 +23,11 @@ std::shared_ptr<EffectFileList> DataBase::GetEffectFileList()
 std::shared_ptr<ShaderFileList> DataBase::GetShaderFileList()
 {
 	return std::make_shared<ShaderFileList>();
+}
+
+std::shared_ptr<AudioFileList> DataBase::GetAudioFileList()
+{
+	return std::make_shared<AudioFileList>();
 }
 
 std::shared_ptr<AnimationSpeedList> DataBase::GetAnimationSpeedList()

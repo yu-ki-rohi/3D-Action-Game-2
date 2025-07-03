@@ -1,12 +1,32 @@
 #pragma once
 #include "../Common.h"
 
+// デバッグ系の処理は最終的にはなるべくここにまとめたい
+
 #ifdef DEBUG
+
+#include<memory>
+
+struct DebugLog
+{
+	enum class Type
+	{
+		Message,
+		Warning,
+		Error
+	};
+
+	std::unique_ptr<char> Message;
+
+};
 
 class DebugManager
 {
 public:
+	
+	void AddDebugLog(DebugLog::Type type_, char* message_);
 
+	void Render();
 
 private:
 

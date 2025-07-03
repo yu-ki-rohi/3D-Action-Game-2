@@ -26,10 +26,73 @@ InputManager::~InputManager()
 
 }
 
+unsigned char InputManager::GetConfig(KeyConfig::Tag tag_)
+{
+	return config.GetConfig(tag_);
+}
+
+bool InputManager::IsReverseVertical()
+{
+	return config.IsReverseVertical();
+}
+
+bool InputManager::IsReverseHorizontal()
+{
+	return config.IsReverseHorizontal();
+}
+
+bool InputManager::IsSwitchedConfigDecideAndCancel()
+{
+	bool result = true;
+	if (config.GetConfig(KeyConfig::Tag::Decide) == XINPUT_BUTTON_B)
+	{
+		result = false;
+	}
+	return result;
+}
+
+void InputManager::SetConfig(KeyConfig::Tag tag_, unsigned char button_)
+{
+	config.SetConfig(tag_, button_);
+}
+
+void InputManager::SwitchIsReverseVertical()
+{
+	config.SwitchIsReverseVertical();
+}
+
+void InputManager::SwitchIsReverseHorizontal()
+{
+	config.SwitchIsReverseHorizontal();
+}
+
+
+void InputManager::SwitchConfigDecideAndCancel()
+{
+	if (config.GetConfig(KeyConfig::Tag::Decide) == XINPUT_BUTTON_B)
+	{
+		config.SetConfig(KeyConfig::Tag::Decide, XINPUT_BUTTON_A);
+		config.SetConfig(KeyConfig::Tag::Cancel, XINPUT_BUTTON_B);
+	}
+	else
+	{
+		config.SetConfig(KeyConfig::Tag::Decide, XINPUT_BUTTON_B);
+		config.SetConfig(KeyConfig::Tag::Cancel, XINPUT_BUTTON_A);
+	}
+}
+
 void InputManager::RegisterBehave(Map map_, unsigned char buttonType_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)
 {
-	if (buttonType_ >= BUTTON_NUM) return;
-	buttons[buttonType_]->Register(map_, state_, behavior_);
+	if (buttonType_ >= BUTTON_NUM) { return; }
+	if (buttonType_ != XINPUT_BUTTON_LEFT_TRIGGER &&
+		buttonType_ != XINPUT_BUTTON_RIGHT_TRIGGER)
+	{
+		buttons[buttonType_]->Register(map_, state_, behavior_);
+	}
+	else
+	{
+		triggers[buttonType_ - XINPUT_BUTTON_LEFT_TRIGGER]->Register(map_, state_, behavior_);
+	}
 }
 
 void InputManager::RegisterBehave(Map map_, KeyConfig::Tag tag_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_)

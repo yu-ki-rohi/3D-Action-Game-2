@@ -58,6 +58,8 @@ private:
 	void ResetTimeScale();
 	void FinishJustAvoidTime();
 
+	void ReturnTitle();
+
 private:
 	// オブジェクトの管理クラス
 	std::shared_ptr<ObjectManager> objectManager;

@@ -103,7 +103,7 @@ std::shared_ptr<CameraBase> ObjectFactory::CreateCameraTPS()
 }
 
 
-std::shared_ptr<Player> ObjectFactory::CreatePlayer(std::shared_ptr <PlayerEventNotifier> notifier_, std::shared_ptr<CameraManager> camera_manager_)
+std::shared_ptr<Player> ObjectFactory::CreatePlayer(Vector3 position_, Vector3 rotation_, std::shared_ptr <PlayerEventNotifier> notifier_, std::shared_ptr<CameraManager> camera_manager_)
 {
 	auto object_manager = objectManager.lock();
 	auto assets_manager = assetsManager.lock();
@@ -111,7 +111,7 @@ std::shared_ptr<Player> ObjectFactory::CreatePlayer(std::shared_ptr <PlayerEvent
 	if (!object_manager || !assets_manager || !collider_interface) { return nullptr; }
 
 	auto obj = std::make_shared<PlayerSaber>(camera_manager_);
-	obj->SetComponent(std::make_shared<Transform>(Vector3(), Vector3(0.1f, 0.1f, 0.1f)));
+	obj->SetComponent(std::make_shared<Transform>(position_, Vector3(0.1f, 0.1f, 0.1f), rotation_));
 	obj->SetComponent(std::make_shared<Renderer>(
 		assets_manager->GetModel(MKind::Player)->Handle,
 		assets_manager->GetVertexShader(VSKind::SkinnedMesh)->Handle,
@@ -127,7 +127,7 @@ std::shared_ptr<Player> ObjectFactory::CreatePlayer(std::shared_ptr <PlayerEvent
 	return obj;
 }
 
-std::shared_ptr<Enemy> ObjectFactory::CreateEnemy()
+std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rotation_)
 {
 	auto object_manager = objectManager.lock();
 	auto assets_manager = assetsManager.lock();
@@ -135,7 +135,7 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy()
 	if (!object_manager || !assets_manager || !collider_interface) { return nullptr; }
 
 	auto obj = std::make_shared<Enemy>();
-	obj->SetComponent(std::make_shared<Transform>(Vector3(20.0f, 0.0f, 10.0f), Vector3(0.18f, 0.18f, 0.18f)));
+	obj->SetComponent(std::make_shared<Transform>(position_, Vector3(0.18f, 0.18f, 0.18f), rotation_));
 	obj->SetComponent(std::make_shared<Renderer>(
 		assets_manager->GetModel(MKind::Enemy)->Handle,
 		assets_manager->GetVertexShader(VSKind::SkinnedMesh)->Handle,

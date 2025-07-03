@@ -51,6 +51,18 @@ public:
 	};
 
 public:
+	unsigned char GetConfig(KeyConfig::Tag tag_);
+
+	bool IsReverseVertical();
+	bool IsReverseHorizontal();
+	bool IsSwitchedConfigDecideAndCancel();
+
+	void SetConfig(KeyConfig::Tag tag_, unsigned char button_);
+
+	void SwitchIsReverseVertical();
+	void SwitchIsReverseHorizontal();
+	void SwitchConfigDecideAndCancel();
+
 	// “ü—Í‚Ì‚Ó‚é‚Ü‚¢‚ğ“o˜^
 	// ‘æˆêˆø”:“o˜^æ‚Ìƒ}ƒbƒvA‘æ“ñˆø”:“o˜^‚·‚éƒ{ƒ^ƒ“A‘æOˆø”:“o˜^‚·‚é“ü—Íó‘ÔA‘ælˆø”:“o˜^‚·‚é‚Ó‚é‚Ü‚¢
 	void RegisterBehave(Map map_, unsigned char buttonType_, State state_, std::shared_ptr<MemberFunctionPointerContainerBase> behavior_);
@@ -75,6 +87,7 @@ public:
 
 	// ƒ}ƒbƒv‚ÌØ‘Ö
 	void ChangeMap(Map map_);
+
 
 private:
 	Map currentMap = Map::Menu;

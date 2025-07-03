@@ -26,4 +26,6 @@ public:
 
 private:
 	std::shared_ptr<SimpleObserver> so;
+	bool isReverseVertical;
+	bool isReverseHorizontal;
 };

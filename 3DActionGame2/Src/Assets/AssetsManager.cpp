@@ -3,13 +3,16 @@
 #include "ModelResource.h"
 #include "EffectResource.h"
 #include "ShaderResource.h"
+#include "AudioResource.h"
 #include "../DataBase/DataBase.h"
 #include "../DataBase/AnimationData.h"
 #include "../DataBase/EffectData.h"
 #include "../DataBase/ModelData.h"
 #include "../DataBase/ShaderData.h"
+#include "../DataBase/AudioData.h"
 #include "../Common.h"
 #include <DxLib.h>
+#include "../Audio/AudioManager.h"
 
 AssetsManager::AssetsManager() :
 	tmpScreenHandle(-1),
@@ -36,6 +39,8 @@ void AssetsManager::Load()
 	MakeTmpScreen();
 
 	MakeShadowMap();
+
+	LoadAudio();
 }
 
 void AssetsManager::DeleteAll()
@@ -64,6 +69,9 @@ void AssetsManager::DeleteAll()
 	}
 
 	InitShader();
+
+	InitSoundMem();
+	AudioManager::Instance().DestructResource();
 
 	DeleteGraph(tmpScreenHandle);
 	DeleteGraph(shadowMapHandle);
@@ -94,14 +102,20 @@ const std::shared_ptr<PixelShaderResource> AssetsManager::GetPixelShader(PSKind 
 	return pixelShaderResource[kind_];
 }
 
-int AssetsManager::GetTmpScreenHandle()
+int AssetsManager::GetTmpScreenHandle() const
 {
 	return tmpScreenHandle;
 }
 
-int AssetsManager::GetShadowMapHandle()
+int AssetsManager::GetShadowMapHandle() const
 {
 	return shadowMapHandle;
+}
+
+void AssetsManager::PrepareToPlayAudio()
+{
+	AudioManager::Instance().RegisterMusic(musicResource);
+	AudioManager::Instance().RegisterSound(soundResource);
 }
 
 void AssetsManager::LoadModel()
@@ -252,4 +266,47 @@ void AssetsManager::MakeShadowMap()
 	SetDrawValidFloatTypeGraphCreateFlag(FALSE);
 	SetCreateDrawValidGraphChannelNum(4);
 	SetCreateGraphColorBitDepth(32);
+}
+
+void AssetsManager::LoadAudio()
+{
+	std::shared_ptr<AudioFileList> audio_file_list = DataBase::Instance().GetAudioFileList();
+
+	if (!musicResource) { musicResource = std::make_shared<std::unordered_map<BGMKind, std::shared_ptr<MusicResource>>>(); }
+	if (!soundResource) { soundResource = std::make_shared<std::unordered_map<SEKind, std::shared_ptr<SoundResource>>>(); }
+
+	int judge = GetRand(MUSIC_PATTERN - 1);
+
+	// 読み込み方式をストリーミングに設定する
+	SetCreateSoundDataType(DX_SOUNDDATATYPE_FILE);
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
+	// 音楽読み込み
+	for (const auto& music_file : audio_file_list->MusicFiles[judge])
+	{
+		if ((*musicResource)[music_file.first] == nullptr)
+		{
+			(*musicResource)[music_file.first] = std::make_shared<MusicResource>();
+		}
+		(*musicResource)[music_file.first]->Handle = LoadSoundMem(music_file.second);
+	}
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+	SetUseASyncLoadFlag(FALSE);
+
+	// ストリーミング読み込み設定の解除
+	SetCreateSoundDataType(DX_SOUNDDATATYPE_MEMNOPRESS);
+
+	SetUseASyncLoadFlag(TRUE);
+	// ↓↓↓非同期読み込み関数はここから下で呼ぶ↓↓↓
+	// 効果音読み込み
+	for (const auto& sound_file : audio_file_list->SoundFiles)
+	{
+		if ((*soundResource)[sound_file.first] == nullptr)
+		{
+			(*soundResource)[sound_file.first] = std::make_shared<SoundResource>();
+		}
+		(*soundResource)[sound_file.first]->Handle = LoadSoundMem(sound_file.second);
+	}
+	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
+	SetUseASyncLoadFlag(FALSE);
 }

@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Assets\AssetsManager.cpp" />
+    <ClCompile Include="Src\Audio\AudioManager.cpp" />
     <ClCompile Include="Src\Collision\BoxCollider.cpp" />
     <ClCompile Include="Src\Collision\ColliderRegisterInterface.cpp" />
     <ClCompile Include="Src\Collision\CollisionManager.cpp" />
@@ -198,9 +199,11 @@
     <ClInclude Include="Src\App.h" />
     <ClInclude Include="Src\Assets\AnimationResource.h" />
     <ClInclude Include="Src\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\Assets\AudioResource.h" />
     <ClInclude Include="Src\Assets\EffectResource.h" />
     <ClInclude Include="Src\Assets\ModelResource.h" />
     <ClInclude Include="Src\Assets\ShaderResource.h" />
+    <ClInclude Include="Src\Audio\AudioManager.h" />
     <ClInclude Include="Src\Collision\BoxCollider.h" />
     <ClInclude Include="Src\Collision\Collider.h" />
     <ClInclude Include="Src\Collision\ColliderRegisterInterface.h" />
@@ -209,6 +212,7 @@
     <ClInclude Include="Src\Collision\SphereCollider.h" />
     <ClInclude Include="Src\Common.h" />
     <ClInclude Include="Src\DataBase\AnimationData.h" />
+    <ClInclude Include="Src\DataBase\AudioData.h" />
     <ClInclude Include="Src\DataBase\CharacterParameters.h" />
     <ClInclude Include="Src\DataBase\DataBase.h" />
     <ClInclude Include="Src\DataBase\DataKind.h" />

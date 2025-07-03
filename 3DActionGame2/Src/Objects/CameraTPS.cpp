@@ -3,7 +3,9 @@
 #include "../Input/InputManager.h"
 #include "../Systems/SimpleObserver.h"
 
-CameraTPS::CameraTPS()
+CameraTPS::CameraTPS() :
+	isReverseVertical(InputManager::Instance().IsReverseVertical()),
+	isReverseHorizontal(InputManager::Instance().IsReverseHorizontal())
 {
 	so = std::make_shared<SimpleObserver>();
 	InputManager::Instance().AddObserver(InputManager::Stick::Right, InputManager::Map::Player, so);
@@ -62,7 +64,8 @@ void CameraTPS::Update(float elapsed_time_)
 {
 	float x, y;
 	so->GetFloatx2(x, y);
-
+	if (isReverseVertical) { y *= -1.0f; }
+	if (isReverseHorizontal) { x *= -1.0f; }
 	float horizontal_speed = 50.0f, vertical_speed = 30.0f;
 	if (abs(x) > 0.5f)
 	{

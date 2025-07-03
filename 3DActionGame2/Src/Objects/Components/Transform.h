@@ -68,18 +68,19 @@ public:
 #endif
 
 public:
-	Transform() = default;
+	Transform();
 	Transform(Vector3 position_);
 	Transform(Vector3 position_, Vector3 scale_);
+	Transform(Vector3 position_, Vector3 scale_, Vector3 rotation_);
 
 private:
 	// オイラー角による回転状態
 	// 基本的に参照用なので、こちらを直接変更はしない
 	// 単位はラジアン
-	Vector3 rotateAngle = Vector3::ZERO;
+	Vector3 rotateAngle;
 
 	// こちらが回転情報の本体
-	Quaternion quaternion = Quaternion::IDENTITY;
+	Quaternion quaternion;
 
 	// いずれ階層構造を実装するとき用
 	//std::vector<std::shared_ptr<Transform>> children;

@@ -38,6 +38,9 @@
     <Filter Include="Src\DataBase">
       <UniqueIdentifier>{6a6d660f-d86e-466c-8fe6-ff17ac30495d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Audio">
+      <UniqueIdentifier>{a9fe8d1c-8ddf-4f00-96b1-8e67bbb8ba0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\main.cpp">
@@ -198,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="Src\Collision\FlexibleBoxCollider.cpp">
       <Filter>Src\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Audio\AudioManager.cpp">
+      <Filter>Src\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +431,15 @@
     </ClInclude>
     <ClInclude Include="Src\Systems\MFPCFactory.h">
       <Filter>Src\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataBase\AudioData.h">
+      <Filter>Src\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Assets\AudioResource.h">
+      <Filter>Src\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Audio\AudioManager.h">
+      <Filter>Src\Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@
 
 struct Vector3;
 
+// todo Vector4\‘¢‘Ì‚ğì‚èA‚»‚ê‚ğŒp³
+
 struct Quaternion
 {
 public:

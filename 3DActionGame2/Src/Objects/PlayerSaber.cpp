@@ -47,7 +47,7 @@ void PlayerSaber::Start()
 
 	InputManager::Instance().RegisterBehave(
 		InputManager::Map::Player,
-		XINPUT_BUTTON_A,
+		KeyConfig::Tag::Attack,
 		InputManager::State::Hold,
 		MFPCFactory::CreateMFPC(shared_from_this(), this, &PlayerSaber::IgnitAttackAnimation));
 

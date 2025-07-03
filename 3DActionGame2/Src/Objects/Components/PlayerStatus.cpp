@@ -5,6 +5,7 @@
 #include "../ObjectFactory.h"
 #include "../../Mathmatics/Vector3.h"
 #include "../Player.h"
+#include "../../Audio/AudioManager.h"
 
 PlayerStatus::PlayerStatus(std::shared_ptr<Player> owner_, std::shared_ptr<PlayerEventNotifier> notifier_, std::shared_ptr<ObjectFactory> object_factory_) :
 	owner(owner_),
@@ -47,6 +48,7 @@ void PlayerStatus::OnTriggerEnter(Collider* other_)
 			if (!object_factory) { return; }
 			// ˆø”‚Íˆê’U“K“–‚É
 			object_factory->CreateSlashEffect(other_->GetHitPosition(), 30.0f, 0.0f);
+			AudioManager::Instance().PlaySoundEffect(SEKind::HitSlash);
 		}
 
 		auto player = owner.lock();

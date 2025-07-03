@@ -27,4 +27,6 @@ private:
 	BoxCollider justAvoidIgnitionCollider;
 
 	std::shared_ptr<JustAvoidIgnition> justAvoidIgnition;
+
+	bool isChanging;
 };

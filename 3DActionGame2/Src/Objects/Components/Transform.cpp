@@ -144,16 +144,35 @@ void Transform::Translate(const Vector3& vec_)
 	Position += quaternion.GetUp() * vec_.y;
 	Position += quaternion.GetRight() * vec_.x;
 }
+Transform::Transform() :
+	Position(Vector3::ZERO),
+	rotateAngle(Vector3::ZERO),
+	quaternion(Quaternion::IDENTITY)
+{
 
+}
 Transform::Transform(Vector3 position_) :
-	Position(position_)
+	Position(position_),
+	rotateAngle(Vector3::ZERO),
+	quaternion(Quaternion::IDENTITY)
 {
 
 }
 
 Transform::Transform(Vector3 position_, Vector3 scale_) :
 	Position(position_),
-	Scale(scale_)
+	Scale(scale_),
+	rotateAngle(Vector3::ZERO),
+	quaternion(Quaternion::IDENTITY)
+{
+
+}
+
+Transform::Transform(Vector3 position_, Vector3 scale_, Vector3 rotation_) :
+	Position(position_),
+	Scale(scale_),
+	rotateAngle(rotation_),
+	quaternion(Quaternion::ConvertFromEular(rotation_))
 {
 
 }

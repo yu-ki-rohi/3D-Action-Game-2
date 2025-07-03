@@ -10,12 +10,15 @@
 #include "../Common.h"
 #include "../Systems/TimerFactory.h"
 #include "../Systems/Time.h"
+#include "../Systems/MFPCFactory.h"
 #include "PlayerEventNotifier.h"
 
 #include "../Objects/Player.h"
 #include "../Objects/Enemy.h"
 
 #include "../Input/InputManager.h"
+#include "../Audio/AudioManager.h"
+
 
 GameScene::GameScene() :
 	objectManager(std::make_shared<ObjectManager>()),
@@ -140,13 +143,22 @@ void GameScene::UpdateInLoading(float elapsed_time_)
 {
 	if (isReady)
 	{
+		InputManager::Instance().RegisterBehave(
+			InputManager::Map::Player,
+			XINPUT_BUTTON_START,
+			InputManager::State::Press,
+			MFPCFactory::CreateMFPC(shared_from_this(), this, &GameScene::ReturnTitle)
+		);
 		InputManager::Instance().ChangeMap(InputManager::Map::Player);
+		AudioManager::Instance().PlayMusic(BGMKind::Main);
+		AudioManager::Instance().SetVolume(125, SEKind::HitSlash);
 
 		currentStep = Step::Update;
 	}
 	else if (GetASyncLoadNum() == 0)
 	{
 		GenerateObjects();
+		assetsManager->PrepareToPlayAudio();
 		isReady = true;
 	}
 }
@@ -182,6 +194,7 @@ void GameScene::Initialize()
 
 SceneBase::Type GameScene::Delete()
 {
+	InputManager::Instance().Clear();
 	return Type::Title;
 }
 
@@ -202,11 +215,16 @@ void GameScene::SuccessJustAvoid()
 		objectFactory->SetIsJustAvoidTime(true);
 	}
 
-	intensity = 0.03f;
+	intensity = 0.035f;
+
+	AudioManager::Instance().SetVolume(155, BGMKind::Main);
+
+	const float time_to_reset = 0.08f;
+	const float just_avoid_bonus_time = 5.0f;
 
 	Time::TimeScale = 0.1f;
-	TimerFactory::CreateTimer<GameScene>(0.08f, shared_from_this(), this, &GameScene::ResetTimeScale);
-	TimerFactory::CreateTimer<GameScene>(4.0f, shared_from_this(), this, &GameScene::FinishJustAvoidTime);
+	TimerFactory::CreateTimer<GameScene>(time_to_reset, shared_from_this(), this, &GameScene::ResetTimeScale);
+	TimerFactory::CreateTimer<GameScene>(time_to_reset + just_avoid_bonus_time, shared_from_this(), this, &GameScene::FinishJustAvoidTime);
 
 	isJustAvoidTime = true;
 }
@@ -365,9 +383,14 @@ void GameScene::PostProcessing()
 
 void GameScene::GenerateObjects()
 {
-	auto player = objectFactory->CreatePlayer(playerEventNotifier, cameraManager);
+	Vector3 initial_position = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 initial_rotation = Vector3(0.0f, 180.0f, 0.0f);
+	auto player = objectFactory->CreatePlayer(initial_position, initial_rotation, playerEventNotifier, cameraManager);
+	
+	initial_position = Vector3(0.0f, 0.0f, 50.0f);
+	initial_rotation = Vector3(0.0f, 0.0f, 0.0f);
 
-	auto enemy = objectFactory->CreateEnemy();
+	auto enemy = objectFactory->CreateEnemy(initial_position, initial_rotation);
 
 	objectFactory->CreateStage();
 
@@ -397,5 +420,12 @@ void GameScene::FinishJustAvoidTime()
 	}
 	intensity = 0.0f;
 
+	AudioManager::Instance().SetVolume(255, BGMKind::Main);
+
 	isJustAvoidTime = false;
+}
+
+void GameScene::ReturnTitle()
+{
+	currentStep = Step::Finish;
 }

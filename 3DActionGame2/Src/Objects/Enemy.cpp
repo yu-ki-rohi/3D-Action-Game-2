@@ -12,7 +12,8 @@
 Enemy::Enemy() :
 	attackCollider(Vector3(0.0f, 30.0f, -7.0f), Vector3(30.0f, 100.0f, 30.0f), Vector3(0.0f, -6.0f, 32.0f)),
 	bodyCollider(Vector3(0.0f, -10.0f, -5.0f), Vector3(70.0f, 170.0f, 40.0f), Vector3(0.0f, 0.0f, 0.0f)),
-	justAvoidIgnitionCollider(Vector3(0.0f, 30.0f, -7.0f), Vector3(70.0f, 140.0f, 80.0f), Vector3(0.0f, -6.0f, 32.0f))
+	justAvoidIgnitionCollider(Vector3(0.0f, 30.0f, -7.0f), Vector3(70.0f, 140.0f, 80.0f), Vector3(0.0f, -6.0f, 32.0f)),
+	isChanging(false)
 {
 
 }
@@ -69,10 +70,29 @@ void Enemy::Render()
 
 void Enemy::UpdateBehavior(float elapsed_time_)
 {
-	if (animator->GetAnimationProgressPercentage() > 0.95f)
+	if (animator->GetAnimationProgressPercentage() > 0.9f)
 	{
-		float changing_time = animator->GetAnimationTimeByNormalizedValue(0.05f);
-		animator->SetNextAnim(AKind::Attack00, Animator::Immediately, changing_time, false);
+		if (isChanging) { return; }
+		const char pattern_num = 3;
+		int judge = GetRand(pattern_num - 1);
+		float changing_time = animator->GetAnimationTimeByNormalizedValue(0.1f);
+		switch (judge)
+		{
+		case 0:
+			animator->SetNextAnim(AKind::Attack00, Animator::Immediately, changing_time, false);
+			break;
+		case 1:
+			animator->SetNextAnim(AKind::Attack01, Animator::Immediately, changing_time, false);
+			break;
+		case 2:
+			animator->SetNextAnim(AKind::Attack02, Animator::Immediately, changing_time, false);
+			break;
+		}
+		isChanging = true;
+	}
+	else
+	{
+		isChanging = false;
 	}
 }
 

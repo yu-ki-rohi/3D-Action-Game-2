@@ -17,6 +17,11 @@ struct EffectResource;
 struct VertexShaderResource;
 struct PixelShaderResource;
 
+struct MusicResource;
+struct SoundResource;
+
+
+// 主にHandleを管理させるクラス
 class AssetsManager
 {
 public:
@@ -35,8 +40,10 @@ public:
 	const std::shared_ptr<VertexShaderResource> GetVertexShader(VSKind kind_);
 	const std::shared_ptr<PixelShaderResource> GetPixelShader(PSKind kind_);
 
-	int GetTmpScreenHandle();
-	int GetShadowMapHandle();
+	int GetTmpScreenHandle() const;
+	int GetShadowMapHandle() const;
+
+	void PrepareToPlayAudio();
 
 private:
 	void LoadModel();
@@ -46,7 +53,10 @@ private:
 	void MakeTmpScreen();
 	void MakeShadowMap();
 
+	void LoadAudio();
+
 private:
+	// Assets
 	std::unordered_map<MKind, std::shared_ptr<ModelResource>> modelResource;
 	std::unordered_map<MKind, std::shared_ptr<AnimationResource>> animationResource;
 	std::unordered_map<EKind, std::shared_ptr<EffectResource>> effectResource;
@@ -59,4 +69,9 @@ private:
 
 	// シャドウマップ
 	int shadowMapHandle;
+
+	// 管理権限をAudioManagerにも渡すので、shared_ptrにする
+	std::shared_ptr<std::unordered_map<BGMKind, std::shared_ptr<MusicResource>>> musicResource;
+	std::shared_ptr<std::unordered_map<SEKind, std::shared_ptr<SoundResource>>> soundResource;
+
 };
