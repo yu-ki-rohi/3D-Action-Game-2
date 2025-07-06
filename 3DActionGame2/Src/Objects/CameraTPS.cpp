@@ -66,13 +66,22 @@ void CameraTPS::Update(float elapsed_time_)
 	so->GetFloatx2(x, y);
 	if (isReverseVertical) { y *= -1.0f; }
 	if (isReverseHorizontal) { x *= -1.0f; }
-	float horizontal_speed = 50.0f, vertical_speed = 30.0f;
-	if (abs(x) > 0.5f)
+	float horizontal_speed = 120.0f, vertical_speed = 30.0f;
+	float border = 0.5f;
+	if (abs(x) > border)
 	{
 		transform->RotateAxisY(x * horizontal_speed * elapsed_time_);
 	}
-	if (abs(y) > 0.4f)
+
+	Vector3 camera_dir = transform->GetForward();
+	const float y_max = 0.9f;
+	const float y_min = -0.35f;
+	// “ü—Í’l‚ª‹K’è‚æ‚è‘å‚«‚¢@‚©‚Â
+	// ƒJƒƒ‰‚Ì•ûŒü‚ª‹K’è‚Ìˆæ‚ðo‚Ä‚¢‚È‚¢
+	if (abs(y) > border && 
+		((y > 0 || camera_dir.y < y_max) &&
+		 (y < 0 || camera_dir.y > y_min)))
 	{
-		transform->RotateAxisRight(-y * vertical_speed * elapsed_time_);
+		transform->RotateAxisRight(y * vertical_speed * elapsed_time_);
 	}
 }

@@ -47,7 +47,7 @@ private:
 	std::weak_ptr<CameraManager> cameraManager;
 
 private:
-	static constexpr float hitStopTimeScale = 0.01;
+	static constexpr float hitStopTimeScale = 0.01f;
 	static constexpr float hitStopTimeScaleInv = 1.0f / hitStopTimeScale;
 	static constexpr float hitStopTime = 0.15f;
 

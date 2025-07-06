@@ -28,6 +28,8 @@ public:
 	Type Delete() override;
 
 private:
+	void FinishScene();
+
 	void OnDicede();
 	void OnCancel();
 	void ChangeMenuIndex();
@@ -64,7 +66,7 @@ private:
 
 private:
 	static constexpr char titleChoicesNum = 2;
-	static constexpr char optionChoicesNum = 5;
+	static constexpr char optionChoicesNum = 6;
 
 private:
 	char choicesIndex;

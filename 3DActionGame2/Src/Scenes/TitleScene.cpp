@@ -3,12 +3,16 @@
 #include "../Objects/ObjectFactory.h"
 #include "../Input/InputManager.h"
 #include "../Systems/TimerManager.h"
+#include "../Systems/TimerFactory.h"
 #include "../Systems/MFPCFactory.h"
 #include "../Systems/SimpleObserver.h"
 #include "../Common.h"
+#include "../DataBase/DataKind.h"
+#include "../Audio/AudioManager.h"
+#include "../Assets/AudioResource.h"
 #include <DxLib.h>
 
-// 一旦処理をべた書きしているので、今後もう少し切り分けていきたい
+// 一旦処理を雑にベタ書きしているので、今後もう少し整理・切り分けをしていきたい
 
 TitleScene::TitleScene() :
 	choicesIndex(0),
@@ -37,20 +41,21 @@ void TitleScene::TitleScene::Update(float elapsed_time_)
 
 void TitleScene::TitleScene::Render()
 {
+	// 一旦ベタ書き
 	if (state == State::Title)
 	{
 		int title_x, title_y;
 		unsigned int color;
-		title_x = WindowSettings::WindowWidth * 0.4f;
-		title_y = WindowSettings::WindowHeight * 0.3f;
+		title_x = (int)(WindowSettings::WindowWidth * 0.4f);
+		title_y = (int)(WindowSettings::WindowHeight * 0.3f);
 		color = GetColor(255, 255, 255);
 
 		DrawString(title_x, title_y, "3D Action Game 2", color);
 
 		int choice_x, choice_y;
 
-		choice_x = WindowSettings::WindowWidth * 0.4f;
-		choice_y = WindowSettings::WindowHeight * 0.6f;
+		choice_x = (int)(WindowSettings::WindowWidth * 0.4f);
+		choice_y = (int)(WindowSettings::WindowHeight * 0.6f);
 		int space = 30;
 
 		DrawString(choice_x, choice_y, "Game Start", color);
@@ -62,15 +67,16 @@ void TitleScene::TitleScene::Render()
 		int choice_x, choice_y;
 		unsigned int color = GetColor(255, 255, 255);
 
-		choice_x = WindowSettings::WindowWidth * 0.3f;
-		choice_y = WindowSettings::WindowHeight * 0.2f;
+		choice_x = (int)(WindowSettings::WindowWidth * 0.3f);
+		choice_y = (int)(WindowSettings::WindowHeight * 0.2f);
 		int space = 30;
 		const char* option_text[optionChoicesNum] = {
 			"Flip Camera rotation up and down",
 			"Flip Camera rotation left and right",
 			"Swap the OK and CANCEL buttons",
 			"Attack Button",
-			"Avoid Button"
+			"Avoid Button",
+			"Return"
 		};
 		// テキスト
 		for (int i = 0; i < optionChoicesNum; i++)
@@ -79,6 +85,7 @@ void TitleScene::TitleScene::Render()
 		}
 		DrawString(choice_x - space, choice_y + space * choicesIndex, "->", color);
 
+		// 値
 		choice_x += 350;
 		using InputManagerBoolFunc = bool(InputManager::*)();
 		const int bool_value_num = 3;
@@ -120,7 +127,7 @@ void TitleScene::TitleScene::Render()
 			"X",
 			"Y",
 		};
-		// 一旦べた書き
+		
 		DrawString(choice_x, choice_y + space * 3, button_name[InputManager::Instance().GetConfig(KeyConfig::Tag::Attack)], color);
 		DrawString(choice_x, choice_y + space * 4, button_name[InputManager::Instance().GetConfig(KeyConfig::Tag::Avoid)], color);
 	}
@@ -128,7 +135,30 @@ void TitleScene::TitleScene::Render()
 
 void TitleScene::UpdateInLoading(float elapsed_time_)
 {
+	// 一旦ベタ書き
+	const int sound_num = 3;
+	std::pair<SEKind, int> kind_and_handles[sound_num] = {
+		std::make_pair<SEKind, int>(SEKind::SystemDecide,LoadSoundMem("Res/Audio/Sound/maou_se_system37.mp3")),
+		std::make_pair<SEKind, int>(SEKind::SystemCancel,LoadSoundMem("Res/Audio/Sound/maou_se_system19.mp3")),
+		std::make_pair<SEKind, int>(SEKind::SystemSelect,LoadSoundMem("Res/Audio/Sound/maou_se_system48.mp3"))
+	};
 
+	auto se_map = std::make_shared<std::unordered_map<SEKind, std::shared_ptr<SoundResource>>>();
+
+	for (const auto& kind_and_handle : kind_and_handles)
+	{
+		auto sound_resource = std::make_shared<SoundResource>();
+		sound_resource->Handle = kind_and_handle.second;
+		(*se_map)[kind_and_handle.first] = sound_resource;
+	}
+
+	AudioManager::Instance().RegisterSound(se_map);
+
+	AudioManager::Instance().SetVolume(125, SEKind::SystemDecide);
+	AudioManager::Instance().SetVolume(125, SEKind::SystemCancel);
+	AudioManager::Instance().SetVolume(125, SEKind::SystemSelect);
+
+	currentStep = Step::Update;
 }
 
 void TitleScene::RenderInLoading()
@@ -142,24 +172,38 @@ void TitleScene::TitleScene::Initialize()
 
 	RegisterInputBehavior();
 
-	currentStep = Step::Update;
+	currentStep = Step::Load;
 }
 
 SceneBase::Type TitleScene::TitleScene::Delete()
 {
 	InputManager::Instance().Clear();
 	TimerManager::Instance().EraseAll();
+
+	InitSoundMem();
+	AudioManager::Instance().DestructResource();
 	return Type::Game;
+}
+
+void TitleScene::FinishScene()
+{
+	currentStep = Step::Finish;
 }
 
 void TitleScene::OnDicede()
 {
+	if (choicesIndex < 5)
+	{
+		AudioManager::Instance().PlaySoundEffect(SEKind::SystemDecide);
+	}
+
 	if (state == State::Title)
 	{
 		switch (choicesIndex)
 		{
 		case 0:	// Game Start
-			currentStep = Step::Finish;
+			InputManager::Instance().ChangeMap(InputManager::Map::None);
+			TimerFactory::CreateTimer(1.0f, shared_from_this(), this, &TitleScene::FinishScene);
 			break;
 		case 1:	// Option
 			state = State::Option;
@@ -191,9 +235,8 @@ void TitleScene::OnDicede()
 			configTag = KeyConfig::Tag::Avoid;
 			InputManager::Instance().ChangeMap(InputManager::Map::Player);
 			break;
-		case 5:	// ダッシュボタン
-			configTag = KeyConfig::Tag::Dash;
-			InputManager::Instance().ChangeMap(InputManager::Map::Player);
+		case 5: //戻る
+			OnCancel();
 			break;
 		}
 	}
@@ -202,6 +245,7 @@ void TitleScene::OnCancel()
 {
 	if (state == State::Option)
 	{
+		AudioManager::Instance().PlaySoundEffect(SEKind::SystemCancel);
 		state = State::Title;
 		choicesIndex = 0;
 		choicesNum = titleChoicesNum;
@@ -227,6 +271,7 @@ void TitleScene::IncreaseMenuIndex()
 {
 	choicesIndex++;
 	choicesIndex %= choicesNum;
+	AudioManager::Instance().PlaySoundEffect(SEKind::SystemSelect);
 }
 
 void TitleScene::DecreaseMenuIndex()
@@ -236,6 +281,7 @@ void TitleScene::DecreaseMenuIndex()
 	{
 		choicesIndex = choicesNum - 1;
 	}
+	AudioManager::Instance().PlaySoundEffect(SEKind::SystemSelect);
 }
 
 
@@ -299,7 +345,8 @@ void TitleScene::SetKeyConfigRightTrigger()
 void TitleScene::SetKeyConfig(unsigned char button_)
 {
 	InputManager::Instance().SetConfig(configTag, button_);
-	InputManager::Instance().ChangeMap(InputManager::Map::Menu);
+	InputManager::Instance().ChangeMap(InputManager::Map::Menu); 
+	AudioManager::Instance().PlaySoundEffect(SEKind::SystemDecide);
 }
 
 void TitleScene::RegisterInputBehavior()

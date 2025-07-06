@@ -10,7 +10,7 @@ BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_) :
 	localTransform.Scale = scale_;
 
 	// Eular => Quaternion ‚Ì•ÏŠ·
-	localTransform.SetRotate(rotate_ * DX_PI / 180.0f);
+	localTransform.SetRotate(rotate_ * (float)(DX_PI / 180.0f));
 }
 
 BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, bool is_collide_once_) :
@@ -20,7 +20,7 @@ BoxCollider::BoxCollider(Vector3 position_, Vector3 scale_, Vector3 rotate_, boo
 	localTransform.Scale = scale_;
 
 	// Eular => Quaternion ‚Ì•ÏŠ·
-	localTransform.SetRotate(rotate_ * DX_PI / 180.0f);
+	localTransform.SetRotate(rotate_ * (float)(DX_PI / 180.0f));
 }
 
 Vector3 BoxCollider::GetPosition() const

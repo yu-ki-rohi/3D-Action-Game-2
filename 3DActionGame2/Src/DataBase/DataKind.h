@@ -59,5 +59,8 @@ enum class BGMKind
 
 enum class SEKind
 {
+	SystemDecide,
+	SystemCancel,
+	SystemSelect,
 	HitSlash
 };

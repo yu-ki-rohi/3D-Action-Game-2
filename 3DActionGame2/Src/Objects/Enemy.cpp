@@ -23,13 +23,31 @@ ObjectBase::Tag Enemy::GetTag() const
 	return Tag::Enemy;
 }
 
+void Enemy::SetLocalTimeScale(float time_scale_)
+{
+	CharacterBase::SetLocalTimeScale(time_scale_);
+	if (!enableColliderTimer || !disableColliderTimer) { return; }
+	enableColliderTimer->SetLocalTimeScale(localTimeScale);
+	disableColliderTimer->SetLocalTimeScale(localTimeScale);
+}
+
+void Enemy::MultiplyLocalTimeScaleBy(float multiplier_)
+{
+	CharacterBase::MultiplyLocalTimeScaleBy(multiplier_);
+	if (!enableColliderTimer || !disableColliderTimer) { return; }
+	enableColliderTimer->SetLocalTimeScale(localTimeScale);
+	disableColliderTimer->SetLocalTimeScale(localTimeScale);
+}
+
 void Enemy::Start()
 {
 	CharacterBase::Start();
 	if (!IsActive()) { return; }
 	justAvoidIgnition = std::make_shared<JustAvoidIgnition>(Tag::Player);
 
-	//attackCollider.SetIsEnabled(false);
+	attackCollider.SetIsEnabled(false);
+	justAvoidIgnitionCollider.SetIsEnabled(false);
+
 	attackCollider.SetOwner(shared_from_this());
 	bodyCollider.SetOwner(shared_from_this()); 
 	justAvoidIgnitionCollider.SetOwner(shared_from_this());
@@ -80,12 +98,18 @@ void Enemy::UpdateBehavior(float elapsed_time_)
 		{
 		case 0:
 			animator->SetNextAnim(AKind::Attack00, Animator::Immediately, changing_time, false);
+			enableColliderTimer = TimerFactory::CreateTimer(3.1f, shared_from_this(), this, &Enemy::EnableAttackCollider);
+			disableColliderTimer = TimerFactory::CreateTimer(3.8f, shared_from_this(), this, &Enemy::DisableAttackCollider);
 			break;
 		case 1:
 			animator->SetNextAnim(AKind::Attack01, Animator::Immediately, changing_time, false);
+			enableColliderTimer = TimerFactory::CreateTimer(3.1f, shared_from_this(), this, &Enemy::EnableAttackCollider);
+			disableColliderTimer = TimerFactory::CreateTimer(3.8f, shared_from_this(), this, &Enemy::DisableAttackCollider);
 			break;
 		case 2:
 			animator->SetNextAnim(AKind::Attack02, Animator::Immediately, changing_time, false);
+			enableColliderTimer = TimerFactory::CreateTimer(3.1f, shared_from_this(), this, &Enemy::EnableAttackCollider);
+			disableColliderTimer = TimerFactory::CreateTimer(3.8f, shared_from_this(), this, &Enemy::DisableAttackCollider);
 			break;
 		}
 		isChanging = true;
@@ -126,4 +150,16 @@ void Enemy::UpdateCollider()
 
 	animator->DetachAnim(renderer->GetModelHandle());
 
+}
+
+void Enemy::EnableAttackCollider()
+{
+	attackCollider.SetIsEnabled(true);
+	justAvoidIgnitionCollider.SetIsEnabled(true);
+}
+
+void Enemy::DisableAttackCollider()
+{
+	attackCollider.SetIsEnabled(false);
+	justAvoidIgnitionCollider.SetIsEnabled(false);
 }

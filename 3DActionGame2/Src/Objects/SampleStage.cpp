@@ -41,7 +41,9 @@ void SampleStage::Render()
 
 void SampleStage::RenderShadow()
 {
-	SetUseVertexShader(renderer.GetShadowVSHandle());
+	int shadow_vs_handle = renderer.GetShadowVSHandle();
+	if (shadow_vs_handle == -1) { return; }
+	SetUseVertexShader(shadow_vs_handle);
 	renderer.Render(transform);
 }
 

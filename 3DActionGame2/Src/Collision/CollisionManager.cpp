@@ -353,7 +353,7 @@ void CollisionManager::EraseColliderPair(const Collider* collider_)
 
 void CollisionManager::CheckBodyAndBody()
 {
-	const int body_size = bodies.size();
+	const int body_size = (int)bodies.size();
 	// 同じ相手との重複チェックは不要
 	// 最後尾は確認不要なので bodies.size() - 1
 	for (int body_index = 0; body_index < body_size - 1; body_index++)

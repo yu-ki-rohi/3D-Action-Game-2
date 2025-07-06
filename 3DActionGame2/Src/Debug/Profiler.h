@@ -37,8 +37,8 @@ private:
 	LONGLONG previousSystemTime;
 
 	// “Y‚¦Žš‚ÍType‚ÅŽw’è
-	double stampedTime[STAMP_NUM]{};
-	double showStampedTime[STAMP_NUM]{};
+	float stampedTime[STAMP_NUM]{};
+	float showStampedTime[STAMP_NUM]{};
 
 
 };

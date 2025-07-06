@@ -8,7 +8,7 @@
 
 void Profiler::Stamp(Type type_)
 {
-	double elapsed_time = SystemTimeProcess::GetElapsedTime(previousSystemTime);
+	float elapsed_time = SystemTimeProcess::GetElapsedTime(previousSystemTime);
 	stampedTime[(int)type_] += elapsed_time;
 }
 
@@ -38,7 +38,7 @@ void Profiler::Render()
 	int y[2]{ 340,340 };
 
 	// ‘Ñ‚Ì’·‚³
-	const int length = 300 * WindowSettings::Magnification;
+	const int length = (int)(300 * WindowSettings::Magnification);
 	float sum_time = 0.0f;
 	for (int i = 0; i < STAMP_NUM; i++)
 	{

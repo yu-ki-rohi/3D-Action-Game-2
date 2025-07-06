@@ -31,6 +31,12 @@ GameScene::GameScene() :
 	aSyncLoadNumMax(100),
 	isJustAvoidTime(false),
 	intensity(0.0f),
+	targetIntensity(0.0f),
+	fluctuationSpeedOfIntensity(0.0f),
+	monochromeRate(0.0f),
+	targetMonochromeRate(0.0f),
+	fluctuationSpeedOfMonochromeRate(0.0f),
+	monochromeMask(0),
 	lightCameraViewMatrix(MGetIdent()),
 	lightCameraProjectionMatrix(MGetIdent())
 {
@@ -73,6 +79,48 @@ void GameScene::Update(float elapsed_time_)
 	if (objectManager != nullptr)
 	{
 		objectManager->Update(elapsed_time_);
+
+		// 一旦ベタで
+		// ネスト深いし共通処理があるので後で手を入れる
+		if (intensity != targetIntensity)
+		{
+			intensity += fluctuationSpeedOfIntensity * elapsed_time_;
+			if (fluctuationSpeedOfIntensity > 0)
+			{
+				if (intensity > targetIntensity)
+				{
+					intensity = targetIntensity;
+				}
+			}
+			else
+			{
+				if (intensity < targetIntensity)
+				{
+					intensity = targetIntensity;
+				}
+			}
+		}
+
+		if (monochromeRate != targetMonochromeRate)
+		{
+			monochromeRate += fluctuationSpeedOfMonochromeRate * elapsed_time_;
+			if (fluctuationSpeedOfMonochromeRate > 0)
+			{
+				if (monochromeRate > targetMonochromeRate)
+				{
+					monochromeRate = targetMonochromeRate;
+				}
+			}
+			else
+			{
+				if (monochromeRate < targetMonochromeRate)
+				{
+					monochromeRate = targetMonochromeRate;
+				}
+			}
+			objectManager->SetMonochrome(monochromeRate, monochromeMask);
+		}
+
 		objectManager->Erase();
 	}
 }
@@ -98,19 +146,6 @@ void GameScene::Render()
 	SetCameraNearFar(1.0f, 2000.0f);
 
 	cameraManager->SetCameraInfo();
-	
-	// カメラの向きはライトの向き
-	/*Vector3 light_direction = Vector3::ConvertFromVECTOR(GetLightDirection());
-
-	Vector3 target_position = cameraManager->GetNearShadowAreaPos();
-	float distance = 100.0f;
-	Vector3 camera_position = target_position - light_direction * distance;
-
-	SetCameraPositionAndTargetAndUpVec(
-		camera_position.ToVECTOR(),
-		target_position.ToVECTOR(),
-		Vector3::UP.ToVECTOR()
-	);*/
 
 	SetVSConstFMtx(44, lightCameraViewMatrix);
 	SetVSConstFMtx(48, lightCameraProjectionMatrix);
@@ -165,10 +200,10 @@ void GameScene::UpdateInLoading(float elapsed_time_)
 
 void GameScene::RenderInLoading()
 {
-	const int width = WindowSettings::WindowWidth * 0.8f;
-	const int height = WindowSettings::WindowHeight * 0.01f;
-	int x = WindowSettings::WindowWidth * 0.1f;
-	int y = WindowSettings::WindowHeight * 0.85f;
+	const int width = (int)(WindowSettings::WindowWidth * 0.8f);
+	const int height = (int)(WindowSettings::WindowHeight * 0.01f);
+	int x = (int)(WindowSettings::WindowWidth * 0.1f);
+	int y = (int)(WindowSettings::WindowHeight * 0.85f);
 	unsigned int color = GetColor(0, 0, 255);
 	unsigned int guarge_color = GetColor(200, 200, 200);
 	float rate = 1.0f;
@@ -177,7 +212,7 @@ void GameScene::RenderInLoading()
 		rate = (aSyncLoadNumMax - GetASyncLoadNum()) / (float)aSyncLoadNumMax;
 	}
 	DrawBox(x, y, x + width, y + height, guarge_color, TRUE);
-	DrawBox(x, y, x + width * rate, y + height, color, TRUE);
+	DrawBox(x, y, x + (int)(width * rate), y + height, color, TRUE);
 }
 
 void GameScene::Initialize()
@@ -215,15 +250,26 @@ void GameScene::SuccessJustAvoid()
 		objectFactory->SetIsJustAvoidTime(true);
 	}
 
-	intensity = 0.035f;
+	monochromeMask = (int)ObjectBase::Tag::Stage;
+	targetMonochromeRate = 0.9f;
+	float changing_time = 0.05f;
+	float diff_monochrome = targetMonochromeRate - monochromeRate;
+	fluctuationSpeedOfMonochromeRate = diff_monochrome / changing_time;
+
+	targetIntensity = 0.05f;
+	changing_time = 0.025f;
+	float diff_intensity = targetIntensity - intensity;
+	fluctuationSpeedOfIntensity = diff_intensity / changing_time;
 
 	AudioManager::Instance().SetVolume(155, BGMKind::Main);
 
 	const float time_to_reset = 0.08f;
+	const float change_monochrome_time = 2.0f;
 	const float just_avoid_bonus_time = 5.0f;
 
 	Time::TimeScale = 0.1f;
 	TimerFactory::CreateTimer<GameScene>(time_to_reset, shared_from_this(), this, &GameScene::ResetTimeScale);
+	TimerFactory::CreateTimer<GameScene>(time_to_reset + just_avoid_bonus_time - change_monochrome_time, shared_from_this(), this, &GameScene::FinishJustAvoidEffect);
 	TimerFactory::CreateTimer<GameScene>(time_to_reset + just_avoid_bonus_time, shared_from_this(), this, &GameScene::FinishJustAvoidTime);
 
 	isJustAvoidTime = true;
@@ -402,6 +448,22 @@ void GameScene::GenerateObjects()
 void GameScene::ResetTimeScale()
 {
 	Time::TimeScale = 1.0f;
+}
+
+void GameScene::FinishJustAvoidEffect()
+{
+	monochromeMask = (int)ObjectBase::Tag::Stage;
+	targetMonochromeRate = 0.0f;
+	float changing_time = 2.0f;
+	float diff_monochrome = targetMonochromeRate - monochromeRate;
+	fluctuationSpeedOfMonochromeRate = diff_monochrome / changing_time;
+
+	targetIntensity = 0.0f;
+	changing_time = 2.5f;
+	float diff_intensity = targetIntensity - intensity;
+	fluctuationSpeedOfIntensity = diff_intensity / changing_time;
+
+
 }
 
 void GameScene::FinishJustAvoidTime()
