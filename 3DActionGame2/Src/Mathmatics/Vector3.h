@@ -13,11 +13,22 @@ public:
 	float z;
 
 public:
+	// (0, 0, -1)
 	static const Vector3 FORWARD;
+
+	// (0, 1, 0)
 	static const Vector3 UP;
+
+	// (1, 0, 0)
 	static const Vector3 RIGHT;
+
+	// (0, 0, 0)
 	static const Vector3 ZERO;
+
+	// (1, 1, 1)
 	static const Vector3 ONE;
+
+	// Vector3構造体に強く紐づいている値なのでconstexpr
 	static constexpr int COMPONENTS_NUM = 3;
 
 public:
@@ -29,6 +40,7 @@ public:
 	// 第二～四引数 変換先の基底(軸) X, Y, Z の順　(または右、上、前)
 	// 第五引数     原点座標(デフォルトではワールド座標系の原点)
 	static Vector3 BasisTransformation(const Vector3& vector_, Vector3 axis_01_, Vector3 axis_02_, Vector3 axis_03_, Vector3 origin_ = Vector3::ZERO);
+	// 軸をクォータニオンで指定するバージョン
 	static Vector3 BasisTransformation(const Vector3& vector_, const Quaternion& quaternion_, Vector3 origin_ = Vector3::ZERO);
 
 	static Vector3 ConvertFromVECTOR(const VECTOR& vector_);
@@ -52,8 +64,9 @@ public:
 	// 大きさ比較など、わざわざ平方根を計算する必要がないときに使用
 	float sqrLength() const;
 
-	// 射影
+	// 線への射影
 	Vector3 Projection(Vector3 axis_);
+	// 面への射影
 	Vector3 Projection(Vector3 axis_01_, Vector3 axis_02_);
 
 	VECTOR ToVECTOR() const;

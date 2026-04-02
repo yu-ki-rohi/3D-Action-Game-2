@@ -41,6 +41,7 @@ enum class VSKind
 // Pixel Shader‚ÌŽí—Þ
 enum class PSKind
 {
+	NoLighting,
 	Phong,
 	ShadowMap,
 	PostEffect

@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjectBase.h"
 #include "../Systems/TimerFactory.h"
+#include "../Collision/IColliderRegister.h"
 
 struct Vector3;
 
@@ -9,8 +10,6 @@ class Renderer;
 class Animator;
 class CharacterStatus;
 
-//class Collider;
-class ColliderRegisterInterface;
 
 class CharacterBase : public ObjectBase
 {
@@ -25,7 +24,7 @@ public:
 	void SetComponent(std::shared_ptr<Renderer> renderer_);
 	void SetComponent(std::shared_ptr<Animator> animator_);
 	void SetComponent(std::shared_ptr <CharacterStatus> characterStatus_);
-	void SetColliderRegisterInterface(std::shared_ptr<ColliderRegisterInterface> collider_register_interface_);
+	void SetColliderRegisterInterface(std::shared_ptr<IColliderRegister> collider_register_interface_);
 
 	void SetMonochrome(float rate_) override;
 	virtual void SetLocalTimeScale(float time_scale_) override;
@@ -42,10 +41,16 @@ public:
 	void RenderShadow() override;
 
 protected:
+	// Update内のフローを更に分割
+
+	// ふるまいの更新
 	virtual void UpdateBehavior(float elapsed_time_) = 0;
+	// 当たり判定の更新
 	virtual void UpdateCollider() = 0;
 
 	using MyTimer = std::shared_ptr<TimerBase>;
+	// タイマーの準備
+	// 固有タイムスケールの反映などをまとめて行うため
 	template <class T>
 	void PrepareTimer(MyTimer& my_timer_,float time_, T* obj_, void (T::* func_)())
 	{
@@ -67,7 +72,7 @@ protected:
 	std::shared_ptr <Animator> animator;
 	std::shared_ptr <CharacterStatus> characterStatus;
 
-	std::weak_ptr<ColliderRegisterInterface> colliderRegisterInterface;
+	std::weak_ptr<IColliderRegister> colliderRegisterInterface;
 
 	float monochromeRate;
 	float localTimeScale;

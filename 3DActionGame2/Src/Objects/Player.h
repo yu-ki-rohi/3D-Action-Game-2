@@ -22,6 +22,7 @@ protected:
 
 	virtual void UpdateBehavior(float elapsed_time_) override;
 
+	// ボタン操作で起動させるための関数
 
 	void IgnitIdleAnimation();
 	void IgnitWalkAnimation();
@@ -40,6 +41,9 @@ protected:
 	//  0:飛び込み状態
 	//  1:着地状態
 	char rollingStep;
+
+	// 回転移動の方向
+	// 回転状態でないときはnullptrにするためにポインターで
 	std::shared_ptr<Vector3> rollingDirection;
 
 	std::shared_ptr<SimpleObserver> so;
@@ -47,6 +51,8 @@ private:
 	std::weak_ptr<CameraManager> cameraManager;
 
 private:
+	// このあたりのパラメータは後々別にまとめたい
+
 	static constexpr float hitStopTimeScale = 0.01f;
 	static constexpr float hitStopTimeScaleInv = 1.0f / hitStopTimeScale;
 	static constexpr float hitStopTime = 0.15f;

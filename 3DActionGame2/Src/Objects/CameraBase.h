@@ -21,9 +21,12 @@ public:
 
 	virtual Type GetType() const = 0;
 
+	// カメラの位置を取得
 	virtual Vector3 GetCameraPosition() const = 0;
+	// 注視点の位置を取得
 	virtual Vector3 GetTargetPosition() const = 0;
 
+	// シャドウマップを描画するときに参照するための座標を取得
 	virtual Vector3 GetNearShadowAreaPos() const = 0;
 	virtual Vector3 GetForward() const = 0;
 	virtual Vector3 GetRight() const = 0;

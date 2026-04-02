@@ -4,7 +4,7 @@
 #include "Components/Animator.h"
 #include "Components/CharacterStatus.h"
 
-#include "../Collision/ColliderRegisterInterface.h"
+#include "../Collision/IColliderRegister.h"
 
 #include "../Input/InputManager.h"
 #include "../Systems/SimpleObserver.h"

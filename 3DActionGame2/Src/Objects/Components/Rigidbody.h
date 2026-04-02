@@ -2,8 +2,8 @@
 #include "Transform.h"
 #include "ComponentBase.h"
 
-// 便宜上 Rigid body (剛体) という名前を付けてますが、
-// 扱い的には Mass point (質点) です。
+// 便宜上 Rigid body (剛体) という名前を付けているが
+// 扱い的には Mass point (質点)
 // 現状、物理演算で回転させる予定がないので
 class Rigidbody : public ComponentBase
 {

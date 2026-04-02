@@ -26,13 +26,13 @@ public:
 	}
 
 public:
-	// 各frameの最初に行われる処理
+	// Step::Updateで行われる処理
 	virtual void Start() = 0;
-
 	virtual void FixedUpdate() = 0;
 	virtual void Update(float elapsed_time_) = 0;
 	virtual void Render() = 0;
 
+	// Step::Loadで行われる処理
 	virtual void UpdateInLoading(float elapsed_time_) = 0;
 	virtual void RenderInLoading() = 0;
 
@@ -45,6 +45,8 @@ public:
 	/// <returns>次のシーンType</returns>
 	virtual Type Delete() = 0;
 
+	// スマートポインターで呼び出すためにこちらで宣言
+	// MFPC使うなどすれば別にこちらで宣言しなくてもいいかも?
 	virtual void SuccessJustAvoid(){}
 
 protected:

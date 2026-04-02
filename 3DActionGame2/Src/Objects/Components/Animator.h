@@ -79,11 +79,16 @@ private:
 	// (アニメーションの線形補間のため)
 
 	// 再生するアニメーションのハンドル
+
 	int currentAnimHandle = -1;
 	int nextAnimHandle = -1;
 
+	// 再生するアニメーションがアタッチされているインデックス
+
 	int currentAttachIndex = -1;
 	int nextAttachIndex = -1;
+
+	// アニメーションの再生時間
 
 	float currentAnimTimer = 0.0f;
 	float nextAnimTimer = 0.0f;
@@ -96,7 +101,6 @@ private:
 	float animTime = 0.0f;
 
 	// 一旦固定値
-	// TODO アニメーションごとに設定できるようにする
 	float currentAnimSpeed = 30.0f;
 	float nextAnimSpeed = 30.0f;
 

@@ -11,6 +11,7 @@ struct AudioFileList;
 
 struct AnimationSpeedList;
 
+// 現状はファイルパスの保持に使用
 class DataBase
 {
 public:

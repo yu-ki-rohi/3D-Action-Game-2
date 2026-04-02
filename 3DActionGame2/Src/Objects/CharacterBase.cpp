@@ -84,7 +84,7 @@ void CharacterBase::SetComponent(std::shared_ptr <CharacterStatus> character_sta
 	AddComponent(characterStatus);
 }
 
-void CharacterBase::SetColliderRegisterInterface(std::shared_ptr<ColliderRegisterInterface> collider_register_interface_)
+void CharacterBase::SetColliderRegisterInterface(std::shared_ptr<IColliderRegister> collider_register_interface_)
 {
 	if (collider_register_interface_ == nullptr) { return; }
 	colliderRegisterInterface = collider_register_interface_;

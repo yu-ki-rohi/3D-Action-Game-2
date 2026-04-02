@@ -24,7 +24,7 @@
 
 #include "FlashEffect.h"
 
-ObjectFactory::ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_, std::shared_ptr<ColliderRegisterInterface> collider_register_interface_) :
+ObjectFactory::ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_, std::shared_ptr<IColliderRegister> collider_register_interface_) :
 	objectManager(object_manager_),
 	assetsManager(assets_manager_),
 	colliderRegisterInterface(collider_register_interface_),

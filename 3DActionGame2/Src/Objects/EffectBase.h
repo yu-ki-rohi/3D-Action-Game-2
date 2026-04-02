@@ -28,7 +28,9 @@ protected:
 	std::shared_ptr<TimerBase> CreateUpdateTimer(float time_);
 
 private:
+	// タイマーから更新するため
 	void ToTheNextImage();
+	// 更新タイマーの時間を再設定する
 	void ResizeTimer(float past_local_time_scale_);
 
 protected:

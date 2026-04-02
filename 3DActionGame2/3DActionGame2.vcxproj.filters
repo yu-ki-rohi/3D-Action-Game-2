@@ -441,5 +441,8 @@
     <ClInclude Include="Src\Audio\AudioManager.h">
       <Filter>Src\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Collision\IColliderRegister.h">
+      <Filter>Src\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

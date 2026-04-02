@@ -9,7 +9,6 @@ class CollisionManager;
 class AssetsManager;
 class CameraManager;
 class ObjectFactory;
-class ColliderRegisterInterface;
 class PlayerEventNotifier;
 
 class GameScene : public SceneBase
@@ -72,16 +71,17 @@ private:
 
 	std::shared_ptr<CameraManager> cameraManager;
 
-	// Colliderの登録・解除を行うインターフェース
-	std::shared_ptr<ColliderRegisterInterface> colliderRegisterInterface;
 	// オブジェクト生成クラス
 	std::shared_ptr<ObjectFactory> objectFactory;
 
 	std::shared_ptr<PlayerEventNotifier> playerEventNotifier;
 
+	// ロード用
+
 	bool isReady;
 	int aSyncLoadNumMax;
 
+	// ジャスト回避のボーナス状態かどうか
 	bool isJustAvoidTime;
 
 	// ラディアルブラー関係の変数
@@ -105,6 +105,7 @@ private:
 	float fluctuationSpeedOfMonochromeRate;
 	// モノクロ変動させるマスク
 
+	// 影描画用
 
 	MATRIX lightCameraViewMatrix;
 	MATRIX lightCameraProjectionMatrix;

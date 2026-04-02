@@ -6,10 +6,6 @@
 #include <vector>
 #include "ComponentBase.h"
 
-// Suggested (コンポーネント全般に関するものだが、代表としてここに表記)
-// 利便性をあげるならComponentBaseクラスを作りGetComponent関数を作る
-// (ダウンキャストが発生してしまうが)
-
 // TODO
 // 階層構造の実装(優先度:低)
 

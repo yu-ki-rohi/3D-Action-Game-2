@@ -4,6 +4,8 @@ class CollisionManager;
 class Collider;
 class ObjectBase;
 
+// コライダーの登録・登録解除を行うためのインターフェース
+// TODO : c++ public関数のみにして多重継承させる形に変更
 class ColliderRegisterInterface
 {
 public:

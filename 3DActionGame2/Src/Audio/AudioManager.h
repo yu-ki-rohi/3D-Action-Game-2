@@ -13,14 +13,18 @@ class AudioManager
 {
 public:
 	// 音楽再生
+
 	void PlayMusic(BGMKind kind_);
 	void PlaySoundEffect(SEKind kind_, bool is_loop_ = false);
+
+	// 音量設定
 
 	void SetVolume(int volume_pal_);
 	void SetVolume(int volume_pal_, BGMKind kind_);
 	void SetVolume(int volume_pal_, SEKind kind_);
 
 	// リソースを登録
+
 	void RegisterMusic(std::shared_ptr<std::unordered_map<BGMKind, std::shared_ptr<MusicResource>>> music_resource_);
 	void RegisterSound(std::shared_ptr<std::unordered_map<SEKind, std::shared_ptr<SoundResource>>> sound_resource_);
 

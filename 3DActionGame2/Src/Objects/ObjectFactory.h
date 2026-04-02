@@ -6,7 +6,7 @@ struct Vector3;
 class ObjectBase;
 class ObjectManager;
 class AssetsManager;
-class ColliderRegisterInterface;
+class IColliderRegister;
 
 class CameraManager;
 class PlayerEventNotifier;
@@ -21,7 +21,7 @@ class Enemy;
 class ObjectFactory : public std::enable_shared_from_this<ObjectFactory>
 {
 public:
-	ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_, std::shared_ptr<ColliderRegisterInterface> collider_register_interface_);
+	ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_, std::shared_ptr<IColliderRegister> collider_register_interface_);
 
 public:
 	void SetIsJustAvoidTime(bool is_just_avoid_time_);
@@ -43,8 +43,9 @@ public:
 private:
 	std::weak_ptr<ObjectManager> objectManager;
 	std::weak_ptr<AssetsManager> assetsManager;
-	std::weak_ptr<ColliderRegisterInterface> colliderRegisterInterface;
+	std::weak_ptr<IColliderRegister> colliderRegisterInterface;
 
 private:
+	// 必要に応じて生成時に固有タイムスケールを変更するため
 	bool isJustAvoidTime;
 };

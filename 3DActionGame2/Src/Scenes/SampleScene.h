@@ -9,6 +9,9 @@ class ObjectFactory;
 class SampleCamera;
 class SampleCharacter;
 
+// テスト表示用
+// 不要になれば消す
+
 class SampleScene : public SceneBase
 {
 public:

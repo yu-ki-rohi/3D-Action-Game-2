@@ -88,28 +88,32 @@ void Enemy::Render()
 
 void Enemy::UpdateBehavior(float elapsed_time_)
 {
-	if (animator->GetAnimationProgressPercentage() > 0.9f)
+	float border_percentage = 0.9f;
+	if (animator->GetAnimationProgressPercentage() > border_percentage)
 	{
 		if (isChanging) { return; }
 		const char pattern_num = 3;
 		int judge = GetRand(pattern_num - 1);
-		float changing_time = animator->GetAnimationTimeByNormalizedValue(0.1f);
+		float changing_time = animator->GetAnimationTimeByNormalizedValue(1.0f - border_percentage);
+		float enable_time = 0.85f;
+		float disable_time = 1.3f;
 		switch (judge)
 		{
 		case 0:
 			animator->SetNextAnim(AKind::Attack00, Animator::Immediately, changing_time, false);
-			enableColliderTimer = TimerFactory::CreateTimer(3.1f, shared_from_this(), this, &Enemy::EnableAttackCollider);
-			disableColliderTimer = TimerFactory::CreateTimer(3.8f, shared_from_this(), this, &Enemy::DisableAttackCollider);
+			enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &Enemy::EnableAttackCollider);
+			disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &Enemy::DisableAttackCollider);
 			break;
 		case 1:
+			disable_time = 1.45f;
 			animator->SetNextAnim(AKind::Attack01, Animator::Immediately, changing_time, false);
-			enableColliderTimer = TimerFactory::CreateTimer(3.1f, shared_from_this(), this, &Enemy::EnableAttackCollider);
-			disableColliderTimer = TimerFactory::CreateTimer(3.8f, shared_from_this(), this, &Enemy::DisableAttackCollider);
+			enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &Enemy::EnableAttackCollider);
+			disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &Enemy::DisableAttackCollider);
 			break;
 		case 2:
 			animator->SetNextAnim(AKind::Attack02, Animator::Immediately, changing_time, false);
-			enableColliderTimer = TimerFactory::CreateTimer(3.1f, shared_from_this(), this, &Enemy::EnableAttackCollider);
-			disableColliderTimer = TimerFactory::CreateTimer(3.8f, shared_from_this(), this, &Enemy::DisableAttackCollider);
+			enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &Enemy::EnableAttackCollider);
+			disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &Enemy::DisableAttackCollider);
 			break;
 		}
 		isChanging = true;

@@ -42,11 +42,12 @@ public:
 	virtual void SetMonochrome(float rate_) = 0;
 	virtual void SetLocalTimeScale(float time_scale_) = 0;
 
+	// 固有タイムスケールを現在値からの倍率で行うために用意
 	// 命名にChat GPTを使用
 	// https://docs.google.com/document/d/1srepoKZf_39szieano4-QoJ59XDF1VViukK--uwZgPg/edit?tab=t.0#heading=h.8eg32zgt8ps
 	virtual void MultiplyLocalTimeScaleBy(float multiplier_) = 0;
 
-	// 生成直後にshared_from_this()を使って渡すために用意
+	// 生成直後に自身をshared_from_this()を使って渡す必要がある時のために用意
 	virtual void Start() = 0;
 
 	virtual void FixedUpdate() = 0;
@@ -55,6 +56,8 @@ public:
 	virtual void RenderShadow() = 0;
 
 protected:
+	// 他者が取得可能なコンポーネントを追加
+	// 立ち位置がUnityとは違うので、少し名前を変えたほうがいいかも
 	void AddComponent(std::shared_ptr<ComponentBase> component_)
 	{
 		components.push_back(component_);

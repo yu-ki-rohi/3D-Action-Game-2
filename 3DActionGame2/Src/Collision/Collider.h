@@ -9,6 +9,7 @@
 struct Quaternion;
 class ObjectBase;
 
+// Colliderの基底クラス
 class Collider
 {
 public:
@@ -43,6 +44,7 @@ public:
 	Vector3 GetHitPosition() const { return hitPosition; }
 
 	bool IsEnabled() const { return isEnabled; }
+
 	std::shared_ptr<ObjectBase> GetOwner() const { return owner.lock(); }
 
 	void SetIsEnabled(bool is_enabled_)
@@ -71,6 +73,7 @@ public:
 		observers.push_back(observer_);
 	}
 
+	// 重複ヒット防止のための記録を消す
 	void ClearHasHit()
 	{
 		if (!haveHitObjects) { return; }
@@ -78,6 +81,7 @@ public:
 	}
 
 	// 各種当たり時に呼び出す
+
 	void OnTriggerEnter(Collider* other_)
 	{
 		if (HasHit(other_)) { return; }
@@ -125,6 +129,7 @@ public:
 	}
 	
 private:
+	// 既に当たっていたかの確認
 	bool HasHit(Collider* other_)
 	{
 		if (!haveHitObjects) { return false; }

@@ -27,6 +27,8 @@ public:
 	void Render(const Transform& transform_);
 	void Render(const Transform& transform_, Animator& animator_);
 
+	// ƒ‚ƒfƒ‹•`‰æ‚Ì€”õ
+
 	void SetupModelInfo(const Transform& transform_);
 	void SetupModelInfo(const Transform& transform_, Animator& animator_);
 

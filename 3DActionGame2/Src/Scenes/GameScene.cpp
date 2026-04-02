@@ -25,8 +25,7 @@ GameScene::GameScene() :
 	collisionManager(std::make_shared<CollisionManager>()),
 	assetsManager(std::make_shared<AssetsManager>()),
 	cameraManager(std::make_shared<CameraManager>()),
-	colliderRegisterInterface(std::make_shared<ColliderRegisterInterface>(collisionManager)),
-	objectFactory(std::make_shared<ObjectFactory>(objectManager, assetsManager, colliderRegisterInterface)),
+	objectFactory(std::make_shared<ObjectFactory>(objectManager, assetsManager, collisionManager)),
 	isReady(false),
 	aSyncLoadNumMax(100),
 	isJustAvoidTime(false),
@@ -140,8 +139,6 @@ void GameScene::Render()
 
 	// ˆêŽžƒXƒNƒŠ[ƒ“‚Ö‚Ì•`‰æ
 	SetDrawScreen(assetsManager->GetTmpScreenHandle());
-	//SetDrawScreen(DX_SCREEN_BACK);
-	//SetBackgroundColor(0, 0, 0);
 	ClearDrawScreen();
 	SetCameraNearFar(1.0f, 2000.0f);
 

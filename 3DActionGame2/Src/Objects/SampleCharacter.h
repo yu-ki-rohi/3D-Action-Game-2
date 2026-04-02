@@ -9,6 +9,9 @@
 class SimpleObserver;
 class SampleCamera;
 
+// テスト表示用
+// 不要になれば消す
+
 class SampleCharacter : public ObjectBase
 {
 public:

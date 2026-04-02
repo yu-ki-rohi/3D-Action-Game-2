@@ -28,5 +28,7 @@ public:
 
 private:
 	std::vector<std::shared_ptr<ObjectBase>> objects;
+	// Start準備中のオブジェクト
+	// 生成時はこちらに登録し、Start実行後にobjectsへ移動させる
 	std::vector<std::shared_ptr<ObjectBase>> pendingStartObjects;
 };

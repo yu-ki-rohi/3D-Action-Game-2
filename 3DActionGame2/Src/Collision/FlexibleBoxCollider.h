@@ -2,6 +2,7 @@
 #include "BoxCollider.h"
 
 // ‚‘¬‚Å“®‚­‚æ‚¤‚È“–‚½‚è”»’è‚ª‚·‚è”²‚¯‚È‚¢‚æ‚¤‚É‰ÁH‚µ‚½BoxCollider
+// todo : ”»’è‚Ì’£‚è•û‚Ì‰ü—Ç
 class FlexibleBoxCollider : public BoxCollider
 {
 public:

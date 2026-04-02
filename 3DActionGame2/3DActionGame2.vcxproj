@@ -209,6 +209,7 @@
     <ClInclude Include="Src\Collision\ColliderRegisterInterface.h" />
     <ClInclude Include="Src\Collision\CollisionManager.h" />
     <ClInclude Include="Src\Collision\FlexibleBoxCollider.h" />
+    <ClInclude Include="Src\Collision\IColliderRegister.h" />
     <ClInclude Include="Src\Collision\SphereCollider.h" />
     <ClInclude Include="Src\Common.h" />
     <ClInclude Include="Src\DataBase\AnimationData.h" />

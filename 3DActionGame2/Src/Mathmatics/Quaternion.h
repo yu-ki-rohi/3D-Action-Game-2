@@ -23,6 +23,7 @@ public:
 	// 角度の単位は度数
 	static Quaternion GetRotateQuaternion(float degree_, Vector3 axis_);
 
+	// 球面線形補間
 	static Quaternion Slearp(const Quaternion& q_00_, Quaternion q_01_, float t_);
 
 	// オイラー角からクォータニオンへの変換
@@ -39,6 +40,7 @@ public:
 public:
 	// クォータニオンから回転行列の一部へ変換
 	// それぞれ前、上、右方向のベクトルを返す
+
 	Vector3 GetForward() const;
 	Vector3 GetUp() const;
 	Vector3 GetRight() const;

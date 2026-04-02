@@ -154,9 +154,7 @@ void TitleScene::UpdateInLoading(float elapsed_time_)
 
 	AudioManager::Instance().RegisterSound(se_map);
 
-	AudioManager::Instance().SetVolume(125, SEKind::SystemDecide);
-	AudioManager::Instance().SetVolume(125, SEKind::SystemCancel);
-	AudioManager::Instance().SetVolume(125, SEKind::SystemSelect);
+	AudioManager::Instance().SetVolume(125);
 
 	currentStep = Step::Update;
 }

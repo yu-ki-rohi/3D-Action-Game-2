@@ -2,7 +2,7 @@
 #include "ComponentBase.h"
 #include "../ObjectBase.h"
 
-// 当たった相手のジャスト回避を発生させるコンポーネント
+// 当たった相手のジャスト回避を発生させるためのコンポーネント
 class JustAvoidIgnition : public ComponentBase
 {
 public:

@@ -18,5 +18,6 @@ public:
 	virtual void OnTriggerEnter(Collider* other_) override;
 
 protected:
+	// –³“Gó‘Ô‚©‚Ç‚¤‚©
 	bool isInvincible;
 };

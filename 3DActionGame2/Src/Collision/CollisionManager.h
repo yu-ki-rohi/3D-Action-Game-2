@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include "IColliderRegister.h"
 
 // 前方宣言
 class Collider;
@@ -8,19 +9,25 @@ class ObjectBase;
 struct Vector3;
 struct Quaternion;
 
-class CollisionManager
+// 衝突を管理するクラス
+
+class CollisionManager : public IColliderRegister
 {
 public:
 	CollisionManager() = default;
 
 public:
 
-	void RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_);
-	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_);
+	// 原則コライダーの登録・登録解除はColliderRegisterInterfaceを通して行う
 
-	void ReleaseBody(const Collider* collider_);
-	void ReleaseTrigger(const Collider* collider_);
+	void RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_) override;
+	void RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_) override;
 
+	void ReleaseBody(const Collider* collider_) override;
+	void ReleaseTrigger(const Collider* collider_) override;
+
+
+	// 当たりの確認・当たり時の処理を実行
 	void CheckCollision();
 
 	
@@ -50,8 +57,9 @@ private:
 	// ヒットコライダーペアの消去
 	void EraseColliderPair(const Collider* collider_);
 
-
+	// 衝突確認
 	void CheckBodyAndBody();
+	// トリガー確認
 	void CheckBodyAndTrigger();
 
 	// Hitした位置をコライダーに設定

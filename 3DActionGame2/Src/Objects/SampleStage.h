@@ -4,6 +4,9 @@
 #include "Components/Transform.h"
 #include "Components/Renderer.h"
 
+// テスト表示用
+// 不要になれば消す
+
 class SampleStage : public ObjectBase
 {
 public:

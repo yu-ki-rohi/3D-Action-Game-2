@@ -31,9 +31,10 @@ protected:
 	void Behave(InputManager::Map map_, Behaviors& behaviors_);
 
 private:
-	// ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚É”­‰Î‚·‚éŠÖ”‚ğ•ÛŠÇ
-	// Map -> Behavior
+	// “ü—Í‚ÌuŠÔ‚É”­‰Î‚·‚éŠÖ”‚ğ•ÛŠÇ
 	Behaviors onPressBehaviors;
+	// “ü—ÍI—¹‚ÌuŠÔ‚É”­‰Î‚·‚éŠÖ”‚ğ•ÛŠÇ
 	Behaviors onReleaseBehaviors;
+	// “ü—Í’†‚É”­‰Î‚·‚éŠÖ”‚ğ•ÛŠÇ
 	Behaviors onHoldBehaviors;
 };

@@ -8,7 +8,7 @@
 // 
 // Data
 // file, path
-// prameters
+// parameters
 //
 
 struct ModelResource;
@@ -20,6 +20,7 @@ struct PixelShaderResource;
 struct MusicResource;
 struct SoundResource;
 
+// 要検討　タイトル・ゲームシーンで読み込むリソースを変更させる方法
 
 // 主にHandleを管理させるクラス
 class AssetsManager
@@ -43,6 +44,7 @@ public:
 	int GetTmpScreenHandle() const;
 	int GetShadowMapHandle() const;
 
+	// AudioManagerへの音源登録
 	void PrepareToPlayAudio();
 
 private:

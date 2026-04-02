@@ -1,6 +1,7 @@
 #pragma once
 #include "EffectBase.h"
 
+// 光って消える系のエフェクト
 class FlashEffect : public EffectBase
 {
 public:

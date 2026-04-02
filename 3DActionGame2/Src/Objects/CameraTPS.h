@@ -28,4 +28,10 @@ private:
 	std::shared_ptr<SimpleObserver> so;
 	bool isReverseVertical;
 	bool isReverseHorizontal;
+
+	// transformの扱い
+	// transform->Position
+	// 注視点座標の補正
+	// transform->quaternion
+	// 注視点に対してカメラがある方向
 };

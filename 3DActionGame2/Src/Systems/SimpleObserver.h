@@ -1,6 +1,7 @@
 #pragma once
 #include "ObserverBase.h"
 
+// 単純なオブザーバー
 class SimpleObserver : public ObserverBase
 {
 public:

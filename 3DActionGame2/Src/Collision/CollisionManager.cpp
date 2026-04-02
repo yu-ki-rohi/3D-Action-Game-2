@@ -1,6 +1,5 @@
 #include "CollisionManager.h"
 #include "Collider.h"
-#include "ColliderRegisterInterface.h"
 #include "../Mathmatics/Vector3.h"
 #include "../Mathmatics/Quaternion.h"
 
