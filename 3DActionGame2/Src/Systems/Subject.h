@@ -2,6 +2,9 @@
 #include <vector>
 #include <memory>
 
+// オブザーバーパターンの実装のため
+// 観察対象のオブジェクト
+
 class ObserverBase;
 class Subject
 {

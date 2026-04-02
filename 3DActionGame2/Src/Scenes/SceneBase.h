@@ -16,7 +16,6 @@ public:
 	{
 		Title,
 		Game,
-		Sample,
 		Finish
 	};
 public:
@@ -45,7 +44,9 @@ public:
 	/// <returns>次のシーンType</returns>
 	virtual Type Delete() = 0;
 
+	// インゲームでのジャスト回避時の演出
 	// スマートポインターで呼び出すためにこちらで宣言
+	// ただこのためだけにここに書くのは微妙な気がする
 	// MFPC使うなどすれば別にこちらで宣言しなくてもいいかも?
 	virtual void SuccessJustAvoid(){}
 

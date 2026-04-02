@@ -24,13 +24,15 @@ protected:
 	void FinishHitStop() override;
 
 private:
-	void IgnitAttackAnimation();
+	void IgnitAttack();
 
 private:
 	void EnableAttackCollider();
 	void DisableAttackCollider();
 	void FinishAttack();
 	void ResetAttackStep();
+
+	void StepForwardOnAttack(float power_);
 
 private:
 	FlexibleBoxCollider attackCollider;

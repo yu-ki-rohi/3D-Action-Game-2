@@ -1,5 +1,8 @@
 #pragma once
 
+// 時間関係のパラメータを管理
+// staticメンバのみ
+
 class Time
 {
 public:

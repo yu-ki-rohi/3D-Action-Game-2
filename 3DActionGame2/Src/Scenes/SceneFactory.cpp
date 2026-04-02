@@ -1,7 +1,6 @@
 #include "SceneFactory.h"
 #include "TitleScene.h"
 #include "GameScene.h"
-#include "SampleScene.h"
 
 std::shared_ptr<SceneBase> SceneFactory::Create(SceneBase::Type type_)
 {
@@ -18,9 +17,6 @@ std::shared_ptr<SceneBase> SceneFactory::Create(SceneBase::Type type_)
 		break;
 	case SceneBase::Type::Game:
 		new_scene = std::make_shared<GameScene>();
-		break;
-	case SceneBase::Type::Sample:
-		new_scene = std::make_shared<SampleScene>();
 		break;
 	}
 

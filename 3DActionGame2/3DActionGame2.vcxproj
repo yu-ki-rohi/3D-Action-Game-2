@@ -185,7 +185,6 @@
     <ClCompile Include="Src\Physics\PhysicsManager.cpp" />
     <ClCompile Include="Src\Scenes\GameScene.cpp" />
     <ClCompile Include="Src\Scenes\PlayerEventNotifier.cpp" />
-    <ClCompile Include="Src\Scenes\SampleScene.cpp" />
     <ClCompile Include="Src\Scenes\SceneFactory.cpp" />
     <ClCompile Include="Src\Scenes\SceneManager.cpp" />
     <ClCompile Include="Src\Scenes\TitleScene.cpp" />
@@ -258,7 +257,6 @@
     <ClInclude Include="Src\Physics\PhysicsManager.h" />
     <ClInclude Include="Src\Scenes\GameScene.h" />
     <ClInclude Include="Src\Scenes\PlayerEventNotifier.h" />
-    <ClInclude Include="Src\Scenes\SampleScene.h" />
     <ClInclude Include="Src\Scenes\SceneBase.h" />
     <ClInclude Include="Src\Scenes\SceneFactory.h" />
     <ClInclude Include="Src\Scenes\SceneManager.h" />

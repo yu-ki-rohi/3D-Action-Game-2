@@ -8,6 +8,10 @@
 
 class SceneBase;
 
+
+// Sceneを運営するクラス
+// 基本的な作りは先生から頂いたソースに基づいている
+
 class SceneManager
 {
 public:

@@ -62,6 +62,7 @@ void TitleScene::TitleScene::Render()
 		DrawString(choice_x, choice_y + space, "Option", color);
 		DrawString(choice_x - space, choice_y + space * choicesIndex, "->", color);
 	}
+	// オプション画面
 	else
 	{
 		int choice_x, choice_y;
@@ -190,7 +191,7 @@ void TitleScene::FinishScene()
 
 void TitleScene::OnDicede()
 {
-	if (choicesIndex < 5)
+	if (choicesIndex < optionChoicesNum - 1)
 	{
 		AudioManager::Instance().PlaySoundEffect(SEKind::SystemDecide);
 	}
@@ -239,15 +240,16 @@ void TitleScene::OnDicede()
 		}
 	}
 }
+
 void TitleScene::OnCancel()
 {
-	if (state == State::Option)
-	{
-		AudioManager::Instance().PlaySoundEffect(SEKind::SystemCancel);
-		state = State::Title;
-		choicesIndex = 0;
-		choicesNum = titleChoicesNum;
-	}
+	if (state == State::Title) { return; }
+	AudioManager::Instance().PlaySoundEffect(SEKind::SystemCancel);
+	state = State::Title;
+
+	// 値の初期化・変更
+	choicesIndex = 0;
+	choicesNum = titleChoicesNum;
 }
 void TitleScene::ChangeMenuIndex()
 {

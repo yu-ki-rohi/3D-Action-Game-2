@@ -1,5 +1,8 @@
 #pragma once
 
+// オブザーバーパターンの実装のため
+// 観察者
+
 class ObserverBase
 {
 public:

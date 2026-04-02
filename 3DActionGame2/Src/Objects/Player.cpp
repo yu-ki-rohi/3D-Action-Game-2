@@ -29,8 +29,8 @@ void Player::Start()
 
 	if (!IsActive()) { return; }
 
-	so = std::make_shared<SimpleObserver>();
-	InputManager::Instance().AddObserver(InputManager::Stick::Left, InputManager::Map::Player, so);
+	leftSthickInput = std::make_shared<SimpleObserver>();
+	InputManager::Instance().AddObserver(InputManager::Stick::Left, InputManager::Map::Player, leftSthickInput);
 
 
 	InputManager::Instance().RegisterBehave(
@@ -61,9 +61,13 @@ void Player::HitStop()
 void Player::UpdateBehavior(float elapsed_time_)
 {
 	if (!canMove) { return; }
-	
+
+	// HACK:‚à‚¤­‚µ‘‚«•û‰½‚Æ‚©‚µ‚½‚¢
+
 	float x, y;
-	so->GetFloatx2(x, y);
+	leftSthickInput->GetFloatx2(x, y);
+
+	// ‰ñ”ð
 	if (rollingDirection)
 	{
 		if (rollingStep == 0)
@@ -73,21 +77,10 @@ void Player::UpdateBehavior(float elapsed_time_)
 		}
 		else if (rollingStep == 1)
 		{
-			if (x != 0.0f && y != 0.0f)
+			if (x != 0.0f || y != 0.0f)
 			{
-				const std::shared_ptr<CameraManager> camera_manager = cameraManager.lock();
-				if (camera_manager == nullptr) { return; }
-
-				Vector3 target_pos = camera_manager->GetTargetPosition();
-				Vector3 camera_pos = camera_manager->GetCameraPosition();
-
-				Vector3 forward = (target_pos - camera_pos);
-				forward.y = 0.0f;
-				forward = forward.Normalize();
-
-				Vector3 right = Vector3::Cross(Vector3::UP, forward);
-
-				Vector3 move_vec = forward * y + right * x;
+				
+				Vector3 move_vec = ChangeOfBasisSthickInputToHolizontalView();
 				move_vec = move_vec.Projection(transform->GetRight());
 
 				float magnification = 7.0f;
@@ -99,24 +92,14 @@ void Player::UpdateBehavior(float elapsed_time_)
 			transform->SetForward(-*rollingDirection);
 		}
 	}
+	// ˆÚ“®
 	else
 	{
-		if (x != 0.0f && y != 0.0f)
+		if (x != 0.0f || y != 0.0f)
 		{
-			const std::shared_ptr<CameraManager> camera_manager = cameraManager.lock();
-			if (camera_manager == nullptr) { return; }
-
-			Vector3 target_pos = camera_manager->GetTargetPosition();
-			Vector3 camera_pos = camera_manager->GetCameraPosition();
-
-			Vector3 forward = (target_pos - camera_pos);
-			forward.y = 0.0f;
-			forward = forward.Normalize();
-
-			Vector3 right = Vector3::Cross(Vector3::UP, forward);
-
 			float speed = 25.0f;
-			Vector3 move_vec = forward * y + right * x;
+			Vector3 move_vec = ChangeOfBasisSthickInputToHolizontalView();
+
 			transform->Position += move_vec * elapsed_time_ * speed;
 
 			transform->SetForward(-move_vec);
@@ -163,7 +146,7 @@ void Player::FinishRolling()
 	rollingStep = -1;
 	rollingDirection = nullptr;
 	float x, y;
-	so->GetFloatx2(x, y);
+	leftSthickInput->GetFloatx2(x, y);
 	if (x != 0.0f && y != 0.0f)
 	{
 		animator->SetNextAnim(AKind::WalkF, Animator::Immediately, 4.6f, true);
@@ -178,4 +161,26 @@ void Player::FinishRolling()
 void Player::FinishHitStop()
 {
 	MultiplyLocalTimeScaleBy(hitStopTimeScaleInv);
+}
+
+Vector3 Player::ChangeOfBasisSthickInputToHolizontalView()
+{
+	float x, y;
+	leftSthickInput->GetFloatx2(x, y);
+
+	if (x == 0.0f && y == 0.0f) { return Vector3::ZERO; }
+
+	const std::shared_ptr<CameraManager> camera_manager = cameraManager.lock();
+	if (camera_manager == nullptr) { return Vector3::ZERO; }
+
+	Vector3 target_pos = camera_manager->GetTargetPosition();
+	Vector3 camera_pos = camera_manager->GetCameraPosition();
+
+	Vector3 forward = (target_pos - camera_pos);
+	forward.y = 0.0f;
+	forward = forward.Normalize();
+
+	Vector3 right = Vector3::Cross(Vector3::UP, forward);
+
+	return forward * y + right * x;
 }

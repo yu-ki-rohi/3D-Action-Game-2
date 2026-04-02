@@ -49,7 +49,7 @@ void PlayerSaber::Start()
 		InputManager::Map::Player,
 		KeyConfig::Tag::Attack,
 		InputManager::State::Hold,
-		MFPCFactory::CreateMFPC(shared_from_this(), this, &PlayerSaber::IgnitAttackAnimation));
+		MFPCFactory::CreateMFPC(shared_from_this(), this, &PlayerSaber::IgnitAttack));
 
 }
 
@@ -116,10 +116,12 @@ void PlayerSaber::FinishHitStop()
 	
 }
 
-void PlayerSaber::IgnitAttackAnimation()
+void PlayerSaber::IgnitAttack()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
+
+	// HACK: ƒpƒ‰ƒ[ƒ^‚Ì•ª—£
 
 	float enable_time = 0.38f;
 	float disable_time = 0.85f;
@@ -129,17 +131,21 @@ void PlayerSaber::IgnitAttackAnimation()
 	{
 	case 0:
 		animator->SetNextAnim(AKind::Attack00, 0.0f, 4.6f);
+		StepForwardOnAttack(3.8f);
 		break;
 	case 1:
 		animator->SetNextAnim(AKind::Attack01, 0.0f, 4.6f);
 		motion_time = 0.95f;
+		StepForwardOnAttack(1.5f);
 		break;
 	case 2:
 		animator->SetNextAnim(AKind::Attack02, 0.0f, 4.6f);
+		StepForwardOnAttack(2.2f);
 		motion_time = 0.95f;
 		break;
 	case 3:
 		animator->SetNextAnim(AKind::Attack03, 0.0f, 4.6f);
+		StepForwardOnAttack(2.5f);
 		motion_time = 1.2f;
 		attackStep = -1;
 		break;
@@ -171,7 +177,7 @@ void PlayerSaber::FinishAttack()
 	attackCollider.ClearHasHit();
 
 	float x, y;
-	so->GetFloatx2(x, y);
+	leftSthickInput->GetFloatx2(x, y);
 	if (x != 0.0f && y != 0.0f)
 	{
 		animator->SetNextAnim(AKind::WalkF, Animator::Immediately, 4.6f, true);
@@ -186,4 +192,12 @@ void PlayerSaber::FinishAttack()
 void PlayerSaber::ResetAttackStep()
 {
 	attackStep = 0;
+}
+
+void PlayerSaber::StepForwardOnAttack(float power_)
+{
+	Vector3 dir = ChangeOfBasisSthickInputToHolizontalView();
+	if (dir == Vector3::ZERO) { return; }
+	transform->Position += dir * power_;
+	transform->SetForward(-dir);
 }

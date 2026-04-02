@@ -30,6 +30,9 @@ protected:
 
 	virtual void FinishHitStop();
 
+	// 現在のスティックの入力状況を参照し、カメラから見てxz平面上で奥と右方向に向かうベクトルに変換する関数
+	Vector3 ChangeOfBasisSthickInputToHolizontalView();
+
 private:
 	void ProceedToNextRollingStep();
 	void FinishRolling();
@@ -46,7 +49,7 @@ protected:
 	// 回転状態でないときはnullptrにするためにポインターで
 	std::shared_ptr<Vector3> rollingDirection;
 
-	std::shared_ptr<SimpleObserver> so;
+	std::shared_ptr<SimpleObserver> leftSthickInput;
 private:
 	std::weak_ptr<CameraManager> cameraManager;
 

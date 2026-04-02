@@ -4,6 +4,8 @@
 
 class SceneManager;
 
+// アプリケーションとしての層
+
 class App
 {
 public:
