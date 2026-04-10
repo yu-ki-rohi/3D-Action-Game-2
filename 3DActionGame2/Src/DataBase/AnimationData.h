@@ -2,7 +2,7 @@
 #include <utility>
 #include "DataKind.h"
 
-#define ANIMATION_NUM 12
+#define ANIMATION_NUM 13
 
 // ファイル名とかの管理はもっといいやり方を模索したい
 // csvからの読み込みやVBAを使って生成するなど
@@ -22,7 +22,8 @@ struct AnimationFileList
 		std::make_pair(MKind::Enemy,std::make_pair(AKind::Idle,"Res/Models/Enemy/Enemy_Idle.mv1")),
 		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack00,"Res/Models/Enemy/Enemy_Attack1.mv1")),
 		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack01,"Res/Models/Enemy/Enemy_Attack2.mv1")),
-		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack02,"Res/Models/Enemy/Enemy_Attack3.mv1"))
+		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack02,"Res/Models/Enemy/Enemy_Attack3.mv1")),
+		std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkF,"Res/Models/Enemy/Enemy_WalkF.mv1"))
 	};
 };
 
@@ -42,6 +43,7 @@ struct AnimationSpeedList
 	std::make_pair(MKind::Enemy,std::make_pair(AKind::Idle, 30.0f)),
 	std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack00, 30.0f)),
 	std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack01, 30.0f)),
-	std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack02, 30.0f))
+	std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack02, 30.0f)),
+	std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkF, 30.0f))
 	};
 };

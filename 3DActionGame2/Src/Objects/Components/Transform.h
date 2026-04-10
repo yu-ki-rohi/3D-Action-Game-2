@@ -6,8 +6,7 @@
 #include <vector>
 #include "ComponentBase.h"
 
-// TODO
-// ŠK‘w\‘¢‚ÌÀ‘•(—Dæ“x:’á)
+// TODO: ŠK‘w\‘¢‚ÌÀ‘•(—Dæ“x:’á)
 
 class Transform : public ComponentBase
 {

@@ -189,7 +189,7 @@ void TitleScene::FinishScene()
 	currentStep = Step::Finish;
 }
 
-void TitleScene::OnDicede()
+void TitleScene::OnDecide()
 {
 	if (choicesIndex < optionChoicesNum - 1)
 	{
@@ -385,7 +385,7 @@ void TitleScene::RegisterInputBehavior()
 		InputManager::Map::Menu,
 		KeyConfig::Tag::Decide,
 		InputManager::State::Press,
-		MFPCFactory::CreateMFPC(shared_from_this(), this, &TitleScene::OnDicede)
+		MFPCFactory::CreateMFPC(shared_from_this(), this, &TitleScene::OnDecide)
 	);
 	// ƒLƒƒƒ“ƒZƒ‹
 	InputManager::Instance().RegisterBehave(

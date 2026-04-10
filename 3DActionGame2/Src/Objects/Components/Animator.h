@@ -79,7 +79,6 @@ private:
 	// (アニメーションの線形補間のため)
 
 	// 再生するアニメーションのハンドル
-
 	int currentAnimHandle = -1;
 	int nextAnimHandle = -1;
 
@@ -88,8 +87,8 @@ private:
 	int currentAttachIndex = -1;
 	int nextAttachIndex = -1;
 
+	// HACK: アニメーション時間の管理の仕方を変更
 	// アニメーションの再生時間
-
 	float currentAnimTimer = 0.0f;
 	float nextAnimTimer = 0.0f;
 

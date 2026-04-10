@@ -5,6 +5,8 @@
 class JustAvoidIgnition;
 class TimerBase;
 
+#define TMP_EVAUATION
+
 class Enemy : public CharacterBase
 {
 public:

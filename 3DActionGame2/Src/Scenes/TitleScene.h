@@ -21,8 +21,12 @@ public:
 	void Update(float elapsed_time_) override;
 	void Render() override;
 
+
+	// ローディング中
+
 	void UpdateInLoading(float elapsed_time_) override;
 	void RenderInLoading() override;
+
 
 	void Initialize() override;
 	Type Delete() override;
@@ -30,7 +34,8 @@ public:
 private:
 	void FinishScene();
 
-	void OnDicede();
+	
+	void OnDecide();
 	void OnCancel();
 	void ChangeMenuIndex();
 	void IncreaseMenuIndex();

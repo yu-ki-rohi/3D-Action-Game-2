@@ -41,6 +41,12 @@
     <Filter Include="Src\Audio">
       <UniqueIdentifier>{a9fe8d1c-8ddf-4f00-96b1-8e67bbb8ba0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\AI">
+      <UniqueIdentifier>{6ec030d1-9418-47a4-9220-6c453c1c15b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\AI\BehaviorTree">
+      <UniqueIdentifier>{ff82c317-4bb1-404d-b800-54934c4371f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\main.cpp">
@@ -201,6 +207,21 @@
     </ClCompile>
     <ClCompile Include="Src\Audio\AudioManager.cpp">
       <Filter>Src\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AI\EnemyBrain.cpp">
+      <Filter>Src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AI\EnemyDirective.cpp">
+      <Filter>Src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AI\BehaviorTree\SequenceNode.cpp">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AI\BehaviorTree\SelectorNode.cpp">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AI\BehaviorTree\RandomNode.cpp">
+      <Filter>Src\AI\BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,6 +458,57 @@
     </ClInclude>
     <ClInclude Include="Src\Collision\IColliderRegister.h">
       <Filter>Src\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\EnemyCommander.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\EnemyBrain.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\EnemyDirective.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\NPCActionBase.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\EnemyReport.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\IEnemyReportReader.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\IEnemyReportWriter.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\IEnemyDirectiveReader.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\IEnemyDirectiveWriter.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\EnemyReportHandler.h">
+      <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\Node.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\CompositeNode.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\SequenceNode.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\SelectorNode.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\RandomNode.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\ConditionNode.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\BehaviorTree\TestAttack.h">
+      <Filter>Src\AI\BehaviorTree</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

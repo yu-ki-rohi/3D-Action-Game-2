@@ -140,6 +140,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\AI\BehaviorTree\RandomNode.cpp" />
+    <ClCompile Include="Src\AI\BehaviorTree\SelectorNode.cpp" />
+    <ClCompile Include="Src\AI\BehaviorTree\SequenceNode.cpp" />
+    <ClCompile Include="Src\AI\EnemyBrain.cpp" />
+    <ClCompile Include="Src\AI\EnemyDirective.cpp" />
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Assets\AssetsManager.cpp" />
     <ClCompile Include="Src\Audio\AudioManager.cpp" />
@@ -195,6 +200,23 @@
     <ClCompile Include="Src\Systems\TimerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\AI\BehaviorTree\Node.h" />
+    <ClInclude Include="Src\AI\BehaviorTree\CompositeNode.h" />
+    <ClInclude Include="Src\AI\BehaviorTree\ConditionNode.h" />
+    <ClInclude Include="Src\AI\BehaviorTree\RandomNode.h" />
+    <ClInclude Include="Src\AI\BehaviorTree\SelectorNode.h" />
+    <ClInclude Include="Src\AI\BehaviorTree\SequenceNode.h" />
+    <ClInclude Include="Src\AI\BehaviorTree\TestAttack.h" />
+    <ClInclude Include="Src\AI\EnemyReport.h" />
+    <ClInclude Include="Src\AI\EnemyReportHandler.h" />
+    <ClInclude Include="Src\AI\IEnemyDirectiveReader.h" />
+    <ClInclude Include="Src\AI\IEnemyDirectiveWriter.h" />
+    <ClInclude Include="Src\AI\IEnemyReportReader.h" />
+    <ClInclude Include="Src\AI\IEnemyReportWriter.h" />
+    <ClInclude Include="Src\AI\NPCActionBase.h" />
+    <ClInclude Include="Src\AI\EnemyBrain.h" />
+    <ClInclude Include="Src\AI\EnemyCommander.h" />
+    <ClInclude Include="Src\AI\EnemyDirective.h" />
     <ClInclude Include="Src\App.h" />
     <ClInclude Include="Src\Assets\AnimationResource.h" />
     <ClInclude Include="Src\Assets\AssetsManager.h" />

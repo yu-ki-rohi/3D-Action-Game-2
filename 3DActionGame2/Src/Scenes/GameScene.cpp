@@ -83,6 +83,7 @@ void GameScene::Update(float elapsed_time_)
 		// ネスト深いし共通処理があるので後で手を入れる
 		if (intensity != targetIntensity)
 		{
+			// HACK: 絶対的処理に変更
 			intensity += fluctuationSpeedOfIntensity * elapsed_time_;
 			if (fluctuationSpeedOfIntensity > 0)
 			{
@@ -102,6 +103,7 @@ void GameScene::Update(float elapsed_time_)
 
 		if (monochromeRate != targetMonochromeRate)
 		{
+			// HACK: 絶対的処理に変更
 			monochromeRate += fluctuationSpeedOfMonochromeRate * elapsed_time_;
 			if (fluctuationSpeedOfMonochromeRate > 0)
 			{

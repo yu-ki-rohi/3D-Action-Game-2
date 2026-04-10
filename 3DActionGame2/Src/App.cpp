@@ -81,4 +81,6 @@ void App::MainLoop()
 		// ƒƒCƒ“ˆ—
 		sceneManager->Main(elapsed_time);
 	}
+
+	sceneManager = nullptr;
 }

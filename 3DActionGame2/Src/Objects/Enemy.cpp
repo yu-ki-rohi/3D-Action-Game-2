@@ -88,6 +88,7 @@ void Enemy::Render()
 
 void Enemy::UpdateBehavior(float elapsed_time_)
 {
+#ifdef TMP_EVAUATION
 	float border_percentage = 0.9f;
 	if (animator->GetAnimationProgressPercentage() > border_percentage)
 	{
@@ -122,6 +123,10 @@ void Enemy::UpdateBehavior(float elapsed_time_)
 	{
 		isChanging = false;
 	}
+#else
+
+
+#endif
 }
 
 void Enemy::UpdateCollider()
