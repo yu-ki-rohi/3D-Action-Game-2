@@ -10,7 +10,7 @@ namespace BehaviorTree
 		// todo: ‹““®‚Ìˆá‚¢‚Ì’²¸
 		explicit ConditionNode(std::function<bool()> fn_);
 
-		Status Tick() override;
+		Status Tick(float elapsed_time_) override;
 
 	private:
 		// note: 

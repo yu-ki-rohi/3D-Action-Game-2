@@ -12,7 +12,7 @@ public:
 
 public:
 	int Damage(int attack_) override;
-	void OnTriggerEnter(Collider* other_) override;
+	void OnTriggerEnter(std::shared_ptr<Collider> other_) override;
 
 private:
 	std::weak_ptr<Player> owner;

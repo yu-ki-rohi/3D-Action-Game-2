@@ -15,6 +15,6 @@ namespace BehaviorTree
 	{
 	public:
 		virtual ~Node() = default;
-		virtual Status Tick() = 0;
+		virtual Status Tick(float elapsed_time_) = 0;
 	};
 }

@@ -57,7 +57,7 @@ void Animator::SetNextAnim(AnimType anim_type_, float start_changing_time_, floa
 
 void Animator::SetNextAnim(AKind anim_kind_, float start_changing_time_, float changing_time_, bool is_loop_)
 {
-	// AnimType版とほぼ共通なので、共通部分を関数化するか、そもそもあちらはSample用なのでいずれ消すか
+	// HACK: AnimType版とほぼ共通なので、共通部分を関数化するか、そもそもあちらはSample用なのでいずれ消すか
 
 	// nullチェック
 	if (!animResource) { return; }

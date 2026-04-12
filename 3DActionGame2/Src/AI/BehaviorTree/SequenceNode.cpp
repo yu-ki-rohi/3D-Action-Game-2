@@ -2,11 +2,11 @@
 
 using namespace BehaviorTree;
 
-Status SequenceNode::Tick()
+Status SequenceNode::Tick(float elapsed_time_)
 {
 	for (int i = runningIndex; i < children.size(); ++i)
 	{
-		auto result = children[i]->Tick();
+		auto result = children[i]->Tick(elapsed_time_);
 		if (result == Status::Success) { continue; }
 
 		switch (result)

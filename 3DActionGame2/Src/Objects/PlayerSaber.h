@@ -35,8 +35,8 @@ private:
 	void StepForwardOnAttack(float power_);
 
 private:
-	FlexibleBoxCollider attackCollider;
-	BoxCollider bodyCollider;
+	std::shared_ptr<FlexibleBoxCollider> attackCollider;
+	std::shared_ptr<BoxCollider> bodyCollider;
 
 	char attackStep;
 

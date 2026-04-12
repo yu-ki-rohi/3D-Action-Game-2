@@ -9,7 +9,7 @@ public:
 	EnemyStatus(std::shared_ptr<Enemy> owner_);
 
 public:
-	void OnTriggerEnter(Collider* other_) override;
+	void OnTriggerEnter(std::shared_ptr<Collider> other_) override;
 
 private:
 	std::weak_ptr<Enemy> owner;

@@ -24,6 +24,7 @@
 
 #include "FlashEffect.h"
 
+
 ObjectFactory::ObjectFactory(std::shared_ptr<ObjectManager> object_manager_, std::shared_ptr<AssetsManager> assets_manager_, std::shared_ptr<IColliderRegister> collider_register_interface_) :
 	objectManager(object_manager_),
 	assetsManager(assets_manager_),
@@ -127,14 +128,14 @@ std::shared_ptr<Player> ObjectFactory::CreatePlayer(Vector3 position_, Vector3 r
 	return obj;
 }
 
-std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rotation_)
+std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rotation_, unsigned char id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_)
 {
 	auto object_manager = objectManager.lock();
 	auto assets_manager = assetsManager.lock();
 	auto collider_interface = colliderRegisterInterface.lock();
 	if (!object_manager || !assets_manager || !collider_interface) { return nullptr; }
 
-	auto obj = std::make_shared<Enemy>();
+	auto obj = std::make_shared<Enemy>(id_, directive_);
 	obj->SetComponent(std::make_shared<Transform>(position_, Vector3(0.18f, 0.18f, 0.18f), rotation_));
 	obj->SetComponent(std::make_shared<Renderer>(
 		assets_manager->GetModel(MKind::Enemy)->Handle,
@@ -144,6 +145,9 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rot
 	));
 	obj->SetComponent(std::make_shared<Animator>(assets_manager->GetAnimation(MKind::Enemy)));
 	obj->SetComponent(std::make_shared<EnemyStatus>(obj));
+
+	obj->SetupBrain();
+
 	obj->SetColliderRegisterInterface(collider_interface);
 
 	object_manager->Register(obj);

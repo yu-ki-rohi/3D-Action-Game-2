@@ -20,6 +20,7 @@ public:
 public:
 	Vector3 GetPosition();
 
+	// 検討: 現状の外部からセットする方式のままにするか、内部でセットする方式にするか
 	void SetComponent(std::shared_ptr<Transform> transform_);
 	void SetComponent(std::shared_ptr<Renderer> renderer_);
 	void SetComponent(std::shared_ptr<Animator> animator_);

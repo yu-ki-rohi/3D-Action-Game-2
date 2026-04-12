@@ -8,7 +8,7 @@ JustAvoidIgnition::JustAvoidIgnition(ObjectBase::Tag ignit_target_) :
 
 }
 
-void JustAvoidIgnition::OnTriggerEnter(Collider* other_)
+void JustAvoidIgnition::OnTriggerEnter(std::shared_ptr<Collider> other_)
 {
 	auto owner = other_->GetOwner();
 	if (!owner) { return; }

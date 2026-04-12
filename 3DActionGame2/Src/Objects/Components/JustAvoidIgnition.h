@@ -8,7 +8,7 @@ class JustAvoidIgnition : public ComponentBase
 public:
 	JustAvoidIgnition(ObjectBase::Tag ignit_target_);
 
-	void OnTriggerEnter(Collider* other_) override;
+	void OnTriggerEnter(std::shared_ptr<Collider> other_) override;
 
 private:
 	ObjectBase::Tag ignitTarget;

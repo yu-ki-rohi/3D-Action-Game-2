@@ -7,6 +7,12 @@ namespace BehaviorTree
 {
 	class CompositeNode : public Node
 	{
+	public:
+		void AddNode(std::unique_ptr<Node> node_)
+		{
+			children.push_back(std::move(node_));
+		}
+
 	protected:
 
 	protected:

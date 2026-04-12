@@ -3,10 +3,10 @@
 
 namespace BehaviorTree
 {
-	class SelectorNode : CompositeNode
+	class SelectorNode : public CompositeNode
 	{
 	public:
 		// 一番最初に実行可能な子ノードを実行
-		Status Tick() override;
+		Status Tick(float elapsed_time_) override;
 	};
 }

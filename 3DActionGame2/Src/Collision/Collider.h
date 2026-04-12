@@ -82,7 +82,7 @@ public:
 
 	// 各種当たり時に呼び出す
 
-	void OnTriggerEnter(Collider* other_)
+	void OnTriggerEnter(std::shared_ptr<Collider> other_)
 	{
 		if (HasHit(other_)) { return; }
 		for (auto& obeserver : observers)
@@ -90,14 +90,14 @@ public:
 			obeserver->OnTriggerEnter(other_);
 		}
 	}
-	void OnTriggerStay(Collider* other_)
+	void OnTriggerStay(std::shared_ptr<Collider> other_)
 	{
 		for (auto& obeserver : observers)
 		{
 			obeserver->OnTriggerStay(other_);
 		}
 	}
-	void OnTriggerExit(Collider* other_)
+	void OnTriggerExit(std::shared_ptr<Collider> other_)
 	{
 		for (auto& obeserver : observers)
 		{
@@ -105,7 +105,7 @@ public:
 		}
 	}
 
-	void OnCollisionEnter(Collider* other_)
+	void OnCollisionEnter(std::shared_ptr<Collider> other_)
 	{
 		if (HasHit(other_)) { return; }
 		for (auto& obeserver : observers)
@@ -113,14 +113,14 @@ public:
 			obeserver->OnCollisionEnter(other_);
 		}
 	}
-	void OnCollisionStay(Collider* other_)
+	void OnCollisionStay(std::shared_ptr<Collider> other_)
 	{
 		for (auto& obeserver : observers)
 		{
 			obeserver->OnCollisionStay(other_);
 		}
 	}
-	void OnCollisionExit(Collider* other_)
+	void OnCollisionExit(std::shared_ptr<Collider> other_)
 	{
 		for (auto& obeserver : observers)
 		{
@@ -130,7 +130,7 @@ public:
 	
 private:
 	// 既に当たっていたかの確認
-	bool HasHit(Collider* other_)
+	bool HasHit(std::shared_ptr<Collider> other_)
 	{
 		if (!haveHitObjects) { return false; }
 		auto other_owner = other_->GetOwner();

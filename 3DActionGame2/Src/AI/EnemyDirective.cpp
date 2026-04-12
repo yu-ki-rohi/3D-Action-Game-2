@@ -15,6 +15,8 @@
 #define SIN_3_8 0.9238795
 #define SIN_4_8 1.0000000
 
+using namespace EnemyAI;
+
 Vector3 EnemyDirective::GetDirectedPosition(unsigned char id_) const
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外を指定されたことを表示 */ return Vector3::ZERO; }
@@ -128,7 +130,7 @@ Vector3 EnemyDirective::GetDirectedPosition(unsigned char id_) const
 	return Vector3(x, y, z);
 }
 
-EnemyDirective::Actions EnemyDirective::GetDirectedAciton(unsigned char id_) const
+Actions EnemyDirective::GetDirectedAciton(unsigned char id_) const
 {
 	if (id_ >= directives.size()){ /* todo: 範囲外を指定されたことを表示 */ return Actions::STAND_BY; }
 	// 検討事項：このキャストの妥当性
@@ -179,4 +181,10 @@ void EnemyDirective::RotatePosition(unsigned char id_, signed char num_)
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
 
+}
+
+int EnemyDirective::AddDirective(unsigned char directive_)
+{
+	directives.push_back(directive_);
+	return (int)directives.size() - 1;
 }

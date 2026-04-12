@@ -3,10 +3,10 @@
 
 namespace BehaviorTree
 {
-	class SequenceNode : CompositeNode
+	class SequenceNode : public CompositeNode
 	{
 	public:
 		// 実行可能な子ノードを順番に実行
-		Status Tick() override;
+		Status Tick(float elapsed_time_) override;
 	};
 }

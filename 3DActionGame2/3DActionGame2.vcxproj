@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\AI\BehaviorTree\LeafNode.cpp" />
     <ClCompile Include="Src\AI\BehaviorTree\RandomNode.cpp" />
     <ClCompile Include="Src\AI\BehaviorTree\SelectorNode.cpp" />
     <ClCompile Include="Src\AI\BehaviorTree\SequenceNode.cpp" />
@@ -149,7 +150,6 @@
     <ClCompile Include="Src\Assets\AssetsManager.cpp" />
     <ClCompile Include="Src\Audio\AudioManager.cpp" />
     <ClCompile Include="Src\Collision\BoxCollider.cpp" />
-    <ClCompile Include="Src\Collision\ColliderRegisterInterface.cpp" />
     <ClCompile Include="Src\Collision\CollisionManager.cpp" />
     <ClCompile Include="Src\Collision\FlexibleBoxCollider.cpp" />
     <ClCompile Include="Src\Collision\SphereCollider.cpp" />
@@ -200,13 +200,14 @@
     <ClCompile Include="Src\Systems\TimerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\AI\BehaviorTree\LeafNode.h" />
     <ClInclude Include="Src\AI\BehaviorTree\Node.h" />
     <ClInclude Include="Src\AI\BehaviorTree\CompositeNode.h" />
     <ClInclude Include="Src\AI\BehaviorTree\ConditionNode.h" />
     <ClInclude Include="Src\AI\BehaviorTree\RandomNode.h" />
     <ClInclude Include="Src\AI\BehaviorTree\SelectorNode.h" />
     <ClInclude Include="Src\AI\BehaviorTree\SequenceNode.h" />
-    <ClInclude Include="Src\AI\BehaviorTree\TestAttack.h" />
+    <ClInclude Include="Src\AI\EnemyAICommons.h" />
     <ClInclude Include="Src\AI\EnemyReport.h" />
     <ClInclude Include="Src\AI\EnemyReportHandler.h" />
     <ClInclude Include="Src\AI\IEnemyDirectiveReader.h" />
@@ -227,7 +228,6 @@
     <ClInclude Include="Src\Audio\AudioManager.h" />
     <ClInclude Include="Src\Collision\BoxCollider.h" />
     <ClInclude Include="Src\Collision\Collider.h" />
-    <ClInclude Include="Src\Collision\ColliderRegisterInterface.h" />
     <ClInclude Include="Src\Collision\CollisionManager.h" />
     <ClInclude Include="Src\Collision\FlexibleBoxCollider.h" />
     <ClInclude Include="Src\Collision\IColliderRegister.h" />
@@ -260,6 +260,8 @@
     <ClInclude Include="Src\Objects\Components\CharacterStatus.h" />
     <ClInclude Include="Src\Objects\Components\ComponentBase.h" />
     <ClInclude Include="Src\Objects\Components\EnemyStatus.h" />
+    <ClInclude Include="Src\Objects\Components\ICollidable.h" />
+    <ClInclude Include="Src\Objects\Components\IUpdatable.h" />
     <ClInclude Include="Src\Objects\Components\JustAvoidIgnition.h" />
     <ClInclude Include="Src\Objects\Components\PlayerStatus.h" />
     <ClInclude Include="Src\Objects\Components\Renderer.h" />

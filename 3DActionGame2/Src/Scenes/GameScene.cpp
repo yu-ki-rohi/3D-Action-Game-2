@@ -1,4 +1,7 @@
 #include "GameScene.h"
+
+#include "DxLib.h"
+
 #include "../Objects/ObjectManager.h"
 #include "../Collision/CollisionManager.h"
 #include "../Assets/AssetsManager.h"
@@ -18,6 +21,8 @@
 
 #include "../Input/InputManager.h"
 #include "../Audio/AudioManager.h"
+
+#include "../AI/EnemyDirective.h"
 
 
 GameScene::GameScene() :
@@ -432,10 +437,33 @@ void GameScene::GenerateObjects()
 	Vector3 initial_rotation = Vector3(0.0f, 180.0f, 0.0f);
 	auto player = objectFactory->CreatePlayer(initial_position, initial_rotation, playerEventNotifier, cameraManager);
 	
-	initial_position = Vector3(0.0f, 0.0f, 50.0f);
-	initial_rotation = Vector3(0.0f, 0.0f, 0.0f);
 
-	auto enemy = objectFactory->CreateEnemy(initial_position, initial_rotation);
+	const int enemy_num = 3;
+	Vector3 initial_positions[enemy_num] = {
+			Vector3(0.0f, 0.0f, 250.0f),
+			Vector3(40.0f, 0.0f, 300.0f),
+			Vector3(-40.0f, 0.0f, 350.0f),
+	};
+
+	Vector3 initial_rotations[enemy_num] = {
+		Vector3(0.0f, 0.0f, 0.0f),
+		Vector3(0.0f, 0.0f, 0.0f),
+		Vector3(0.0f, 0.0f, 0.0f),
+	};
+
+	auto directive = std::make_shared<EnemyAI::EnemyDirective>();
+
+	unsigned char derectives[enemy_num] = {
+		0,
+		16,
+		32
+	};
+
+	for (int i = 0; i < enemy_num; ++i)
+	{
+		auto enemy = objectFactory->CreateEnemy(initial_positions[i], initial_rotations[i], directive->AddDirective(derectives[i]), directive);
+
+	}
 
 	objectFactory->CreateStage();
 

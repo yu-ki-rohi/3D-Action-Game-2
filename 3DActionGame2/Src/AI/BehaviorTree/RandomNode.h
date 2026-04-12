@@ -6,6 +6,6 @@ namespace BehaviorTree
 	{
 	public:
 		// ランダムな子ノードを実行
-		Status Tick() override;
+		Status Tick(float elapsed_time_) override;
 	};
 }

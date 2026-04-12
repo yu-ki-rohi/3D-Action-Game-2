@@ -28,7 +28,7 @@ int  PlayerStatus::Damage(int attack_)
 }
 
 
-void PlayerStatus::OnTriggerEnter(Collider* other_)
+void PlayerStatus::OnTriggerEnter(std::shared_ptr<Collider> other_)
 {
 	auto other_owner = other_->GetOwner();
 	if (!other_owner) { return; }

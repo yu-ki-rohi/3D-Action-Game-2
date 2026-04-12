@@ -15,7 +15,7 @@ public:
 	virtual int Damage(int attack_);
 
 	// “–‚½‚è
-	virtual void OnTriggerEnter(Collider* other_) override;
+	virtual void OnTriggerEnter(std::shared_ptr<Collider> other_) override;
 
 protected:
 	// –³“Gó‘Ô‚©‚Ç‚¤‚©

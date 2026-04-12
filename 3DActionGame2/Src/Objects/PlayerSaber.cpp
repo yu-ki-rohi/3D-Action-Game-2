@@ -15,8 +15,8 @@
 
 PlayerSaber::PlayerSaber(std::shared_ptr<CameraManager> camera_manager_) :
 	Player(camera_manager_),
-	attackCollider(Vector3(53.0f, 40.0f, 5.0f), Vector3(145.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f, 30.0f), true),
-	bodyCollider(Vector3(0.0f, -5.0f, -15.0f), Vector3(45.0f, 150.0f, 45.0f), Vector3(0.0f, 0.0f, 0.0f)),
+	attackCollider(std::make_shared<FlexibleBoxCollider>(Vector3(53.0f, 40.0f, 5.0f), Vector3(145.0f, 18.0f, 12.0f), Vector3(10.0f, -8.0f, 30.0f), true)),
+	bodyCollider(std::make_shared<BoxCollider>(Vector3(0.0f, -5.0f, -15.0f), Vector3(45.0f, 150.0f, 45.0f), Vector3(0.0f, 0.0f, 0.0f))),
 	attackStep(0)
 {
 
@@ -27,22 +27,22 @@ void PlayerSaber::Start()
 	Player::Start();
 
 	if (!IsActive()) { return; }
-	attackCollider.SetIsEnabled(false);
-	attackCollider.SetOwner(shared_from_this());
-	bodyCollider.SetOwner(shared_from_this());
+	attackCollider->SetIsEnabled(false);
+	attackCollider->SetOwner(shared_from_this());
+	bodyCollider->SetOwner(shared_from_this());
 
-	attackCollider.AddObserver(characterStatus);
+	attackCollider->AddObserver(characterStatus);
 
 	UpdateCollider();
 
-	attackCollider.UpdateRadius();
-	bodyCollider.UpdateRadius();
+	attackCollider->UpdateRadius();
+	bodyCollider->UpdateRadius();
 
 	auto collider_register_interface = colliderRegisterInterface.lock();
 	if (collider_register_interface)
 	{
-		collider_register_interface->RegisterBody(shared_from_this(), &bodyCollider);
-		collider_register_interface->RegisterTrigger(shared_from_this(), &attackCollider);
+		collider_register_interface->RegisterBody(bodyCollider);
+		collider_register_interface->RegisterTrigger(attackCollider);
 	}
 
 	InputManager::Instance().RegisterBehave(
@@ -62,8 +62,8 @@ void PlayerSaber::Render()
 {
 	CharacterBase::Render();
 #ifdef DEBUG
-	attackCollider.DebugDrow();
-	bodyCollider.DebugDrow();
+	attackCollider->DebugDrow();
+	bodyCollider->DebugDrow();
 #endif
 }
 
@@ -92,12 +92,12 @@ void PlayerSaber::UpdateCollider()
 	// 武器コライダーの更新
 	int frame_index = 34;
 	MATRIX frame_matrix = MV1GetFrameLocalWorldMatrix(renderer->GetModelHandle(), frame_index);
-	attackCollider.UpdateFromParentMat(frame_matrix);
+	attackCollider->UpdateFromParentMat(frame_matrix);
 
 	// 身体コライダーの更新
 	frame_index = 1;
 	frame_matrix = MV1GetFrameLocalWorldMatrix(renderer->GetModelHandle(), frame_index);
-	bodyCollider.UpdateFromParentMat(frame_matrix);
+	bodyCollider->UpdateFromParentMat(frame_matrix);
 
 	animator->DetachAnim(renderer->GetModelHandle());
 }
@@ -163,18 +163,18 @@ void PlayerSaber::IgnitAttack()
 
 void PlayerSaber::EnableAttackCollider()
 {
-	attackCollider.SetIsEnabled(true);
+	attackCollider->SetIsEnabled(true);
 }
 
 void PlayerSaber::DisableAttackCollider()
 {
-	attackCollider.SetIsEnabled(false);
+	attackCollider->SetIsEnabled(false);
 }
 
 void PlayerSaber::FinishAttack()
 {
 	canMove = true;
-	attackCollider.ClearHasHit();
+	attackCollider->ClearHasHit();
 
 	float x, y;
 	leftSthickInput->GetFloatx2(x, y);

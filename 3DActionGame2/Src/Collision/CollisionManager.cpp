@@ -3,21 +3,21 @@
 #include "../Mathmatics/Vector3.h"
 #include "../Mathmatics/Quaternion.h"
 
-void CollisionManager::RegisterBody(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
+void CollisionManager::RegisterBody(std::shared_ptr<Collider> collider_)
 {
-	bodies.push_back(std::make_pair(owner_, collider_));
+	bodies.push_back(collider_);
 }
 
-void CollisionManager::RegisterTrigger(std::shared_ptr<ObjectBase> owner_, Collider* collider_)
+void CollisionManager::RegisterTrigger(std::shared_ptr<Collider> collider_)
 {
-	triggers.push_back(std::make_pair(owner_, collider_));
+	triggers.push_back(collider_);
 }
 
-void CollisionManager::ReleaseBody(const Collider* collider_)
+void CollisionManager::ReleaseBody( std::shared_ptr<Collider> collider_)
 {
 	for (auto itr = bodies.begin(); itr != bodies.end(); )
 	{
-		if ((*itr).second == collider_)
+		if ((*itr) == collider_)
 		{
 			itr = bodies.erase(itr);
 		}
@@ -28,11 +28,11 @@ void CollisionManager::ReleaseBody(const Collider* collider_)
 	}
 }
 
-void CollisionManager::ReleaseTrigger(const Collider* collider_)
+void CollisionManager::ReleaseTrigger( std::shared_ptr<Collider> collider_)
 {
 	for (auto itr = triggers.begin(); itr != triggers.end(); )
 	{
-		if ((*itr).second == collider_)
+		if ((*itr) == collider_)
 		{
 			itr = triggers.erase(itr);
 		}
@@ -54,7 +54,7 @@ void CollisionManager::CheckCollision()
 	CheckBodyAndTrigger();
 }
 
-bool CollisionManager::IsColliding(const Collider* collider_01_, const Collider* collider_02_)
+bool CollisionManager::IsColliding( std::shared_ptr<Collider> collider_01_,  std::shared_ptr<Collider> collider_02_)
 {
 	// 球ではない場合は、Bounding Sphere で球と球の当たりを確認
 	if (IsCollidingSphereAndSphere(collider_01_,collider_02_))
@@ -88,7 +88,7 @@ bool CollisionManager::IsColliding(const Collider* collider_01_, const Collider*
 	return false;
 }
 
-bool CollisionManager::IsCollidingSphereAndSphere(const Collider* collider_01_, const Collider* collider_02_)
+bool CollisionManager::IsCollidingSphereAndSphere( std::shared_ptr<Collider> collider_01_,  std::shared_ptr<Collider> collider_02_)
 {
 	if (collider_01_ == nullptr || collider_02_ == nullptr) { return false; }
 
@@ -102,7 +102,7 @@ bool CollisionManager::IsCollidingSphereAndSphere(const Collider* collider_01_, 
 	return false;
 }
 
-bool CollisionManager::IsCollidingBoxAndSphere(const Collider* box_collider_, const Collider* sphere_collider_)
+bool CollisionManager::IsCollidingBoxAndSphere( std::shared_ptr<Collider> box_collider_,  std::shared_ptr<Collider> sphere_collider_)
 {
 	// 先に SphereAndSphere の方を通っているので、ここでは判定不要だろうが念のため
 	if (box_collider_ == nullptr || sphere_collider_ == nullptr) { return false; }
@@ -147,14 +147,14 @@ bool CollisionManager::IsCollidingBoxAndSphere(const Collider* box_collider_, co
 	return false;
 }
 
-bool CollisionManager::IsCollidingBoxAndBox(const Collider* collider_01_, const Collider* collider_02_)
+bool CollisionManager::IsCollidingBoxAndBox( std::shared_ptr<Collider> collider_01_,  std::shared_ptr<Collider> collider_02_)
 {
 	// 先に SphereAndSphere の方を通っているので、ここでは判定不要だが念のため
 	if (collider_01_ == nullptr || collider_02_ == nullptr) { return false; }
 
 	Vector3 vertices_list[2][8]{};
 
-	auto get_vertices = [&vertices_list](const Collider* collider_, int index)
+	auto get_vertices = [&vertices_list]( std::shared_ptr<Collider> collider_, int index)
 	{
 		if (index < 0 || index > 2) { return; }
 		vertices_list[index][0] = (-collider_->GetQuaternion().GetRight() * collider_->GetScale().x + collider_->GetQuaternion().GetUp() * collider_->GetScale().y + collider_->GetQuaternion().GetForward() * collider_->GetScale().z) * 0.5f + collider_->GetPosition();	// 手前左上
@@ -279,7 +279,7 @@ bool CollisionManager::CheckOBBCrossVecSAT(Quaternion axes_list_[2], Vector3 ver
 	return false;
 }
 
-bool CollisionManager::WasCollided(const Collider* collider_01_, const Collider* collider_02_, bool does_erase_)
+bool CollisionManager::WasCollided( std::shared_ptr<Collider> collider_01_,  std::shared_ptr<Collider> collider_02_, bool does_erase_)
 {
 	for (auto itr = preCollided.begin(); itr != preCollided.end(); )
 	{
@@ -305,13 +305,12 @@ bool CollisionManager::WasCollided(const Collider* collider_01_, const Collider*
 
 void CollisionManager::EraseColliderPtrWhoseOwnerHasVanished()
 {
-	std::vector<const Collider*> removed_colliders;
+	std::vector< std::shared_ptr<Collider>> removed_colliders;
 	for (auto body : bodies)
 	{
-		auto obj = body.first.lock();
-		if (obj == nullptr)
+		if (!body->GetOwner())
 		{
-			removed_colliders.push_back(body.second);
+			removed_colliders.push_back(body);
 		}
 	}
 	for (auto removed_collider : removed_colliders)
@@ -323,10 +322,9 @@ void CollisionManager::EraseColliderPtrWhoseOwnerHasVanished()
 
 	for (auto trigger : triggers)
 	{
-		auto obj = trigger.first.lock();
-		if (obj == nullptr)
+		if (!trigger->GetOwner())
 		{
-			removed_colliders.push_back(trigger.second);
+			removed_colliders.push_back(trigger);
 		}
 	}
 	for (auto removed_collider : removed_colliders)
@@ -335,7 +333,7 @@ void CollisionManager::EraseColliderPtrWhoseOwnerHasVanished()
 		EraseColliderPair(removed_collider);
 	}
 }
-void CollisionManager::EraseColliderPair(const Collider* collider_)
+void CollisionManager::EraseColliderPair( std::shared_ptr<Collider> collider_)
 {
 	for (auto itr = preCollided.begin(); itr != preCollided.end(); )
 	{
@@ -352,7 +350,7 @@ void CollisionManager::EraseColliderPair(const Collider* collider_)
 
 void CollisionManager::CheckBodyAndBody()
 {
-	const int body_size = (int)bodies.size();
+	 int body_size = (int)bodies.size();
 	// 同じ相手との重複チェックは不要
 	// 最後尾は確認不要なので bodies.size() - 1
 	for (int body_index = 0; body_index < body_size - 1; body_index++)
@@ -361,28 +359,28 @@ void CollisionManager::CheckBodyAndBody()
 		for (int other_index = body_index + 1; other_index < body_size; other_index++)
 		{
 			// いずれかのColliderが有効でない場合はスキップ
-			if (!bodies[body_index].second->IsEnabled() ||
-				!bodies[other_index].second->IsEnabled()){ continue; }
+			if (!bodies[body_index]->IsEnabled() ||
+				!bodies[other_index]->IsEnabled()){ continue; }
 
 			// ヒット確認
-			if (IsColliding(bodies[body_index].second, bodies[other_index].second))
+			if (IsColliding(bodies[body_index], bodies[other_index]))
 			{
 				// ヒット時
-				SetHitPosition(bodies[body_index].second, bodies[other_index].second);
+				SetHitPosition(bodies[body_index], bodies[other_index]);
 
 				// 前フレームで当たっていたかを確認
-				if (!WasCollided(bodies[body_index].second, bodies[other_index].second))
+				if (!WasCollided(bodies[body_index], bodies[other_index]))
 				{
 					// 当たった瞬間
-					bodies[body_index].second->OnCollisionEnter(bodies[other_index].second);
-					bodies[other_index].second->OnCollisionEnter(bodies[body_index].second);
-					preCollided.push_back(std::make_pair(bodies[body_index].second, bodies[other_index].second));
+					bodies[body_index]->OnCollisionEnter(bodies[other_index]);
+					bodies[other_index]->OnCollisionEnter(bodies[body_index]);
+					preCollided.push_back(std::make_pair(bodies[body_index], bodies[other_index]));
 				}
 				else
 				{
 					// 当たり継続
-					bodies[body_index].second->OnCollisionStay(bodies[other_index].second);
-					bodies[other_index].second->OnCollisionStay(bodies[body_index].second);
+					bodies[body_index]->OnCollisionStay(bodies[other_index]);
+					bodies[other_index]->OnCollisionStay(bodies[body_index]);
 				}
 			}
 			else
@@ -390,10 +388,10 @@ void CollisionManager::CheckBodyAndBody()
 				// 当たっていない場合
 				// 前フレームまで当たっていたかを確認
 				// 当たっていた場合、記録の除去も同時に実行
-				if (WasCollided(bodies[body_index].second, bodies[other_index].second, true))
+				if (WasCollided(bodies[body_index], bodies[other_index], true))
 				{
-					bodies[body_index].second->OnCollisionExit(bodies[other_index].second);
-					bodies[other_index].second->OnCollisionExit(bodies[body_index].second);
+					bodies[body_index]->OnCollisionExit(bodies[other_index]);
+					bodies[other_index]->OnCollisionExit(bodies[body_index]);
 				}
 			}
 		}
@@ -407,27 +405,27 @@ void CollisionManager::CheckBodyAndTrigger()
 		for (auto trigger : triggers)
 		{
 			// いずれかのColliderが有効でない場合はスキップ
-			if (!body.second->IsEnabled() ||
-				!trigger.second->IsEnabled()) {
+			if (!body->IsEnabled() ||
+				!trigger->IsEnabled()) {
 				continue;
 			}
 
-			if (IsColliding(body.second, trigger.second))
+			if (IsColliding(body, trigger))
 			{
 				// ヒット時
-				SetHitPosition(body.second, trigger.second);
+				SetHitPosition(body, trigger);
 				
 				// 前フレームで当たっていたかを確認
-				if (!WasCollided(body.second, trigger.second))
+				if (!WasCollided(body, trigger))
 				{
 					// 当たった瞬間
-					trigger.second->OnTriggerEnter(body.second);
-					preCollided.push_back(std::make_pair(body.second, trigger.second));
+					trigger->OnTriggerEnter(body);
+					preCollided.push_back(std::make_pair(body, trigger));
 				}
 				else
 				{
 					// 当たり継続
-					trigger.second->OnTriggerStay(body.second);
+					trigger->OnTriggerStay(body);
 				}
 			}
 			else
@@ -435,16 +433,16 @@ void CollisionManager::CheckBodyAndTrigger()
 				// 当たっていない場合
 				// 前フレームまで当たっていたかを確認
 				// 当たっていた場合、記録の除去も同時に実行
-				if (WasCollided(body.second, trigger.second, true))
+				if (WasCollided(body, trigger, true))
 				{
-					trigger.second->OnTriggerExit(body.second);
+					trigger->OnTriggerExit(body);
 				}
 			}
 		}
 	}
 }
 
-void CollisionManager::SetHitPosition(Collider* collider_01_, Collider* collider_02_)
+void CollisionManager::SetHitPosition(std::shared_ptr<Collider> collider_01_, std::shared_ptr<Collider> collider_02_)
 {
 	// とりあえず一旦簡易的な実装
 	Vector3 hit_position = Vector3::ZERO;

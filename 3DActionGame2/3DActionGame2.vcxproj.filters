@@ -112,9 +112,6 @@
     <ClCompile Include="Src\Mathmatics\Vector3.cpp">
       <Filter>Src\Mathmatics</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Collision\ColliderRegisterInterface.cpp">
-      <Filter>Src\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Collision\CollisionManager.cpp">
       <Filter>Src\Collision</Filter>
     </ClCompile>
@@ -223,6 +220,9 @@
     <ClCompile Include="Src\AI\BehaviorTree\RandomNode.cpp">
       <Filter>Src\AI\BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="Src\AI\BehaviorTree\LeafNode.cpp">
+      <Filter>Src\AI\BehaviorTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\App.h">
@@ -311,9 +311,6 @@
     </ClInclude>
     <ClInclude Include="Src\Mathmatics\Vector3.h">
       <Filter>Src\Mathmatics</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Collision\ColliderRegisterInterface.h">
-      <Filter>Src\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Src\Collision\CollisionManager.h">
       <Filter>Src\Collision</Filter>
@@ -507,8 +504,17 @@
     <ClInclude Include="Src\AI\BehaviorTree\ConditionNode.h">
       <Filter>Src\AI\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="Src\AI\BehaviorTree\TestAttack.h">
+    <ClInclude Include="Src\AI\BehaviorTree\LeafNode.h">
       <Filter>Src\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\ICollidable.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\Components\IUpdatable.h">
+      <Filter>Src\Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AI\EnemyAICommons.h">
+      <Filter>Src\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

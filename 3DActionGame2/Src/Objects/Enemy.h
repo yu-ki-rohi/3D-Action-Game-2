@@ -2,15 +2,19 @@
 #include "CharacterBase.h"
 #include "../Collision/BoxCollider.h"
 
+// todo: 前方宣言で出来ないかどうか調べる
+#include "../AI/EnemyBrain.h"
+#include "../AI/IEnemyDirectiveReader.h"
+
 class JustAvoidIgnition;
 class TimerBase;
 
-#define TMP_EVAUATION
+//#define TMP_EVAUATION
 
 class Enemy : public CharacterBase
 {
 public:
-	Enemy();
+	Enemy(unsigned char id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
 
 public:
 	Tag GetTag() const override;
@@ -23,7 +27,10 @@ public:
 	void FixedUpdate() override;
 	void Render() override;
 
-	
+public:
+	// NOTE: オブジェクトの生成とコンポーネントアタッチに時差があるため用意
+	// HACK: 設計の見直し
+	void SetupBrain();
 
 protected:
 	virtual void UpdateBehavior(float elapsed_time_) override;
@@ -34,9 +41,9 @@ private:
 	void DisableAttackCollider();
 
 private:
-	BoxCollider attackCollider;
-	BoxCollider bodyCollider;
-	BoxCollider justAvoidIgnitionCollider;
+	std::shared_ptr<BoxCollider> attackCollider;
+	std::shared_ptr<BoxCollider> bodyCollider;
+	std::shared_ptr<BoxCollider> justAvoidIgnitionCollider;
 
 	std::shared_ptr<JustAvoidIgnition> justAvoidIgnition;
 
@@ -44,4 +51,8 @@ private:
 	std::shared_ptr<TimerBase> disableColliderTimer;
 
 	bool isChanging;
+
+	// 
+	std::unique_ptr<EnemyAI::EnemyBrain> brain;
+	
 };

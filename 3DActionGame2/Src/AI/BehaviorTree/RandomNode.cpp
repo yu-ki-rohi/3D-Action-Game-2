@@ -3,11 +3,11 @@
 
 using namespace BehaviorTree;
 
-Status RandomNode::Tick()
+Status RandomNode::Tick(float elapsed_time_)
 {
 	if (runningIndex >= 0)
 	{
-		auto result = children[runningIndex]->Tick();
+		auto result = children[runningIndex]->Tick(elapsed_time_);
 
 		if (result != Status::Running)
 		{
@@ -18,7 +18,7 @@ Status RandomNode::Tick()
 
 	int judge = GetRand((int)children.size() - 1);
 
-	auto result = children[judge]->Tick();
+	auto result = children[judge]->Tick(elapsed_time_);
 
 	if (result == Status::Running)
 	{

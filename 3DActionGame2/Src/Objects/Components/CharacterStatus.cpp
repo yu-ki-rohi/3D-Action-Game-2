@@ -19,7 +19,7 @@ int CharacterStatus::Damage(int attack_)
 	return attack_;
 }
 
-void CharacterStatus::OnTriggerEnter(Collider* other_)
+void CharacterStatus::OnTriggerEnter(std::shared_ptr<Collider> other_)
 {
 	auto owner = other_->GetOwner();
 	if (!owner) { return; }
