@@ -47,7 +47,8 @@ public:
 	// https://docs.google.com/document/d/1srepoKZf_39szieano4-QoJ59XDF1VViukK--uwZgPg/edit?tab=t.0#heading=h.8eg32zgt8ps
 	virtual void MultiplyLocalTimeScaleBy(float multiplier_) = 0;
 
-	// 生成直後に自身をshared_from_this()を使って渡す必要がある時のために用意
+	virtual void Awake() {}
+
 	virtual void Start() = 0;
 
 	virtual void FixedUpdate() = 0;

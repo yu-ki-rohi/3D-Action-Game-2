@@ -37,32 +37,6 @@ void ObjectFactory::SetIsJustAvoidTime(bool is_just_avoid_time_)
 	isJustAvoidTime = is_just_avoid_time_;
 }
 
-// テスト用に作ったやつ
-// 一応残してあるが、最終的には消す
-std::shared_ptr<ObjectBase> ObjectFactory::Create()
-{
-#if false
-	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
-	if (object_manager == nullptr) return nullptr;
-	std::shared_ptr<ObjectBase> obj = std::make_shared<TestObject>();
-	object_manager->Register(obj);
-	return obj;
-#endif
-	return nullptr;
-}
-
-std::shared_ptr<ObjectBase> ObjectFactory::Create(Vector3 position_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_)
-{
-#if true
-	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
-	if (object_manager == nullptr) return nullptr;
-	std::shared_ptr<ObjectBase> obj = std::make_shared<SampleStage>(position_, model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_);
-	object_manager->Register(obj);
-	return obj;
-#endif
-	return nullptr;
-}
-
 
 std::shared_ptr<CameraBase> ObjectFactory::CreateCameraTPS()
 {
@@ -73,7 +47,7 @@ std::shared_ptr<CameraBase> ObjectFactory::CreateCameraTPS()
 
 	obj->SetTransform(std::make_shared<Transform>(Vector3(0.0f, 12.0f, 0.0f)));
 
-	object_manager->Register(obj);
+	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
 }
 
@@ -98,7 +72,7 @@ std::shared_ptr<Player> ObjectFactory::CreatePlayer(Vector3 position_, Vector3 r
 
 	obj->SetColliderRegisterInterface(collider_interface);
 
-	object_manager->Register(obj);
+	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
 }
 
@@ -122,7 +96,7 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rot
 
 	obj->SetColliderRegisterInterface(collider_interface);
 
-	object_manager->Register(obj);
+	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
 }
 
@@ -138,7 +112,8 @@ std::shared_ptr<ObjectBase> ObjectFactory::CreateStage()
 		assets_manager->GetVertexShader(VSKind::Rigidbody)->Handle,
 		assets_manager->GetPixelShader(PSKind::Phong)->Handle,
 		assets_manager->GetVertexShader(VSKind::RigidbodyShadow)->Handle);
-	object_manager->Register(obj);
+
+	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
 }
 
@@ -158,6 +133,12 @@ std::shared_ptr<ObjectBase> ObjectFactory::CreateSlashEffect(Vector3 position_, 
 		obj->SetLocalTimeScale(GameScene::JustAvoidLocalTimeScale);
 	}
 
-	object_manager->Register(obj);
+	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
+}
+
+void ObjectFactory::CommonProcessWhenCreate(std::shared_ptr<ObjectBase> obj_, std::shared_ptr<ObjectManager> object_manager_)
+{
+	obj_->Awake();
+	object_manager_->Register(obj_);
 }
