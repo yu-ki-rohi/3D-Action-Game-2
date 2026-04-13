@@ -13,10 +13,7 @@
 #include "Components/PlayerStatus.h"
 #include "Components/EnemyStatus.h"
 
-//#include "TestObject.h"
-#include "SampleCamera.h"
 #include "SampleStage.h"
-#include "SampleCharacter.h"
 
 #include "CameraTPS.h"
 #include "PlayerSaber.h"
@@ -66,29 +63,6 @@ std::shared_ptr<ObjectBase> ObjectFactory::Create(Vector3 position_, int model_h
 	return nullptr;
 }
 
-std::shared_ptr<SampleCamera> ObjectFactory::CreateSampleCamera(Vector3 position_)
-{
-#if true
-	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
-	if (object_manager == nullptr) return nullptr;
-	std::shared_ptr<SampleCamera> obj = std::make_shared<SampleCamera>(position_);
-	object_manager->Register(obj);
-	return obj;
-#endif
-	return nullptr;
-}
-
-std::shared_ptr<SampleCharacter> ObjectFactory::CreateCharacter(Vector3 position_, Vector3 scale_, int model_handle_, int vertex_shader_handle_, int pixel_shader_handle_, int shadow_vs_handle_, int idle_anim_handle_, std::shared_ptr<SampleCamera> sample_camera_)
-{
-#if true
-	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
-	if (object_manager == nullptr) return nullptr;
-	std::shared_ptr<SampleCharacter> obj = std::make_shared<SampleCharacter>(position_, scale_, model_handle_, vertex_shader_handle_, pixel_shader_handle_, shadow_vs_handle_, idle_anim_handle_, sample_camera_);
-	object_manager->Register(obj);
-	return obj;
-#endif
-	return nullptr;
-}
 
 std::shared_ptr<CameraBase> ObjectFactory::CreateCameraTPS()
 {
@@ -145,8 +119,6 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rot
 	));
 	obj->SetComponent(std::make_shared<Animator>(assets_manager->GetAnimation(MKind::Enemy)));
 	obj->SetComponent(std::make_shared<EnemyStatus>(obj));
-
-	obj->SetupBrain();
 
 	obj->SetColliderRegisterInterface(collider_interface);
 

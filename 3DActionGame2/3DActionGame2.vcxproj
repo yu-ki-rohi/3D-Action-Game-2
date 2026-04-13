@@ -184,8 +184,6 @@
     <ClCompile Include="Src\Objects\ObjectManager.cpp" />
     <ClCompile Include="Src\Objects\Player.cpp" />
     <ClCompile Include="Src\Objects\PlayerSaber.cpp" />
-    <ClCompile Include="Src\Objects\SampleCamera.cpp" />
-    <ClCompile Include="Src\Objects\SampleCharacter.cpp" />
     <ClCompile Include="Src\Objects\SampleStage.cpp" />
     <ClCompile Include="Src\Physics\PhysicsManager.cpp" />
     <ClCompile Include="Src\Scenes\GameScene.cpp" />
@@ -275,8 +273,6 @@
     <ClInclude Include="Src\Objects\ObjectManager.h" />
     <ClInclude Include="Src\Objects\Player.h" />
     <ClInclude Include="Src\Objects\PlayerSaber.h" />
-    <ClInclude Include="Src\Objects\SampleCamera.h" />
-    <ClInclude Include="Src\Objects\SampleCharacter.h" />
     <ClInclude Include="Src\Objects\SampleStage.h" />
     <ClInclude Include="Src\Physics\PhysicsManager.h" />
     <ClInclude Include="Src\Scenes\GameScene.h" />

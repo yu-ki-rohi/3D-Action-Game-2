@@ -14,7 +14,7 @@ class TimerBase;
 class Enemy : public CharacterBase
 {
 public:
-	Enemy(unsigned char id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
+	Enemy(int id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
 
 public:
 	Tag GetTag() const override;
@@ -27,10 +27,7 @@ public:
 	void FixedUpdate() override;
 	void Render() override;
 
-public:
-	// NOTE: オブジェクトの生成とコンポーネントアタッチに時差があるため用意
-	// HACK: 設計の見直し
-	void SetupBrain();
+	
 
 protected:
 	virtual void UpdateBehavior(float elapsed_time_) override;
@@ -40,6 +37,11 @@ private:
 	void EnableAttackCollider();
 	void DisableAttackCollider();
 
+	// NOTE: オブジェクトの生成とコンポーネントアタッチに時差があるため用意
+	// HACK: 設計の見直し
+	void SetupBrain();
+
+	void SetupColliders();
 private:
 	std::shared_ptr<BoxCollider> attackCollider;
 	std::shared_ptr<BoxCollider> bodyCollider;

@@ -89,7 +89,7 @@ void Player::UpdateBehavior(float elapsed_time_)
 
 			float speed = 80.0f;
 			transform->Position += *rollingDirection * elapsed_time_ * speed;
-			transform->SetForward(-*rollingDirection);
+			transform->SetForward(*rollingDirection);
 		}
 	}
 	// ˆÚ“®
@@ -102,7 +102,7 @@ void Player::UpdateBehavior(float elapsed_time_)
 
 			transform->Position += move_vec * elapsed_time_ * speed;
 
-			transform->SetForward(-move_vec);
+			transform->SetForward(move_vec);
 		}
 	}
 }

@@ -32,9 +32,6 @@ public:
 	void Main(float elapsed_time_);
 
 private:
-	// Timerで呼び出す
-	void FixedUpdate();
-	// MainLoop内で呼び出す
 	void FixedUpdate(float elapsed_time_);
 
 	void Update(float elapsed_time_);
@@ -49,10 +46,8 @@ private:
 	// 現在のシーン
 	std::shared_ptr<SceneBase> currentScene;
 
-	// FixedUpdateを実行させるためのタイマー
-	// SceneManagerは存在しないことがまずないので、特例でダミーのsharedとしてSceneBaseを渡しておく
-	std::unique_ptr<Timer<SceneManager, SceneBase>> fixedUpdateTimer = nullptr;
-	std::unique_ptr<Timer<SceneManager, SceneBase>> renderUpdateTimer = nullptr;
+	// FixedUpdateを実行させる時間を管理する値
+	float elapsedTimeSinceLastFixupdate = 0.0f;
 
 	// 超過時間(次回FixedUpdateまでの補正のため)
 	float excess = 0.0f;

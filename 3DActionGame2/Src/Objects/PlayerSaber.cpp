@@ -199,5 +199,5 @@ void PlayerSaber::StepForwardOnAttack(float power_)
 	Vector3 dir = ChangeOfBasisSthickInputToHolizontalView();
 	if (dir == Vector3::ZERO) { return; }
 	transform->Position += dir * power_;
-	transform->SetForward(-dir);
+	transform->SetForward(dir);
 }

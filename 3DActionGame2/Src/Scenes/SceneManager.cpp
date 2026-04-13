@@ -6,6 +6,8 @@
 #include "../Input/InputManager.h"
 #include <DxLib.h>
 
+#define FIXEDUPDATE_LOOP
+
 SceneManager::SceneManager(std::shared_ptr<SceneBase> initial_scene_) :
 	currentScene(initial_scene_)
 {
@@ -76,25 +78,36 @@ void SceneManager::Main(float elapsed_time_)
 
 }
 
-void SceneManager::FixedUpdate()
-{
-	currentScene->FixedUpdate();
-
-#ifdef DEBUG
-	fixedNum++;
-#endif           
-	excess = fixedUpdateTimer->GetRemainingTime();
-}
-
 void SceneManager::FixedUpdate(float elapsed_time_)
 {
 	if (currentScene->GetCurrentStep() != SceneBase::Step::Update) { return; }
-	if (fixedUpdateTimer == nullptr || !fixedUpdateTimer->IsActive())
-	{
-		fixedUpdateTimer = std::make_unique<Timer<SceneManager,SceneBase>>(Timer<SceneManager, SceneBase>(Time::FixedDeltaTime + excess, currentScene, this, &SceneManager::FixedUpdate));
-	}
-	fixedUpdateTimer->Update(elapsed_time_);
 
+	elapsedTimeSinceLastFixupdate += elapsed_time_;
+
+#ifdef FIXEDUPDATE_LOOP
+	int loopNum = (int)(elapsedTimeSinceLastFixupdate / Time::FixedDeltaTime);
+	for (int i = 0; i < loopNum; ++i)
+	{
+		currentScene->FixedUpdate();
+
+#ifdef DEBUG
+		fixedNum++;
+#endif
+	}
+	elapsedTimeSinceLastFixupdate -= Time::FixedDeltaTime * loopNum;
+
+#else
+	if (elapsedTimeSinceLastFixupdate >= Time::FixedDeltaTime)
+	{
+		currentScene->FixedUpdate();
+		elapsedTimeSinceLastFixupdate -= Time::FixedDeltaTime;
+#ifdef DEBUG
+		fixedNum++;
+#endif
+	}
+
+
+#endif
 #ifdef DEBUG
 	profiler.Stamp(Profiler::Type::FixedUpdate);
 #endif       

@@ -9,27 +9,6 @@ struct AnimationResource;
 class Animator : public ComponentBase
 {
 public:
-	enum class AnimType
-	{
-		Idle,
-		WalkF,
-		WalkL,
-		WalkR,
-		WalkB,
-		Run,
-		Attack00,
-		Attack01,
-		Attack02,
-		Attack03,
-		Attack04,
-		Attack05,
-		Attack06,
-		Damage,
-		Down
-	};
-
-public:
-	Animator(int idle_anim_handle_);
 	Animator(std::shared_ptr<AnimationResource> anim_resource_);
 
 public:
@@ -39,19 +18,14 @@ public:
 	// アニメーションの全体の時間に引数を掛けたものを取得
 	float GetAnimationTimeByNormalizedValue(float normalized_value_);
 
-	// animHandlesにキャッシュとして登録
-	void RegisterAnim(AnimType anim_type_, int anim_handle_);
-
-	void SetNextAnim(AnimType anim_type_, bool is_loop_ = false);
+	
 	/// <summary>
 	/// アニメーション遷移先をセット
 	/// </summary>
-	/// <param name="anim_type_">遷移先の種類</param>
+	/// <param name="anim_kind_">遷移先の種類</param>
 	/// <param name="start_changing_time_">遷移を開始するアニメーション時刻</param>
 	/// <param name="changing_time_">遷移し終わるまでの時間</param>
 	/// <param name="is_loop_">次のアニメーションをループさせるか否か</param>
-	void SetNextAnim(AnimType anim_type_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
-
 	void SetNextAnim(AKind anim_kind_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
 
 	void SetAnimTimerAdjuster(float value_);
@@ -70,9 +44,7 @@ public:
 	static constexpr float Immediately = 0.0f;
 
 private:
-	// AnimTypeごとのハンドル
-	std::unordered_map<AnimType, int> animHandles;
-
+	// AnimResourceへのハンドル
 	std::shared_ptr<AnimationResource> animResource;
 
 	// nextXXはアニメーション遷移先を予約するために使用

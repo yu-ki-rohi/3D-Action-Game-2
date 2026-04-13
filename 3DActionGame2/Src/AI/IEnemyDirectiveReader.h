@@ -9,8 +9,8 @@ namespace EnemyAI
 	class IEnemyDirectiveReader
 	{
 	public:
-		virtual Vector3 GetDirectedPosition(unsigned char id_) const = 0;
-		virtual Actions GetDirectedAciton(unsigned char id_) const = 0;
+		virtual Vector3 GetDirectedPosition(int id_) const = 0;
+		virtual Actions GetDirectedAciton(int id_) const = 0;
 
 	};
 }

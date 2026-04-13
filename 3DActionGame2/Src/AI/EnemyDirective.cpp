@@ -17,7 +17,7 @@
 
 using namespace EnemyAI;
 
-Vector3 EnemyDirective::GetDirectedPosition(unsigned char id_) const
+Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外を指定されたことを表示 */ return Vector3::ZERO; }
 
@@ -53,7 +53,7 @@ Vector3 EnemyDirective::GetDirectedPosition(unsigned char id_) const
 		direction &= ~(1 << (DIRECTION_BIT_NUM - 1));
 
 		// sin cos の反転 and zの符号反転 を行うか判定するためのbitを抜き出し
-		signed char invert = direction >> (DIRECTION_BIT_NUM - 2);
+		unsigned char invert = direction >> (DIRECTION_BIT_NUM - 2);
 
 		// 方位情報から上記情報を除去
 		direction &= ~(1 << (DIRECTION_BIT_NUM - 2));
@@ -130,7 +130,7 @@ Vector3 EnemyDirective::GetDirectedPosition(unsigned char id_) const
 	return Vector3(x, y, z);
 }
 
-Actions EnemyDirective::GetDirectedAciton(unsigned char id_) const
+Actions EnemyDirective::GetDirectedAciton(int id_) const
 {
 	if (id_ >= directives.size()){ /* todo: 範囲外を指定されたことを表示 */ return Actions::STAND_BY; }
 	// 検討事項：このキャストの妥当性
@@ -138,14 +138,14 @@ Actions EnemyDirective::GetDirectedAciton(unsigned char id_) const
 }
 
 
-void EnemyDirective::SetDirective(unsigned char id_, unsigned char directive_)
+void EnemyDirective::SetDirective(int id_, unsigned char directive_)
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
 	directives[id_] = directive_;
 }
 
 
-void EnemyDirective::SetDirective(unsigned char id_, Direction direction_, CombatRange range_, Actions action_)
+void EnemyDirective::SetDirective(int id_, Direction direction_, CombatRange range_, Actions action_)
 {
 	unsigned char direction = (unsigned char)direction_;
 	unsigned char range = (unsigned char)range_ << DIRECTION_BIT_NUM;
@@ -153,14 +153,14 @@ void EnemyDirective::SetDirective(unsigned char id_, Direction direction_, Comba
 	SetDirective(id_, direction | range | action);
 }
 
-void EnemyDirective::SetDirective(unsigned char id_, Direction direction_)
+void EnemyDirective::SetDirective(int id_, Direction direction_)
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
 	directives[id_] &= ~(unsigned char)Mask::DIRECTION;
 	directives[id_] |= (unsigned char)direction_;
 }
 
-void EnemyDirective::SetDirective(unsigned char id_, CombatRange range_)
+void EnemyDirective::SetDirective(int id_, CombatRange range_)
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
 	directives[id_] &= ~(unsigned char)Mask::COMBAT_RANGE;
@@ -168,7 +168,7 @@ void EnemyDirective::SetDirective(unsigned char id_, CombatRange range_)
 	directives[id_] |= range;
 }
 
-void EnemyDirective::SetDirective(unsigned char id_, Actions action_)
+void EnemyDirective::SetDirective(int id_, Actions action_)
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
 	directives[id_] &= ~(unsigned char)Mask::ACTION;
@@ -177,7 +177,7 @@ void EnemyDirective::SetDirective(unsigned char id_, Actions action_)
 }
 
 // 現在位置から時計回り正で num_ 移動する地点をセット
-void EnemyDirective::RotatePosition(unsigned char id_, signed char num_)
+void EnemyDirective::RotatePosition(int id_, signed char num_)
 {
 	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
 

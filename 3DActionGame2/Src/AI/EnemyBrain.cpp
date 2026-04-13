@@ -13,13 +13,13 @@
 using namespace BehaviorTree;
 using namespace EnemyAI;
 EnemyBrain::EnemyBrain(
-	unsigned char id_,
+	int id_,
 	std::shared_ptr<IEnemyDirectiveReader> directive_,
 	std::shared_ptr<Collider> attackCollider_,
 	std::shared_ptr<Collider> justAvoidIgnitionCollider_) :
+	id(id_),
 	directive(directive_),
 	behaviorTree(std::make_unique<SelectorNode>()),
-	id(id_),
 	attackCollider(attackCollider_),
 	justAvoidIgnitionCollider(justAvoidIgnitionCollider_),
 	isChangeingAttackAnimation(false)
@@ -51,8 +51,9 @@ EnemyBrain::EnemyBrain(
 	behaviorTree->AddNode(std::move(attackSequence));
 }
 
-void EnemyBrain::SetReference(std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_)
+void EnemyBrain::SetReference(std::shared_ptr<ObjectBase> owner_, std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_)
 {
+	owner = owner_;
 	animator = animator_;
 	transform = transform_;
 }
@@ -73,7 +74,8 @@ Status EnemyBrain::MoveStart(float elapsed_time_)
 	}
 
 	animator->SetNextAnim(AKind::WalkF, Animator::Immediately, 0.1f, true);
-	transform->SetForward(-directive->GetDirectedPosition(id) + transform->Position);
+
+	transform->SetForward(directive->GetDirectedPosition(id) - transform->Position);
 	return Status::Success;
 }
 
@@ -99,31 +101,30 @@ Status EnemyBrain::AttackStart(float elapsed_time_)
 	{
 		return Status::Success;
 	}
-
+	// TODO: ‚»‚ê‚¼‚ê‚Ì‚É•ª‚¯‚é
 	const char pattern_num = 3;
 	int judge = GetRand(pattern_num - 1);
 	float changing_time = animator->GetAnimationTimeByNormalizedValue(1.0f - animationChangeBorderPercentage);
 	float enable_time = 0.85f;
 	float disable_time = 1.3f;
 
-	// FIXME: Timer¶¬•”•ª‚Å—áŠO‚ðƒXƒ[
 	switch (judge)
 	{
 	case 0:
 		animator->SetNextAnim(AKind::Attack00, Animator::Immediately, changing_time, false);
-		//enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &EnemyBrain::EnableAttackCollider);
-		//disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &EnemyBrain::DisableAttackCollider);
+		enableColliderTimer = TimerFactory::CreateTimer(enable_time, owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
+		disableColliderTimer = TimerFactory::CreateTimer(disable_time, owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
 		break;
 	case 1:
 		disable_time = 1.45f;
 		animator->SetNextAnim(AKind::Attack01, Animator::Immediately, changing_time, false);
-		//enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &EnemyBrain::EnableAttackCollider);
-		//disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &EnemyBrain::DisableAttackCollider);
+		enableColliderTimer = TimerFactory::CreateTimer(enable_time, owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
+		disableColliderTimer = TimerFactory::CreateTimer(disable_time, owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
 		break;
 	case 2:
 		animator->SetNextAnim(AKind::Attack02, Animator::Immediately, changing_time, false);
-		//enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &EnemyBrain::EnableAttackCollider);
-		//disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &EnemyBrain::DisableAttackCollider);
+		enableColliderTimer = TimerFactory::CreateTimer(enable_time, owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
+		disableColliderTimer = TimerFactory::CreateTimer(disable_time, owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
 		break;
 	}
 

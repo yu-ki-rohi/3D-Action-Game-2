@@ -14,7 +14,7 @@
 class App;
 
 // T : メンバ関数を保有するクラス
-// V : TまたはTの基底クラス
+// V : TまたはTの基底クラス若しくはインスタンスを所有するクラス
 template <class T, class V>
 class MemberFunctionPointerContainer : public MemberFunctionPointerContainerBase
 {

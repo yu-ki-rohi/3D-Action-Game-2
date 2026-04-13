@@ -15,19 +15,19 @@ namespace EnemyAI
 
 	public:
 		// TODO: IEnemyDirectiveReaderに純粋仮想関数として宣言
-		Vector3 GetDirectedPosition(unsigned char id_) const override;
-		Actions GetDirectedAciton(unsigned char id_) const override;
+		Vector3 GetDirectedPosition(int id_) const override;
+		Actions GetDirectedAciton(int id_) const override;
 
 		// TODO: IEnemyDirectiveWriterに純粋仮想関数として宣言
-		void SetDirective(unsigned char id_, unsigned char directive_);
-		void SetDirective(unsigned char id_, Direction direction_, CombatRange range_, Actions action_);
-		void SetDirective(unsigned char id_, Direction direction_);
-		void SetDirective(unsigned char id_, CombatRange range_);
-		void SetDirective(unsigned char id_, Actions action_);
+		void SetDirective(int id_, unsigned char directive_);
+		void SetDirective(int id_, Direction direction_, CombatRange range_, Actions action_);
+		void SetDirective(int id_, Direction direction_);
+		void SetDirective(int id_, CombatRange range_);
+		void SetDirective(int id_, Actions action_);
 
 		// TODO: 後で実装
 		// 現在位置から時計回り正で num_ 移動する地点をセット
-		void RotatePosition(unsigned char id_, signed char num_);
+		void RotatePosition(int id_, signed char num_);
 
 		// 戻り値はインデックス
 		int AddDirective(unsigned char directive_);

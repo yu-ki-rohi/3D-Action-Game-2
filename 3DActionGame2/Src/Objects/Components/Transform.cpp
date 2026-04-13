@@ -51,9 +51,9 @@ const Quaternion& Transform::GetQuaternion() const
 void Transform::SetForward(const Vector3& forward_)
 {
 	float virtical_theta = asinf(forward_.y);
-	float horizontal_theta = atan2f(forward_.x, forward_.z);
+	float horizontal_theta = atan2f(-forward_.x, -forward_.z);
 
-	quaternion =
+	quaternion = 
 		Quaternion::GetRotateQuaternion(horizontal_theta * 180.0f / (float)DX_PI, Vector3::UP) *
 		Quaternion::GetRotateQuaternion(virtical_theta * 180.0f / (float)DX_PI, Vector3::RIGHT);
 

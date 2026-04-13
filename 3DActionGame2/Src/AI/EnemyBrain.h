@@ -16,24 +16,26 @@ class Transform;
 class Collider;
 class TimerBase;
 
+class ObjectBase;
+
 // 各エネミーの行動決定
 namespace EnemyAI
 {
 	class IEnemyDirectiveReader;
 
-	class EnemyBrain : public std::enable_shared_from_this<EnemyBrain>
+	class EnemyBrain
 	{
 	public:
 		// HACK: 引数部分を構造体化するなどの工夫
 		EnemyBrain(
-			unsigned char id_,
+			int id_,
 			std::shared_ptr<IEnemyDirectiveReader> directive_,
 			std::shared_ptr<Collider> attackCollider_,
 			std::shared_ptr<Collider> justAvoidIgnitionCollider_);
 
 	public:
 		// NOTE: 既存の枠組みに合わせるため一旦この関数でAnimatorとTransformをセットする形に
-		void SetReference(std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_);
+		void SetReference(std::shared_ptr<ObjectBase> owner_, std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_);
 
 	public:
 		void Execute(float elapsed_time_);
@@ -65,23 +67,27 @@ namespace EnemyAI
 		static constexpr float moveSpeed = 30.0f;
 
 	private:
+		int id;
+
 		// AI関連
 		std::shared_ptr<IEnemyDirectiveReader> directive;
 
 		// 検討事項: BehaviorTreeを個別に持たせるかどうか
 		std::unique_ptr<BehaviorTree::CompositeNode> behaviorTree;
 
+		std::weak_ptr<ObjectBase> owner;
+
 		// Component関連
 		std::shared_ptr<Animator> animator;
 		std::shared_ptr<Transform> transform;
 
-		unsigned char id;
 
 		std::shared_ptr<Collider> attackCollider;
 		std::shared_ptr<Collider> justAvoidIgnitionCollider;
 
 		std::shared_ptr<TimerBase> enableColliderTimer;
 		std::shared_ptr<TimerBase> disableColliderTimer;
+
 
 		// NOTE: アニメーション切替の挙動を連続で行わせないため　けっこう苦し紛れなので変えたい
 		// HACK: ここの見直し

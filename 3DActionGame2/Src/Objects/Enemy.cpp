@@ -11,7 +11,7 @@
 
 using namespace EnemyAI;
 
-Enemy::Enemy(unsigned char id_, std::shared_ptr<IEnemyDirectiveReader> directive_) :
+Enemy::Enemy(int id_, std::shared_ptr<IEnemyDirectiveReader> directive_) :
 	attackCollider(std::make_shared<BoxCollider>(Vector3(0.0f, 30.0f, -7.0f), Vector3(30.0f, 100.0f, 30.0f), Vector3(0.0f, -6.0f, 32.0f))),
 	bodyCollider(std::make_shared<BoxCollider>(Vector3(0.0f, -10.0f, -5.0f), Vector3(70.0f, 170.0f, 40.0f), Vector3(0.0f, 0.0f, 0.0f))),
 	justAvoidIgnitionCollider(std::make_shared<BoxCollider>(Vector3(0.0f, 30.0f, -7.0f), Vector3(70.0f, 140.0f, 80.0f), Vector3(0.0f, -6.0f, 32.0f))),
@@ -48,29 +48,9 @@ void Enemy::Start()
 	if (!IsActive()) { return; }
 	justAvoidIgnition = std::make_shared<JustAvoidIgnition>(Tag::Player);
 
-	attackCollider->SetIsEnabled(false);
-	justAvoidIgnitionCollider->SetIsEnabled(false);
+	SetupBrain();
 
-	attackCollider->SetOwner(shared_from_this());
-	bodyCollider->SetOwner(shared_from_this()); 
-	justAvoidIgnitionCollider->SetOwner(shared_from_this());
-
-	attackCollider->AddObserver(characterStatus);
-	justAvoidIgnitionCollider->AddObserver(justAvoidIgnition);
-
-	UpdateCollider();
-
-	attackCollider->UpdateRadius();
-	bodyCollider->UpdateRadius();
-	justAvoidIgnitionCollider->UpdateRadius();
-
-	auto collider_register_interface = colliderRegisterInterface.lock();
-	if (collider_register_interface)
-	{
-		collider_register_interface->RegisterBody(bodyCollider);
-		collider_register_interface->RegisterTrigger(attackCollider);
-		collider_register_interface->RegisterTrigger(justAvoidIgnitionCollider);
-	}
+	SetupColliders();
 	
 }
 
@@ -93,7 +73,34 @@ void Enemy::Render()
 
 void Enemy::SetupBrain()
 {
-	brain->SetReference(animator, transform);
+	brain->SetReference(shared_from_this(), animator, transform);
+}
+
+void Enemy::SetupColliders()
+{
+	attackCollider->SetIsEnabled(false);
+	justAvoidIgnitionCollider->SetIsEnabled(false);
+
+	attackCollider->SetOwner(shared_from_this());
+	bodyCollider->SetOwner(shared_from_this());
+	justAvoidIgnitionCollider->SetOwner(shared_from_this());
+
+	attackCollider->AddObserver(characterStatus);
+	justAvoidIgnitionCollider->AddObserver(justAvoidIgnition);
+
+	UpdateCollider();
+
+	attackCollider->UpdateRadius();
+	bodyCollider->UpdateRadius();
+	justAvoidIgnitionCollider->UpdateRadius();
+
+	auto collider_register_interface = colliderRegisterInterface.lock();
+	if (collider_register_interface)
+	{
+		collider_register_interface->RegisterBody(bodyCollider);
+		collider_register_interface->RegisterTrigger(attackCollider);
+		collider_register_interface->RegisterTrigger(justAvoidIgnitionCollider);
+	}
 }
 
 void Enemy::UpdateBehavior(float elapsed_time_)
