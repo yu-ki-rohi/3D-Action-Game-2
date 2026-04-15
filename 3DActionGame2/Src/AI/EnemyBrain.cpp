@@ -22,7 +22,6 @@ EnemyBrain::EnemyBrain(
 	behaviorTree(std::make_unique<SelectorNode>()),
 	attackCollider(attackCollider_),
 	justAvoidIgnitionCollider(justAvoidIgnitionCollider_)
-	//isChangeingAttackAnimation(false)
 {
 	// HACK: behaviorTree‚Ì\¬‚Ìd•û‚Ì•ÏX
 
@@ -110,10 +109,6 @@ Status EnemyBrain::Idle(float elapsed_time_)
 
 Status EnemyBrain::AttackStart(float elapsed_time_)
 {
-	/*if (isChangeingAttackAnimation == true)
-	{
-		return Status::Success;
-	}*/
 	// TODO: ‚»‚ê‚¼‚ê‚Ì‚É•ª‚¯‚é
 	const char pattern_num = 3;
 	int judge = GetRand(pattern_num - 1);
@@ -140,8 +135,6 @@ Status EnemyBrain::AttackStart(float elapsed_time_)
 		break;
 	}
 
-	//isChangeingAttackAnimation = true;
-
 	return Status::Success;
 }
 Status EnemyBrain::Attack(float elapsed_time_)
@@ -150,8 +143,6 @@ Status EnemyBrain::Attack(float elapsed_time_)
 	{
 		return Status::Success;
 	}
-
-	//isChangeingAttackAnimation = false;
 
 	return Status::Running;
 }

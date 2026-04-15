@@ -90,11 +90,6 @@ namespace EnemyAI
 		std::shared_ptr<TimerBase> enableColliderTimer;
 		std::shared_ptr<TimerBase> disableColliderTimer;
 
-
-		// NOTE: アニメーション切替の挙動を連続で行わせないため　けっこう苦し紛れなので変えたい
-		// HACK: ここの見直し
-		//bool isChangeingAttackAnimation;
-
 	};
 
 }

@@ -35,15 +35,6 @@ int Renderer::GetShadowVSHandle()
 
 void Renderer::Render(const Transform& transform_)
 {
-	/*if (!IsRenderingShadow)
-	{
-		SetUseVertexShader(vertexShaderHandle);
-		SetUsePixelShader(pixelShaderHandle);
-	}
-	else
-	{
-		SetUseVertexShader(shadowVSHandle);
-	}*/
 	SetupModelInfo(transform_);
 	MV1DrawModel(modelHandle);
 }
@@ -71,12 +62,6 @@ void Renderer::SetupModelInfo(const Transform& transform_)
 	MV1SetPosition(modelHandle, transform_.Position.ToVECTOR());
 	MV1SetScale(modelHandle, transform_.Scale.ToVECTOR());
 	MV1SetRotationXYZ(modelHandle, transform_.GetRotation().ToVECTOR());
-	/*MV1SetMatrix(modelHandle, MGetIdent());
-	MATRIX transformMat = MGetIdent();
-	transformMat = MMult(transformMat, transform_.GetScaleMat());
-	transformMat = MMult(transformMat, transform_.GetRotateMat());
-	transformMat = MMult(transformMat, transform_.GetTranslateMat());
-	MV1SetMatrix(modelHandle, transformMat);*/
 }
 
 void Renderer::SetupModelInfo(const Transform& transform_, Animator& animator_)
