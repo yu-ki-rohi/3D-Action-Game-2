@@ -25,16 +25,16 @@ void Profiler::Render()
 	};
 
 	// ï∂éöèÓïÒ
-	DrawFormatString(0, 220, color[(int)Type::FixedUpdate], "FixedUpdate : %f", showStampedTime[(int)Type::FixedUpdate]);
-	DrawFormatString(0, 240, color[(int)Type::Input],       "Input       : %f", showStampedTime[(int)Type::Input]);
-	DrawFormatString(0, 260, color[(int)Type::Update],      "Update      : %f", showStampedTime[(int)Type::Update]);
-	DrawFormatString(0, 280, color[(int)Type::Render],      "Render      : %f", showStampedTime[(int)Type::Render]);
-	DrawFormatString(0, 300, color[(int)Type::VSync],       "Vsync       : %f", showStampedTime[(int)Type::VSync]);
-	DrawFormatString(0, 320, color[(int)Type::Other],       "Ohters      : %f", showStampedTime[(int)Type::Other]);
+	DrawFormatString(10, 220, color[(int)Type::FixedUpdate], "FixedUpdate : %f", showStampedTime[(int)Type::FixedUpdate]);
+	DrawFormatString(10, 240, color[(int)Type::Input],       "Input       : %f", showStampedTime[(int)Type::Input]);
+	DrawFormatString(10, 260, color[(int)Type::Update],      "Update      : %f", showStampedTime[(int)Type::Update]);
+	DrawFormatString(10, 280, color[(int)Type::Render],      "Render      : %f", showStampedTime[(int)Type::Render]);
+	DrawFormatString(10, 300, color[(int)Type::VSync],       "Vsync       : %f", showStampedTime[(int)Type::VSync]);
+	DrawFormatString(10, 320, color[(int)Type::Other],       "Ohters      : %f", showStampedTime[(int)Type::Other]);
 
 
 	// ë—ÇÃï\é¶
-	const int x[2]{ 10,50 };
+	const int x[2]{ 10,60 };
 	int y[2]{ 340,340 };
 
 	// ë—ÇÃí∑Ç≥

@@ -9,7 +9,6 @@
 class JustAvoidIgnition;
 class TimerBase;
 
-//#define TMP_EVAUATION
 
 class Enemy : public CharacterBase
 {
@@ -43,18 +42,13 @@ private:
 
 	void SetupColliders();
 private:
-	std::shared_ptr<BoxCollider> attackCollider;
-	std::shared_ptr<BoxCollider> bodyCollider;
-	std::shared_ptr<BoxCollider> justAvoidIgnitionCollider;
+	const std::shared_ptr<BoxCollider> attackCollider;
+	const std::shared_ptr<BoxCollider> bodyCollider;
+	const std::shared_ptr<BoxCollider> justAvoidIgnitionCollider;
 
 	std::shared_ptr<JustAvoidIgnition> justAvoidIgnition;
 
-	std::shared_ptr<TimerBase> enableColliderTimer;
-	std::shared_ptr<TimerBase> disableColliderTimer;
-
-	bool isChanging;
-
 	// 
-	std::unique_ptr<EnemyAI::EnemyBrain> brain;
+	const std::unique_ptr<EnemyAI::EnemyBrain> brain;
 	
 };

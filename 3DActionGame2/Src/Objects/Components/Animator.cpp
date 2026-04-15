@@ -6,41 +6,50 @@
 Animator::Animator(std::shared_ptr<AnimationResource> anim_resource_) :
 	animResource(anim_resource_)
 {
-	if (animResource)
-	{
-		currentAnimHandle = animResource->Handles[AKind::Idle];
-		int anim_index = 0;
-		animTime = MV1GetAnimTotalTime(currentAnimHandle, anim_index);
-	}
+	if (animResource == nullptr) { return; }
+	SetNextAnim(AKind::Idle);
 }
 
 float Animator::GetAnimationProgressPercentage()
 {
-	if (animTime == 0) { return 1.0f; }
-	return currentAnimTimer / animTime;
+	if (animResource == nullptr) { return 0.0f; }
+	float duration = animResource->AnimationParameters[currentAnim.Kind]->Duration;
+	if (duration == 0) { return 1.0f; }
+	return currentAnim.PlayTime / duration;
 }
 
 float Animator::GetAnimationTimeByNormalizedValue(float normalized_value_)
 {
-	return animTime * normalized_value_;
+	if (animResource == nullptr) { return 0.0f; }
+	return animResource->AnimationParameters[currentAnim.Kind]->Duration * normalized_value_;
 }
 
 
-void Animator::SetNextAnim(AKind anim_kind_, float start_changing_time_, float changing_time_, bool is_loop_)
+
+void Animator::SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_)
 {
-	// HACK: AnimType版とほぼ共通なので、共通部分を関数化するか、そもそもあちらはSample用なのでいずれ消すか
+	if (animResource == nullptr) { return; }
+	nextAnim.Kind = anim_kind_;
+	nextAnim.Handle = animResource->Handles[anim_kind_];
+	nextAnim.AttachIndex = -1;
+	nextAnim.PlayTime = 0.0f;
 
-	// nullチェック
-	if (!animResource) { return; }
+	float duration = animResource->AnimationParameters[anim_kind_]->Duration;
+	if (duration != 0)
+	{
+		nextAnim.DurationReciprocal = 1.0f / duration;
+	}
+	else
+	{
+		nextAnim.DurationReciprocal = 0.0f;
+	}
+	int anim_index = 0;	// ここは現状のデータ的に0で固定
+	nextAnim.TotalTime = MV1GetAnimTotalTime(nextAnim.Handle, anim_index);
 
-	// changingTimeに0や負数が代入されることを防ぐ
-	if (changing_time_ < minChangingTime) { changing_time_ = minChangingTime; }
-
-	nextAnimHandle = animResource->Handles[anim_kind_];
-	nextAnimSpeed = animResource->AnimSpeed[anim_kind_];
-	startChangingTime = start_changing_time_;
-	changingTime = changing_time_;
-	nextIsLoop = is_loop_;
+	if (transition_type_ == AnimTransitionType::Immediately)
+	{
+		isTransitioningImmediately = true;
+	}
 }
 
 void Animator::SetAnimTimerAdjuster(float value_)
@@ -50,75 +59,104 @@ void Animator::SetAnimTimerAdjuster(float value_)
 
 void Animator::SetupRenderAnim(int model_handle_)
 {
-	int anim_index = 0;
-
-	// アニメーションのアタッチ
-	currentAttachIndex = MV1AttachAnim(model_handle_, anim_index, currentAnimHandle);
-	MV1SetAttachAnimTime(model_handle_, currentAttachIndex, currentAnimTimer + animTimerAdjuster);
-	
-	// アニメーション遷移しない場合はここで終了
-	if (currentAnimTimer < startChangingTime ||
-		nextAnimHandle == -1)
-	{
-		nextAttachIndex = -1;
-		return;
-	}
-
-	// 遷移先アニメーションのアタッチ
-	nextAttachIndex = MV1AttachAnim(model_handle_, anim_index, nextAnimHandle);
-	MV1SetAttachAnimTime(model_handle_, nextAttachIndex, nextAnimTimer + animTimerAdjuster);
-
-	float nextRate = nextAnimTimer / changingTime;
-
+	int anim_index = 0;// 現状のデータ的にこの値は0で固定
+	currentAnim.AttachIndex = MV1AttachAnim(model_handle_, anim_index, currentAnim.Handle);
+	MV1SetAttachAnimTime(model_handle_, currentAnim.AttachIndex, ConvertPlayTimeToTimeOnData(currentAnim) + animTimerAdjuster);
+	if (previousAnim.Handle == -1) { return; }
+	previousAnim.AttachIndex = MV1AttachAnim(model_handle_, anim_index, previousAnim.Handle);
+	MV1SetAttachAnimTime(model_handle_, previousAnim.AttachIndex, ConvertPlayTimeToTimeOnData(previousAnim) + animTimerAdjuster);
 	// アニメーションブレンド
-	MV1SetAttachAnimBlendRate(model_handle_, nextAttachIndex, nextRate);
-	MV1SetAttachAnimBlendRate(model_handle_, currentAttachIndex, 1.0f - nextRate);
-
+	MV1SetAttachAnimBlendRate(model_handle_, currentAnim.AttachIndex, currentAnimBlendRate);
+	MV1SetAttachAnimBlendRate(model_handle_, previousAnim.AttachIndex, 1.0f - currentAnimBlendRate);
 }
 
 void Animator::DetachAnim(int model_handle_)
 {
-	MV1DetachAnim(model_handle_, currentAttachIndex);
-	if (nextAttachIndex != -1)
+	MV1DetachAnim(model_handle_, currentAnim.AttachIndex);
+	if (previousAnim.AttachIndex != -1)
 	{
-		MV1DetachAnim(model_handle_, nextAttachIndex);
+		MV1DetachAnim(model_handle_, previousAnim.AttachIndex);
 	}
+	currentAnim.AttachIndex = -1;
+	previousAnim.AttachIndex = -1;
 }
 
 void Animator::Update(float elapsed_time_)
 {
-	// アニメーション遷移が始まった瞬間かどうかを判定
-	float evaluation = currentAnimTimer - startChangingTime;
-	evaluation *= evaluation + elapsed_time_ * currentAnimSpeed;
-	isStartChangeAnimNow = evaluation > 0 ? false : true;
+	if (animResource == nullptr) { return; }
 
-	currentAnimTimer += elapsed_time_ * currentAnimSpeed;
+	AdvanceTime(currentAnim, elapsed_time_);
 
-	// アニメーションループ処理
-	if (currentAnimTimer >= animTime &&
-		isLoop)
+	HandleTransition();
+
+	UpdateBlendRate(elapsed_time_);
+
+}
+
+float Animator::ConvertPlayTimeToTimeOnData(const AnimInstance& anim_instance_)
+{
+	std::shared_ptr<AnimationParameters> parameters = animResource->AnimationParameters[anim_instance_.Kind];
+	
+	float start_offset = parameters->StartOffset;
+	float end_offset = parameters->EndOffset;
+
+	return start_offset + (anim_instance_.TotalTime - start_offset - end_offset) * anim_instance_.DurationReciprocal * anim_instance_.PlayTime;
+}
+
+void Animator::AdvanceTime(AnimInstance& anim_instance_, float elapsed_time_)
+{
+	anim_instance_.PlayTime += elapsed_time_ * animSpeed;
+	HandleLooping(anim_instance_);
+}
+
+void Animator::HandleLooping(AnimInstance& anim_instance_)
+{
+	std::shared_ptr<AnimationParameters> anim_parameters = animResource->AnimationParameters[anim_instance_.Kind];
+
+	if (anim_parameters->IsLoop == false ||
+		anim_instance_.PlayTime < anim_parameters->Duration)
 	{
-		currentAnimTimer = 0.0f;
+		return;
+	}
+	anim_instance_.PlayTime = 0.0f;
+}
+
+void Animator::HandleTransition()
+{
+	// 次のアニメーションハンドルが設定されていない場合は処理しない
+	// 
+	if (nextAnim.Handle == -1 ||
+		(isTransitioningImmediately == false &&
+		 currentAnim.PlayTime < animResource->AnimationParameters[currentAnim.Kind]->TransitionOutStartTime))
+	{
+		return;
+	}
+	previousAnim = currentAnim;
+	currentAnim = nextAnim;
+	nextAnim.Reset();
+	isTransitioningImmediately = false;
+}
+
+void Animator::UpdateBlendRate(float elapsed_time_)
+{
+	if (previousAnim.Handle == -1) { return; }
+	AdvanceTime(previousAnim, elapsed_time_);
+
+	float out_duration = animResource->AnimationParameters[previousAnim.Kind]->TransitionOutDuration;
+	float in_duration = animResource->AnimationParameters[currentAnim.Kind]->TransitionInDuration;
+	float min_duration = (out_duration < in_duration) ? out_duration : in_duration;
+
+	if (min_duration == 0.0f)
+	{
+		min_duration = minChangingTime;
 	}
 
-	isFinishChangeAnimNow = false;
-	// アニメーション遷移しない場合はここで終了
-	if (currentAnimTimer < startChangingTime ||
-		nextAnimHandle == -1) return;
+	if (currentAnim.PlayTime < min_duration)
+	{
+		currentAnimBlendRate = currentAnim.PlayTime / min_duration;
+		return;
+	}
 
-	nextAnimTimer += elapsed_time_ * nextAnimSpeed;
-
-	if (nextAnimTimer / changingTime < 1.0f) return;
-	currentAnimHandle = nextAnimHandle;
-	currentAnimTimer = nextAnimTimer;
-	currentAnimSpeed = nextAnimSpeed;
-
-	int anim_index = 0;
-	animTime = MV1GetAnimTotalTime(currentAnimHandle, anim_index);
-
-	nextAnimHandle = -1;
-	nextAnimTimer = 0.0f;
-	isLoop = nextIsLoop;
-
-	isFinishChangeAnimNow = true;
+	currentAnimBlendRate = 1.0f;
+	previousAnim.Reset();
 }

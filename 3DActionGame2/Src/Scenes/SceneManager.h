@@ -3,8 +3,10 @@
 #include "../Systems/Timer.h"
 #include "../Common.h"
 #include "../Debug/Profiler.h"
+#include "../Systems/Time.h"
 
-#define VSYNC
+//#define DELAY_EMULATE
+
 
 class SceneBase;
 
@@ -36,7 +38,7 @@ private:
 
 	void Update(float elapsed_time_);
 
-	void Render();
+	void Render(float elapsed_time_);
 
 #ifdef DEBUG
 	void DebugView();
@@ -47,21 +49,29 @@ private:
 	std::shared_ptr<SceneBase> currentScene;
 
 	// FixedUpdateを実行させる時間を管理する値
-	float elapsedTimeSinceLastFixupdate = 0.0f;
+	float elapsedTimeSinceLastFixedUpdate = 0.0f;
+	float elapsedTimeSinceLastRenderUpdate = 0.0f;
 
 	// 超過時間(次回FixedUpdateまでの補正のため)
 	float excess = 0.0f;
 
+	float renderExcess = Time::MinSPF;
 
 #ifdef DEBUG
 	// テストのために一旦こちらで直接保持
-	// TODO: 最終的にはDebugManagerにまとめる
+	// todo: 最終的にはDebugManagerにまとめる
 	Profiler profiler;
 
 	int num = 0;
 	int numView = 0;
 	int fixedNum = 0;
 	int fixedNumView = 0;
+	int fps = 0;
+	int fpsView = 0;
 	std::unique_ptr<Timer<SceneManager, SceneBase>> debugTimer = nullptr;
+
+#ifdef DELAY_EMULATE
+	static constexpr long delayLoopNum = 500000;
+#endif
 #endif
 };

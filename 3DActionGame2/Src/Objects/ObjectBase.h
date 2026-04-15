@@ -27,7 +27,7 @@ public:
 
 	// ChatGPTを使用して生成したコード
 	template<typename T>
-	std::shared_ptr<T> GetComponent() const
+	std::shared_ptr<T> GetComponent()
 	{
 		for (auto& comp : components)
 		{

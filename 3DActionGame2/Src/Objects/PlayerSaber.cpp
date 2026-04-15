@@ -125,32 +125,32 @@ void PlayerSaber::IgnitAttack()
 
 	float enable_time = 0.38f;
 	float disable_time = 0.85f;
-	float motion_time = 0.9f;
+	float motion_time = 0.8f;
 
 	switch (attackStep)
 	{
 	case 0:
-		animator->SetNextAnim(AKind::Attack00, 0.0f, 4.6f);
+		animator->SetNextAnim(AKind::Attack00);
 		StepForwardOnAttack(3.8f);
 		break;
 	case 1:
-		animator->SetNextAnim(AKind::Attack01, 0.0f, 4.6f);
+		animator->SetNextAnim(AKind::Attack01);
 		motion_time = 0.95f;
 		StepForwardOnAttack(1.5f);
 		break;
 	case 2:
-		animator->SetNextAnim(AKind::Attack02, 0.0f, 4.6f);
+		animator->SetNextAnim(AKind::Attack02);
 		StepForwardOnAttack(2.2f);
 		motion_time = 0.95f;
 		break;
 	case 3:
-		animator->SetNextAnim(AKind::Attack03, 0.0f, 4.6f);
+		animator->SetNextAnim(AKind::Attack03);
 		StepForwardOnAttack(2.5f);
 		motion_time = 1.2f;
 		attackStep = -1;
 		break;
 	default:
-		animator->SetNextAnim(AKind::Attack00, 0.0f, 4.6f);
+		animator->SetNextAnim(AKind::Attack00);
 		break;
 	}
 	attackStep++;
@@ -180,12 +180,11 @@ void PlayerSaber::FinishAttack()
 	leftSthickInput->GetFloatx2(x, y);
 	if (x != 0.0f && y != 0.0f)
 	{
-		animator->SetNextAnim(AKind::WalkF, Animator::Immediately, 4.6f, true);
+		animator->SetNextAnim(AKind::WalkF);
 	}
 	else
 	{
-		float changing_time_parcentage = 0.875f;
-		animator->SetNextAnim(AKind::Idle, animator->GetAnimationTimeByNormalizedValue(changing_time_parcentage), animator->GetAnimationTimeByNormalizedValue(1.0f - changing_time_parcentage), true);
+		animator->SetNextAnim(AKind::Idle);
 	}
 }
 

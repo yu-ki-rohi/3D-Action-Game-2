@@ -30,7 +30,7 @@ std::shared_ptr<AudioFileList> DataBase::GetAudioFileList()
 	return std::make_shared<AudioFileList>();
 }
 
-std::shared_ptr<AnimationSpeedList> DataBase::GetAnimationSpeedList()
+std::shared_ptr<AnimationParametersList> DataBase::GetAnimationParametersList()
 {
-	return std::make_shared<AnimationSpeedList>();
+	return std::make_shared<AnimationParametersList>();
 }

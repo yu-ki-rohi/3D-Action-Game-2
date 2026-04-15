@@ -6,6 +6,40 @@
 
 struct AnimationResource;
 
+struct AnimInstance
+{
+	AKind Kind = AKind::Idle;
+
+	int Handle = -1;
+
+	int AttachIndex = -1;
+
+	// 再生時刻
+	float PlayTime = 0.0f;
+
+	// 全体再生時間の長さの逆数
+	float DurationReciprocal = 1.0f;
+
+	// 元データのアニメーション時間の長さ
+	float TotalTime = 1.0f;
+
+	void Reset()
+	{
+		Kind = AKind::Idle;
+		Handle = -1;
+		AttachIndex = -1;
+		PlayTime = 0.0f;
+		DurationReciprocal = 1.0f;
+		TotalTime = 1.0f;
+	}
+};
+
+enum class AnimTransitionType
+{
+	Immediately,
+	Reserve
+};
+
 class Animator : public ComponentBase
 {
 public:
@@ -18,15 +52,7 @@ public:
 	// アニメーションの全体の時間に引数を掛けたものを取得
 	float GetAnimationTimeByNormalizedValue(float normalized_value_);
 
-	
-	/// <summary>
-	/// アニメーション遷移先をセット
-	/// </summary>
-	/// <param name="anim_kind_">遷移先の種類</param>
-	/// <param name="start_changing_time_">遷移を開始するアニメーション時刻</param>
-	/// <param name="changing_time_">遷移し終わるまでの時間</param>
-	/// <param name="is_loop_">次のアニメーションをループさせるか否か</param>
-	void SetNextAnim(AKind anim_kind_, float start_changing_time_, float changing_time_, bool is_loop_ = false);
+	void SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_ = AnimTransitionType::Immediately);
 
 	void SetAnimTimerAdjuster(float value_);
 
@@ -44,18 +70,49 @@ public:
 	static constexpr float Immediately = 0.0f;
 
 private:
-	// AnimResourceへのハンドル
-	std::shared_ptr<AnimationResource> animResource;
+	float ConvertPlayTimeToTimeOnData(const AnimInstance& anim_instance_);
 
+	void AdvanceTime(AnimInstance& anim_instance_, float elapsed_time_);
+	void HandleLooping(AnimInstance& anim_instance_);
+	void HandleTransition();
+	void UpdateBlendRate(float elapsed_time_);
+
+private:
+	// リソースへのスマートポインタ
+	const std::shared_ptr<AnimationResource> animResource;
+
+
+	// 新形式
+	AnimInstance previousAnim;
+	AnimInstance currentAnim;
+	AnimInstance nextAnim;
+
+	float animSpeed = 1.0f;
+
+	// アニメーションの再生時間をずらす際に使用
+	// 当たり判定の付け方を少し先の再生時間にする、などの用途
+	float animTimerAdjuster = 0.0f;
+
+	float currentAnimBlendRate = 1.0f;
+
+	bool isTransitioningImmediately = false;
+
+
+
+
+	// 旧型式
+	
 	// nextXXはアニメーション遷移先を予約するために使用
 	// (アニメーションの線形補間のため)
 
 	// 再生するアニメーションのハンドル
+	int previousAnimHandle = -1;
 	int currentAnimHandle = -1;
 	int nextAnimHandle = -1;
 
 	// 再生するアニメーションがアタッチされているインデックス
 
+	int previousAttachIndex = -1;
 	int currentAttachIndex = -1;
 	int nextAttachIndex = -1;
 
@@ -64,9 +121,6 @@ private:
 	float currentAnimTimer = 0.0f;
 	float nextAnimTimer = 0.0f;
 
-	// アニメーションの再生時間をずらす際に使用
-	// 当たり判定の付け方を少し先の再生時間にする、などの用途
-	float animTimerAdjuster = 0.0f;
 
 	// 現在アニメーションのトータル時間
 	float animTime = 0.0f;

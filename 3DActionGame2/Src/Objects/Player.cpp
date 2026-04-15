@@ -112,21 +112,21 @@ void Player::IgnitIdleAnimation()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
-	animator->SetNextAnim(AKind::Idle, 0.0f, 4.6f, true);
+	animator->SetNextAnim(AKind::Idle);
 }
 
 void Player::IgnitWalkAnimation()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
-	animator->SetNextAnim(AKind::WalkF, 0.0f, 4.6f, true);
+	animator->SetNextAnim(AKind::WalkF);
 }
 
 void Player::IgnitRolling()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
-	animator->SetNextAnim(AKind::Avoid, 0.0f, 4.6f);
+	animator->SetNextAnim(AKind::Avoid);
 	characterStatus->SetIsInvincible(true);
 	rollingStep = 0;
 	Vector3 dir = transform->GetForward();
@@ -149,11 +149,11 @@ void Player::FinishRolling()
 	leftSthickInput->GetFloatx2(x, y);
 	if (x != 0.0f && y != 0.0f)
 	{
-		animator->SetNextAnim(AKind::WalkF, Animator::Immediately, 4.6f, true);
+		animator->SetNextAnim(AKind::WalkF);
 	}
 	else
 	{
-		animator->SetNextAnim(AKind::Idle, Animator::Immediately, 4.6f, true);
+		animator->SetNextAnim(AKind::Idle);
 	}
 }
 

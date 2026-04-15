@@ -15,7 +15,6 @@ Enemy::Enemy(int id_, std::shared_ptr<IEnemyDirectiveReader> directive_) :
 	attackCollider(std::make_shared<BoxCollider>(Vector3(0.0f, 30.0f, -7.0f), Vector3(30.0f, 100.0f, 30.0f), Vector3(0.0f, -6.0f, 32.0f))),
 	bodyCollider(std::make_shared<BoxCollider>(Vector3(0.0f, -10.0f, -5.0f), Vector3(70.0f, 170.0f, 40.0f), Vector3(0.0f, 0.0f, 0.0f))),
 	justAvoidIgnitionCollider(std::make_shared<BoxCollider>(Vector3(0.0f, 30.0f, -7.0f), Vector3(70.0f, 140.0f, 80.0f), Vector3(0.0f, -6.0f, 32.0f))),
-	isChanging(false),
 	brain(std::make_unique<EnemyBrain>(id_, directive_, attackCollider, justAvoidIgnitionCollider))
 {
 
@@ -29,17 +28,13 @@ ObjectBase::Tag Enemy::GetTag() const
 void Enemy::SetLocalTimeScale(float time_scale_)
 {
 	CharacterBase::SetLocalTimeScale(time_scale_);
-	if (!enableColliderTimer || !disableColliderTimer) { return; }
-	enableColliderTimer->SetLocalTimeScale(localTimeScale);
-	disableColliderTimer->SetLocalTimeScale(localTimeScale);
+	brain->SetLocalTimeScale(localTimeScale);
 }
 
 void Enemy::MultiplyLocalTimeScaleBy(float multiplier_)
 {
 	CharacterBase::MultiplyLocalTimeScaleBy(multiplier_);
-	if (!enableColliderTimer || !disableColliderTimer) { return; }
-	enableColliderTimer->SetLocalTimeScale(localTimeScale);
-	disableColliderTimer->SetLocalTimeScale(localTimeScale);
+	brain->SetLocalTimeScale(localTimeScale);
 }
 
 void Enemy::Start()
@@ -105,45 +100,8 @@ void Enemy::SetupColliders()
 
 void Enemy::UpdateBehavior(float elapsed_time_)
 {
-#ifdef TMP_EVAUATION
-	float border_percentage = 0.9f;
-	if (animator->GetAnimationProgressPercentage() > border_percentage)
-	{
-		if (isChanging) { return; }
-		const char pattern_num = 3;
-		int judge = GetRand(pattern_num - 1);
-		float changing_time = animator->GetAnimationTimeByNormalizedValue(1.0f - border_percentage);
-		float enable_time = 0.85f;
-		float disable_time = 1.3f;
-		switch (judge)
-		{
-		case 0:
-			animator->SetNextAnim(AKind::Attack00, Animator::Immediately, changing_time, false);
-			enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &Enemy::EnableAttackCollider);
-			disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &Enemy::DisableAttackCollider);
-			break;
-		case 1:
-			disable_time = 1.45f;
-			animator->SetNextAnim(AKind::Attack01, Animator::Immediately, changing_time, false);
-			enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &Enemy::EnableAttackCollider);
-			disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &Enemy::DisableAttackCollider);
-			break;
-		case 2:
-			animator->SetNextAnim(AKind::Attack02, Animator::Immediately, changing_time, false);
-			enableColliderTimer = TimerFactory::CreateTimer(enable_time, shared_from_this(), this, &Enemy::EnableAttackCollider);
-			disableColliderTimer = TimerFactory::CreateTimer(disable_time, shared_from_this(), this, &Enemy::DisableAttackCollider);
-			break;
-		}
-		isChanging = true;
-	}
-	else
-	{
-		isChanging = false;
-	}
-#else
 	brain->Execute(elapsed_time_);
 
-#endif
 }
 
 void Enemy::UpdateCollider()

@@ -1,7 +1,6 @@
 #include "SceneManager.h"
 #include "SceneBase.h"
 #include "SceneFactory.h"
-#include "../Systems/Time.h"
 #include "../Systems/TimerManager.h"
 #include "../Input/InputManager.h"
 #include <DxLib.h>
@@ -55,6 +54,13 @@ void SceneManager::Main(float elapsed_time_)
 	// タイマー更新
 	TimerManager::Instance().Update(elapsed_time_ * Time::TimeScale);
 #ifdef DEBUG
+#ifdef DELAY_EMULATE
+	for (long i = 0; i < delayLoopNum; ++i)
+	{
+		VECTOR vec = VGet(i, -i, i / 3.0f);
+		vec = VNorm(vec);
+	}
+#endif
 	// VSync - FixedUpdate の間の処理時間を記録
 	profiler.Stamp(Profiler::Type::Other);
 #endif
@@ -74,7 +80,7 @@ void SceneManager::Main(float elapsed_time_)
 	Update(elapsed_time_);
 
 	// 描画処理
-	Render();
+	Render(elapsed_time_);
 
 }
 
@@ -82,10 +88,10 @@ void SceneManager::FixedUpdate(float elapsed_time_)
 {
 	if (currentScene->GetCurrentStep() != SceneBase::Step::Update) { return; }
 
-	elapsedTimeSinceLastFixupdate += elapsed_time_;
+	elapsedTimeSinceLastFixedUpdate += elapsed_time_;
 
 #ifdef FIXEDUPDATE_LOOP
-	int loopNum = (int)(elapsedTimeSinceLastFixupdate / Time::FixedDeltaTime);
+	int loopNum = (int)(elapsedTimeSinceLastFixedUpdate * Time::FixedFrame);
 	for (int i = 0; i < loopNum; ++i)
 	{
 		currentScene->FixedUpdate();
@@ -94,13 +100,13 @@ void SceneManager::FixedUpdate(float elapsed_time_)
 		fixedNum++;
 #endif
 	}
-	elapsedTimeSinceLastFixupdate -= Time::FixedDeltaTime * loopNum;
+	elapsedTimeSinceLastFixedUpdate -= Time::FixedDeltaTime * loopNum;
 
 #else
-	if (elapsedTimeSinceLastFixupdate >= Time::FixedDeltaTime)
+	if (elapsedTimeSinceLastFixedUpdate >= Time::FixedDeltaTime)
 	{
 		currentScene->FixedUpdate();
-		elapsedTimeSinceLastFixupdate -= Time::FixedDeltaTime;
+		elapsedTimeSinceLastFixedUpdate -= Time::FixedDeltaTime;
 #ifdef DEBUG
 		fixedNum++;
 #endif
@@ -123,7 +129,7 @@ void SceneManager::Update(float elapsed_time_)
 	{
 		currentScene->Update(elapsed_time_ * Time::TimeScale);
 	}
-
+	
 #ifdef DEBUG
 	profiler.Stamp(Profiler::Type::Update);
 
@@ -136,30 +142,43 @@ void SceneManager::Update(float elapsed_time_)
 #endif
 }
 
-void SceneManager::Render()
+void SceneManager::Render(float elapsed_time_)
 {
-	ClearDrawScreen();
+	elapsedTimeSinceLastRenderUpdate += elapsed_time_;
+	if (elapsedTimeSinceLastRenderUpdate >= Time::MinSPF)
+	{
+		ClearDrawScreen();
 
-	if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
-	{
-		currentScene->RenderInLoading();
+		if (currentScene->GetCurrentStep() == SceneBase::Step::Load)
+		{
+			currentScene->RenderInLoading();
+		}
+		else if (currentScene->GetCurrentStep() == SceneBase::Step::Update)
+		{
+			currentScene->Render();
+		}
+
+		elapsedTimeSinceLastRenderUpdate -= Time::MinSPF;
+#ifdef DEBUG
+		profiler.Render();
+
+		DrawFormatString(10, 20, GetColor(255, 255, 255), "Logic Update : %d", numView);
+		DrawFormatString(10, 40, GetColor(255, 255, 255), "Fixed Update : %d", fixedNumView);
+		DrawFormatString(10, 60, GetColor(255, 255, 255), "FPS          : %d", fpsView);
+
+		profiler.Stamp(Profiler::Type::Render);
+		fps++;
+#endif	
+		ScreenFlip();
+#ifdef DEBUG
+		profiler.Stamp(Profiler::Type::VSync);
+#endif
 	}
-	else if (currentScene->GetCurrentStep() == SceneBase::Step::Update)
-	{
-		currentScene->Render();
-	}
+
+#ifdef DEBUG
 	
-#ifdef DEBUG
-	profiler.Render();
+#endif
 
-	DrawFormatString(0, 10, GetColor(255, 255, 255), "FixedFPS : %d", fixedNumView);
-	DrawFormatString(0, 30, GetColor(255, 255, 255), "FPS      : %d", numView);
-	profiler.Stamp(Profiler::Type::Render);
-#endif
-	ScreenFlip();
-#ifdef DEBUG
-	profiler.Stamp(Profiler::Type::VSync);
-#endif
 }
 
 
@@ -170,7 +189,9 @@ void SceneManager::DebugView()
 	profiler.ResetTimes();
 	numView = num;
 	fixedNumView = fixedNum;
+	fpsView = fps;
 	num = 0;
 	fixedNum = 0;
+	fps = 0;
 }
 #endif

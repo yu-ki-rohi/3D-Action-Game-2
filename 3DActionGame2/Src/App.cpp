@@ -45,6 +45,8 @@ bool App::InitApp()
 	SetJoypadDeadZone(DX_INPUT_PAD1, 0.3f);
 	SetDrawScreen(DX_SCREEN_BACK);
 
+	SetAlwaysRunFlag(TRUE);
+
 	// 起動時のシーンを設定
 	sceneManager = std::make_unique<SceneManager>(SceneFactory::Create(SceneBase::Type::Title));
 
@@ -77,6 +79,8 @@ void App::MainLoop()
 
 		// 経過時間取得
 		float elapsed_time = SystemTimeProcess::GetElapsedTime(systemTime);
+
+		if (GetWindowActiveFlag() == FALSE){ continue; }
 
 		// メイン処理
 		sceneManager->Main(elapsed_time);

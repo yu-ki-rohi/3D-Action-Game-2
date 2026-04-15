@@ -162,16 +162,16 @@ void AssetsManager::LoadAnimation()
 	// ↑↑↑非同期読み込み関数はここから上で呼ぶ↑↑↑
 	SetUseASyncLoadFlag(FALSE);
 
-	//Animationの再生速度を設定
-	shared_ptr<AnimationSpeedList> animation_speed_list = DataBase::Instance().GetAnimationSpeedList();
-	for (const auto& animation_speed : animation_speed_list->AnimationSpeeds)
+
+	shared_ptr<AnimationParametersList> animation_parameters_list = DataBase::Instance().GetAnimationParametersList();
+	for (const auto& animation_parameters : animation_parameters_list->AnimationsParameters)
 	{
 		// MKindごとの各AKindにアニメーションを読み込んで保存
-		if (animationResource[animation_speed.first] == nullptr)
+		if (animationResource[animation_parameters.first] == nullptr)
 		{
-			animationResource[animation_speed.first] = make_shared <AnimationResource>();
+			animationResource[animation_parameters.first] = make_shared <AnimationResource>();
 		}
-		animationResource[animation_speed.first]->AnimSpeed[animation_speed.second.first] = animation_speed.second.second;
+		animationResource[animation_parameters.first]->AnimationParameters[animation_parameters.second.first] = animation_parameters.second.second;
 	}
 
 }

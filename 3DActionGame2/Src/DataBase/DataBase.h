@@ -9,7 +9,7 @@ struct ShaderFileList;
 
 struct AudioFileList;
 
-struct AnimationSpeedList;
+struct AnimationParametersList;
 
 // 現状はファイルパスの保持に使用
 class DataBase
@@ -22,7 +22,7 @@ public:
 	
 	std::shared_ptr<AudioFileList> GetAudioFileList();
 
-	std::shared_ptr<AnimationSpeedList> GetAnimationSpeedList();
+	std::shared_ptr<AnimationParametersList> GetAnimationParametersList();
 
 private:
 

@@ -37,6 +37,8 @@ namespace EnemyAI
 		// NOTE: 既存の枠組みに合わせるため一旦この関数でAnimatorとTransformをセットする形に
 		void SetReference(std::shared_ptr<ObjectBase> owner_, std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_);
 
+		void SetLocalTimeScale(float time_scale_);
+
 	public:
 		void Execute(float elapsed_time_);
 
