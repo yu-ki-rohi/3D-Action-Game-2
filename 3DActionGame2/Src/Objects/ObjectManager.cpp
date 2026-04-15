@@ -88,6 +88,15 @@ void ObjectManager::SetMonochrome(float rate_, int mask_)
 	}
 }
 
+void ObjectManager::ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_, int mask_)
+{
+	for (auto& obj : objects)
+	{
+		if (((int)obj->GetTag() & mask_) == 0) { continue; }
+		obj->ChangeMonochromeRequest(initial_rate_, target_rate_, duration_);
+	}
+}
+
 void ObjectManager::SetLocalTimeScale(float time_scale_)
 {
 	for (auto& obj : objects)

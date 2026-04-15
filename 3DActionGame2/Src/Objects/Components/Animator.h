@@ -52,6 +52,9 @@ public:
 	// アニメーションの全体の時間に引数を掛けたものを取得
 	float GetAnimationTimeByNormalizedValue(float normalized_value_);
 
+	float GetTimeUntilStartTransition();
+	bool IsTransitioning();
+
 	void SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_ = AnimTransitionType::Immediately);
 
 	void SetAnimTimerAdjuster(float value_);
@@ -96,50 +99,6 @@ private:
 	float currentAnimBlendRate = 1.0f;
 
 	bool isTransitioningImmediately = false;
-
-
-
-
-	// 旧型式
-	
-	// nextXXはアニメーション遷移先を予約するために使用
-	// (アニメーションの線形補間のため)
-
-	// 再生するアニメーションのハンドル
-	int previousAnimHandle = -1;
-	int currentAnimHandle = -1;
-	int nextAnimHandle = -1;
-
-	// 再生するアニメーションがアタッチされているインデックス
-
-	int previousAttachIndex = -1;
-	int currentAttachIndex = -1;
-	int nextAttachIndex = -1;
-
-	// HACK: アニメーション時間の管理の仕方を変更
-	// アニメーションの再生時間
-	float currentAnimTimer = 0.0f;
-	float nextAnimTimer = 0.0f;
-
-
-	// 現在アニメーションのトータル時間
-	float animTime = 0.0f;
-
-	// 一旦固定値
-	float currentAnimSpeed = 30.0f;
-	float nextAnimSpeed = 30.0f;
-
-	// アニメーション遷移を始める時間
-	float startChangingTime = 0.0f;
-	// アニメーション遷移にかける時間
-	float changingTime = 0.1f;
-
-	bool isLoop = true;
-	bool nextIsLoop = false;
-
-	// 切替の始動/終了を通知するため
-	bool isStartChangeAnimNow = false;
-	bool isFinishChangeAnimNow = false;
 
 private:
 	static constexpr float minChangingTime = 0.001f;

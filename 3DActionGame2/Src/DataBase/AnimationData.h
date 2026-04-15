@@ -149,7 +149,7 @@ struct AnimationParametersList
 		std::make_shared<AnimationParameters>(
 			2.2f,
 			0.3f,
-			0.7f,
+			1.9f,
 			0.3f,
 			0.0f,
 			0.0f,
@@ -161,7 +161,7 @@ struct AnimationParametersList
 		std::make_shared<AnimationParameters>(
 			2.7f,
 			0.3f,
-			0.7f,
+			2.4f,
 			0.3f,
 			0.0f,
 			0.0f,
@@ -173,8 +173,8 @@ struct AnimationParametersList
 		std::make_shared<AnimationParameters>(
 			2.4f,
 			0.3f,
-			0.7f,
-			0.3f,
+			1.8f,
+			0.5f,
 			0.0f,
 			0.0f,
 			0.0f,

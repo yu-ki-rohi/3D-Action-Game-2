@@ -6,8 +6,13 @@
 #include "../Collision/Collider.h"
 
 CharacterBase::CharacterBase() :
+	localTimeScale(1.0f),
 	monochromeRate(0.0f),
-	localTimeScale(1.0f)
+	monochromeInitial(0.0f),
+	monochromeTarget(0.0f),
+	monochromeChangeDuration(0.0f),
+	monochromeChangeTime(0.0f),
+	isMonochromeChanging(false)
 {
 
 }
@@ -35,7 +40,10 @@ void  CharacterBase::FixedUpdate()
 void CharacterBase::Update(float elapsed_time_)
 {
 	UpdateBehavior(elapsed_time_ * localTimeScale);
+
 	animator->Update(elapsed_time_ * localTimeScale);
+
+	UpdateMonochrome(elapsed_time_);
 }
 
 void CharacterBase::Render()
@@ -95,6 +103,16 @@ void CharacterBase::SetMonochrome(float rate_)
 	monochromeRate = rate_;
 }
 
+void CharacterBase::ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_)
+{
+	monochromeInitial = initial_rate_;
+	monochromeTarget = target_rate_;
+	monochromeChangeDuration = duration_;
+	monochromeChangeTime = 0.0f;
+
+	isMonochromeChanging = true;
+}
+
 void CharacterBase::SetLocalTimeScale(float time_scale_)
 {
 	localTimeScale = time_scale_;
@@ -109,5 +127,22 @@ void  CharacterBase::MultiplyLocalTimeScaleBy(float multiplier_)
 	if (fabsf(1.0f - localTimeScale) < error)
 	{
 		localTimeScale = 1.0f;
+	}
+}
+
+void CharacterBase::UpdateMonochrome(float elapsed_time_)
+{
+
+	if (isMonochromeChanging = false) { return; }
+
+	if (monochromeChangeTime < monochromeChangeDuration)
+	{
+		monochromeChangeTime += elapsed_time_;
+		monochromeRate = monochromeInitial + (monochromeTarget - monochromeInitial) / monochromeChangeDuration * monochromeChangeTime;
+	}
+	else
+	{
+		monochromeRate = monochromeTarget;
+		isMonochromeChanging = false;
 	}
 }

@@ -15,6 +15,7 @@ public:
 	Tag GetTag() const override;
 
 	void SetMonochrome(float rate_) override {}
+	void ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_) override {}
 	void SetLocalTimeScale(float time_scale_) override;
 	void MultiplyLocalTimeScaleBy(float multiplier_) override;
 

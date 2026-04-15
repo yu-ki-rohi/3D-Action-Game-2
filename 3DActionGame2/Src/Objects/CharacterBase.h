@@ -28,6 +28,8 @@ public:
 	void SetColliderRegisterInterface(std::shared_ptr<IColliderRegister> collider_register_interface_);
 
 	void SetMonochrome(float rate_) override;
+	void ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_) override;
+
 	virtual void SetLocalTimeScale(float time_scale_) override;
 	virtual void MultiplyLocalTimeScaleBy(float multiplier_) override;
 
@@ -75,6 +77,18 @@ protected:
 
 	std::weak_ptr<IColliderRegister> colliderRegisterInterface;
 
-	float monochromeRate;
 	float localTimeScale;
+
+private:
+	void UpdateMonochrome(float elapsed_time_);
+
+private:
+	float monochromeRate;
+	float monochromeInitial;
+	float monochromeTarget;
+	float monochromeChangeDuration;
+	float monochromeChangeTime;
+	bool isMonochromeChanging;
+
+
 };

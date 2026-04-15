@@ -22,6 +22,7 @@ public:
 	void RenderShadow() override;
 
 	void SetMonochrome(float rate_) override { monochromeRate = rate_; }
+	void ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_) override;
 	void SetLocalTimeScale(float time_scale_) override {}
 	void MultiplyLocalTimeScaleBy(float multiplier_) override {}
 
@@ -29,13 +30,21 @@ public:
 	void DecreaseMonochrome();
 
 private:
-
+	void UpdateMonochrome(float elapsed_time_);
 private:
 	Transform transform;
 
 	Renderer renderer;
 
-	float monochromeRate = 0.0f;
+	
+
+private:
+	float monochromeRate;
+	float monochromeInitial;
+	float monochromeTarget;
+	float monochromeChangeDuration;
+	float monochromeChangeTime;
+	bool isMonochromeChanging;
 
 private:
 

@@ -40,9 +40,10 @@ public:
 	}
 
 	virtual void SetMonochrome(float rate_) = 0;
-	virtual void SetLocalTimeScale(float time_scale_) = 0;
+	virtual void ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_) = 0;
 
-	// 固有タイムスケールを現在値からの倍率で行うために用意
+	virtual void SetLocalTimeScale(float time_scale_) = 0;
+	// 固有タイムスケールの設定を現在値からの倍率で行うために用意
 	// 命名にChat GPTを使用
 	// https://docs.google.com/document/d/1srepoKZf_39szieano4-QoJ59XDF1VViukK--uwZgPg/edit?tab=t.0#heading=h.8eg32zgt8ps
 	virtual void MultiplyLocalTimeScaleBy(float multiplier_) = 0;

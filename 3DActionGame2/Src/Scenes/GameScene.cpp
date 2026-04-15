@@ -35,12 +35,11 @@ GameScene::GameScene() :
 	aSyncLoadNumMax(100),
 	isJustAvoidTime(false),
 	intensity(0.0f),
-	targetIntensity(0.0f),
-	fluctuationSpeedOfIntensity(0.0f),
-	monochromeRate(0.0f),
-	targetMonochromeRate(0.0f),
-	fluctuationSpeedOfMonochromeRate(0.0f),
-	monochromeMask(0),
+	intensityInitial(0.0f),
+	intensityTarget(0.0f),
+	intensityChangeDuration(1.0f),
+	intensityChangeTime(0.0f),
+	isIntensityChanging(false),
 	lightCameraViewMatrix(MGetIdent()),
 	lightCameraProjectionMatrix(MGetIdent())
 {
@@ -84,51 +83,10 @@ void GameScene::Update(float elapsed_time_)
 	{
 		objectManager->Update(elapsed_time_);
 
-		// 一旦ベタで
-		// ネスト深いし共通処理があるので後で手を入れる
-		if (intensity != targetIntensity)
-		{
-			// HACK: 絶対的処理に変更
-			intensity += fluctuationSpeedOfIntensity * elapsed_time_;
-			if (fluctuationSpeedOfIntensity > 0)
-			{
-				if (intensity > targetIntensity)
-				{
-					intensity = targetIntensity;
-				}
-			}
-			else
-			{
-				if (intensity < targetIntensity)
-				{
-					intensity = targetIntensity;
-				}
-			}
-		}
-
-		if (monochromeRate != targetMonochromeRate)
-		{
-			// HACK: 絶対的処理に変更
-			monochromeRate += fluctuationSpeedOfMonochromeRate * elapsed_time_;
-			if (fluctuationSpeedOfMonochromeRate > 0)
-			{
-				if (monochromeRate > targetMonochromeRate)
-				{
-					monochromeRate = targetMonochromeRate;
-				}
-			}
-			else
-			{
-				if (monochromeRate < targetMonochromeRate)
-				{
-					monochromeRate = targetMonochromeRate;
-				}
-			}
-			objectManager->SetMonochrome(monochromeRate, monochromeMask);
-		}
-
 		objectManager->Erase();
 	}
+
+	UpdateBlur(elapsed_time_);
 }
 
 void GameScene::Render()
@@ -244,26 +202,26 @@ void GameScene::SuccessJustAvoid()
 	if (objectManager)
 	{
 		int mask = (int)ObjectBase::Tag::Stage;
-		objectManager->SetMonochrome(0.9f, mask);
+		float initialMonochromeRate = 0.0f;
+		float targetMonochromeRate = 0.9f;
+		float changing_time = 0.05f;
+		objectManager->ChangeMonochromeRequest(initialMonochromeRate, targetMonochromeRate, changing_time, mask);
+
 		mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
 		objectManager->MultiplyLocalTimeScaleBy(JustAvoidLocalTimeScale, mask);
+
 	}
 
 	if (objectFactory)
 	{
 		objectFactory->SetIsJustAvoidTime(true);
 	}
+	
+	float initial = 0.0f;
+	float target = 0.05f;
+	float duration = 0.025f;
+	ChangeBlurRequest(initial, target, duration);
 
-	monochromeMask = (int)ObjectBase::Tag::Stage;
-	targetMonochromeRate = 0.9f;
-	float changing_time = 0.05f;
-	float diff_monochrome = targetMonochromeRate - monochromeRate;
-	fluctuationSpeedOfMonochromeRate = diff_monochrome / changing_time;
-
-	targetIntensity = 0.05f;
-	changing_time = 0.025f;
-	float diff_intensity = targetIntensity - intensity;
-	fluctuationSpeedOfIntensity = diff_intensity / changing_time;
 
 	AudioManager::Instance().SetVolume(155, BGMKind::Main);
 
@@ -277,6 +235,16 @@ void GameScene::SuccessJustAvoid()
 	TimerFactory::CreateTimer<GameScene>(time_to_reset + just_avoid_bonus_time, shared_from_this(), this, &GameScene::FinishJustAvoidTime);
 
 	isJustAvoidTime = true;
+}
+
+void GameScene::ChangeBlurRequest(float initial_, float target_, float duration_)
+{
+	intensityInitial = initial_;
+	intensityTarget = target_;
+	intensityChangeDuration = duration_;
+
+	intensityChangeTime = 0.0f;
+	isIntensityChanging = true;
 }
 
 void GameScene::SetupLight()
@@ -479,27 +447,23 @@ void GameScene::ResetTimeScale()
 
 void GameScene::FinishJustAvoidEffect()
 {
-	monochromeMask = (int)ObjectBase::Tag::Stage;
-	targetMonochromeRate = 0.0f;
+	int mask = (int)ObjectBase::Tag::Stage;
+	float initialMonochromeRate = 0.9f;
+	float targetMonochromeRate = 0.0f;
 	float changing_time = 2.0f;
-	float diff_monochrome = targetMonochromeRate - monochromeRate;
-	fluctuationSpeedOfMonochromeRate = diff_monochrome / changing_time;
+	objectManager->ChangeMonochromeRequest(initialMonochromeRate, targetMonochromeRate, changing_time, mask);
 
-	targetIntensity = 0.0f;
-	changing_time = 2.5f;
-	float diff_intensity = targetIntensity - intensity;
-	fluctuationSpeedOfIntensity = diff_intensity / changing_time;
-
-
+	float initial = 0.05f;
+	float target = 0.0f;
+	float duration = 2.5f;
+	ChangeBlurRequest(initial, target, duration);
 }
 
 void GameScene::FinishJustAvoidTime()
 {
 	if (objectManager)
 	{
-		int mask = (int)ObjectBase::Tag::Stage;
-		objectManager->SetMonochrome(0.0f, mask);
-		mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
+		int mask = (int)ObjectBase::Tag::Enemy | (int)ObjectBase::Tag::Effect;
 		objectManager->MultiplyLocalTimeScaleBy(1.0f / JustAvoidLocalTimeScale, mask);;
 	}
 
@@ -507,7 +471,6 @@ void GameScene::FinishJustAvoidTime()
 	{
 		objectFactory->SetIsJustAvoidTime(false);
 	}
-	intensity = 0.0f;
 
 	AudioManager::Instance().SetVolume(255, BGMKind::Main);
 
@@ -517,4 +480,20 @@ void GameScene::FinishJustAvoidTime()
 void GameScene::ReturnTitle()
 {
 	currentStep = Step::Finish;
+}
+
+void GameScene::UpdateBlur(float elapsed_time_)
+{
+	if (isIntensityChanging == false) { return; }
+
+	if (intensityChangeTime < intensityChangeDuration)
+	{
+		intensityChangeTime += elapsed_time_;
+		intensity = intensityInitial + (intensityTarget - intensityInitial) / intensityChangeDuration * intensityChangeTime;
+	}
+	else
+	{
+		intensity = intensityTarget;
+		isIntensityChanging = false;
+	}
 }

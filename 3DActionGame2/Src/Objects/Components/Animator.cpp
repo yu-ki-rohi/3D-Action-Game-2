@@ -24,6 +24,23 @@ float Animator::GetAnimationTimeByNormalizedValue(float normalized_value_)
 	return animResource->AnimationParameters[currentAnim.Kind]->Duration * normalized_value_;
 }
 
+float Animator::GetTimeUntilStartTransition()
+{
+	if (animResource == nullptr) { return 0.0f; }
+	if (isTransitioningImmediately)
+	{
+		return animResource->AnimationParameters[nextAnim.Kind]->TransitionOutStartTime - nextAnim.PlayTime;
+	}
+	else
+	{
+		return animResource->AnimationParameters[currentAnim.Kind]->TransitionOutStartTime - currentAnim.PlayTime;
+	}
+}
+
+bool Animator::IsTransitioning()
+{
+	return isTransitioningImmediately || previousAnim.Handle != -1;
+}
 
 
 void Animator::SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_)

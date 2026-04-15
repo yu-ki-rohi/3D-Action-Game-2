@@ -62,7 +62,7 @@ namespace EnemyAI
 		// HACK: 値を適切な場所に移動
 		 
 		// 移動をする閾値
-		static constexpr float moveThreshold = 0.25f;
+		static constexpr float moveThreshold = 1.0f;
 		// アニメーション変更のボーダー
 		static constexpr float animationChangeBorderPercentage = 0.9f;
 
@@ -93,7 +93,7 @@ namespace EnemyAI
 
 		// NOTE: アニメーション切替の挙動を連続で行わせないため　けっこう苦し紛れなので変えたい
 		// HACK: ここの見直し
-		bool isChangeingAttackAnimation;
+		//bool isChangeingAttackAnimation;
 
 	};
 

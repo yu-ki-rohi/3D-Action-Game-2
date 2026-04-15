@@ -20,6 +20,7 @@ public:
 public:
 	void SetMonochrome(float rate_);
 	void SetMonochrome(float rate_, int mask_);
+	void ChangeMonochromeRequest(float initial_rate_, float target_rate_, float duration_, int mask_);
 
 	void SetLocalTimeScale(float time_scale_);
 	void SetLocalTimeScale(float time_scale_, int mask_);

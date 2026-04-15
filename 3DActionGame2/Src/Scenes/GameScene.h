@@ -40,6 +40,8 @@ public:
 public:
 	void SuccessJustAvoid() override;
 
+	void ChangeBlurRequest(float initial_, float target_, float duration_);
+
 public:
 	static constexpr float JustAvoidLocalTimeScale = 0.05f;
 
@@ -59,6 +61,8 @@ private:
 	void FinishJustAvoidTime();
 
 	void ReturnTitle();
+
+	void UpdateBlur(float elapsed_time_);
 
 private:
 	// オブジェクトの管理クラス
@@ -86,24 +90,13 @@ private:
 
 	// ラディアルブラー関係の変数
 	
-	// 現在のラディアルブラーをかける度合
 	float intensity;
-	// ラディアルブラーをかける度合いの目標値
-	float targetIntensity;
-	// ラディアルブラーの変動スピード
-	float fluctuationSpeedOfIntensity;
+	float intensityInitial;
+	float intensityTarget;
+	float intensityChangeDuration;
+	float intensityChangeTime;
+	bool isIntensityChanging;
 
-	int monochromeMask;
-
-	// モノクロ描画関係の変数
-
-	// 現在のモノクロ割合
-	float monochromeRate;
-	// 目標のモノクロ割合
-	float targetMonochromeRate;
-	// モノクロ割合の変動スピード
-	float fluctuationSpeedOfMonochromeRate;
-	// モノクロ変動させるマスク
 
 	// 影描画用
 
