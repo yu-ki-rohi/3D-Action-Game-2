@@ -60,7 +60,7 @@ private:
 #ifdef DEBUG
 	// テストのために一旦こちらで直接保持
 	// todo: 最終的にはDebugManagerにまとめる
-	Profiler profiler;
+	//Profiler profiler;
 
 	int num = 0;
 	int numView = 0;

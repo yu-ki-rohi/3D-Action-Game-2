@@ -6,6 +6,7 @@
 #include "BehaviorTree/CompositeNode.h"
 
 #include "../Common.h"
+#include "../DataBase/DataKind.h"
 
 // AIŠÖ˜A
 
@@ -52,7 +53,10 @@ namespace EnemyAI
 		BehaviorTree::Status MoveStart(float elapsed_time_);
 		BehaviorTree::Status Move(float elapsed_time_);
 		BehaviorTree::Status Idle(float elapsed_time_);
-		BehaviorTree::Status AttackStart(float elapsed_time_);
+		BehaviorTree::Status AttackStart0(float elapsed_time_);
+		BehaviorTree::Status AttackStart1(float elapsed_time_);
+		BehaviorTree::Status AttackStart2(float elapsed_time_);
+		BehaviorTree::Status AttackStart(AKind anim_kind_);
 		BehaviorTree::Status Attack(float elapsed_time_);
 
 		void EnableAttackCollider();

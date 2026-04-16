@@ -9,6 +9,7 @@
 #include "../Systems/TimerFactory.h"
 #include "../Common.h"
 #include "CameraManager.h"
+#include "../Debug/DebugManager.h"
 
 Player::Player(std::shared_ptr<CameraManager> camera_manager_) :
 	canMove(true),
@@ -126,6 +127,7 @@ void Player::IgnitRolling()
 {
 	if (!canMove || rollingStep != -1) { return; }
 	if (!animator) { return; }
+	DebugManager::Instance().AddDebugLog(DebugLog::Type::Message, "‰ñ”ð‘€ì‚ðŽó‚¯•t‚¯‚½");
 	animator->SetNextAnim(AKind::Avoid);
 	characterStatus->SetIsInvincible(true);
 	rollingStep = 0;

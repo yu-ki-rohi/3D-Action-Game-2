@@ -24,6 +24,8 @@
 
 #include "../AI/EnemyDirective.h"
 
+#include "../Debug/DebugManager.h"
+
 
 GameScene::GameScene() :
 	objectManager(std::make_shared<ObjectManager>()),
@@ -43,7 +45,9 @@ GameScene::GameScene() :
 	lightCameraViewMatrix(MGetIdent()),
 	lightCameraProjectionMatrix(MGetIdent())
 {
-
+	DebugManager::Instance().AddDebugLog(DebugLog::Type::Message, "メッセージテスト");
+	DebugManager::Instance().AddDebugLog(DebugLog::Type::Warning, "ワーニングテスト");
+	DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "エラーテスト");
 }
 
 GameScene::~GameScene()
@@ -198,6 +202,7 @@ SceneBase::Type GameScene::Delete()
 void GameScene::SuccessJustAvoid()
 {
 	if (isJustAvoidTime) { return; }
+	DebugManager::Instance().AddDebugLog(DebugLog::Type::Message, "ジャスト回避成功");
 
 	if (objectManager)
 	{

@@ -14,7 +14,6 @@ struct AnimInstance
 
 	int AttachIndex = -1;
 
-	// 再生時刻
 	float PlayTime = 0.0f;
 
 	// 全体再生時間の長さの逆数
@@ -55,6 +54,9 @@ public:
 	float GetTimeUntilStartTransition();
 	bool IsTransitioning();
 
+	float GetActivationTime();
+	float GetDeactivationTime();
+
 	void SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_ = AnimTransitionType::Immediately);
 
 	void SetAnimTimerAdjuster(float value_);
@@ -66,11 +68,6 @@ public:
 	void DetachAnim(int model_handle_);
 
 	void Update(float elapsed_time_);
-
-public:
-	// Animationの遷移を即座に開始される時のために
-	// 思ったよりも即座に切り替えたいということの方が多かったので用意
-	static constexpr float Immediately = 0.0f;
 
 private:
 	float ConvertPlayTimeToTimeOnData(const AnimInstance& anim_instance_);

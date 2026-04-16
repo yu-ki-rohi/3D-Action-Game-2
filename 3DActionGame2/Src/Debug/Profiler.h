@@ -1,8 +1,5 @@
 #pragma once
 #include "../Common.h"
-
-#ifdef DEBUG
-
 #include <DxLib.h>
 
 #define STAMP_NUM 6
@@ -42,5 +39,3 @@ private:
 
 
 };
-
-#endif

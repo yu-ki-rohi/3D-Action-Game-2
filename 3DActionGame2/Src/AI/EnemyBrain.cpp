@@ -7,6 +7,7 @@
 #include "../Collision/Collider.h"
 #include "BehaviorTree/SelectorNode.h"
 #include "BehaviorTree/SequenceNode.h"
+#include "BehaviorTree/RandomNode.h"
 #include "BehaviorTree/LeafNode.h"
 
 
@@ -35,19 +36,46 @@ EnemyBrain::EnemyBrain(
 	moveSequence->AddNode(std::move(moveStart));
 	moveSequence->AddNode(std::move(move));
 
-	// UŒ‚ƒm[ƒh‚Ì––’[ƒm[ƒh‚ğì¬
-	std::unique_ptr<LeafNode> attackStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart(elapsed_time_); });
-	std::unique_ptr<LeafNode> attack = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
 
-	// UŒ‚ƒV[ƒNƒGƒ“ƒX‚Ìì¬E“o˜^
-	std::unique_ptr<CompositeNode> attackSequence = std::make_unique<SequenceNode>();
-	attackSequence->AddNode(std::move(attackStart));
-	attackSequence->AddNode(std::move(attack));
+	// UŒ‚0ƒm[ƒh‚Ì––’[ƒm[ƒh‚ğì¬
+	std::unique_ptr<LeafNode> attackStart0 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart0(elapsed_time_); });
+	std::unique_ptr<LeafNode> attack0 = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
 
+	// UŒ‚0ƒV[ƒNƒGƒ“ƒX‚Ìì¬E“o˜^
+	std::unique_ptr<CompositeNode> attackSequence0 = std::make_unique<SequenceNode>();
+	attackSequence0->AddNode(std::move(attackStart0));
+	attackSequence0->AddNode(std::move(attack0));
+
+	
+	// UŒ‚1ƒm[ƒh‚Ì––’[ƒm[ƒh‚ğì¬
+	std::unique_ptr<LeafNode> attackStart1 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart1(elapsed_time_); });
+	std::unique_ptr<LeafNode> attack1 = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
+
+	// UŒ‚1ƒV[ƒNƒGƒ“ƒX‚Ìì¬E“o˜^
+	std::unique_ptr<CompositeNode> attackSequence1 = std::make_unique<SequenceNode>();
+	attackSequence1->AddNode(std::move(attackStart1));
+	attackSequence1->AddNode(std::move(attack1));
+
+	
+	// UŒ‚2ƒm[ƒh‚Ì––’[ƒm[ƒh‚ğì¬
+	std::unique_ptr<LeafNode> attackStart2 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart2(elapsed_time_); });
+	std::unique_ptr<LeafNode> attack2 = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
+
+	// UŒ‚2ƒV[ƒNƒGƒ“ƒX‚Ìì¬E“o˜^
+	std::unique_ptr<CompositeNode> attackSequence2 = std::make_unique<SequenceNode>();
+	attackSequence2->AddNode(std::move(attackStart2));
+	attackSequence2->AddNode(std::move(attack2));
+
+	// ƒ‰ƒ“ƒ_ƒ€UŒ‚ƒm[ƒh‚Ìì¬E“o˜^
+	std::unique_ptr<CompositeNode> attackRandom = std::make_unique<RandomNode>();
+
+	attackRandom->AddNode(std::move(attackSequence0));
+	attackRandom->AddNode(std::move(attackSequence1));
+	attackRandom->AddNode(std::move(attackSequence2));
 
 	// root‚É“o˜^
 	behaviorTree->AddNode(std::move(moveSequence));
-	behaviorTree->AddNode(std::move(attackSequence));
+	behaviorTree->AddNode(std::move(attackRandom));
 }
 
 void EnemyBrain::SetReference(std::shared_ptr<ObjectBase> owner_, std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_)
@@ -107,33 +135,27 @@ Status EnemyBrain::Idle(float elapsed_time_)
 	return Status::Success;
 }
 
-Status EnemyBrain::AttackStart(float elapsed_time_)
+Status EnemyBrain::AttackStart0(float elapsed_time_)
+{
+	return AttackStart(AKind::Attack00);
+}
+
+Status EnemyBrain::AttackStart1(float elapsed_time_)
+{
+	return AttackStart(AKind::Attack01);
+}
+
+Status EnemyBrain::AttackStart2(float elapsed_time_)
+{
+	return AttackStart(AKind::Attack02);
+}
+
+Status EnemyBrain::AttackStart(AKind anim_kind_)
 {
 	// TODO: ‚»‚ê‚¼‚ê‚Ì‚É•ª‚¯‚é
-	const char pattern_num = 3;
-	int judge = GetRand(pattern_num - 1);
-	float enable_time = 0.85f;
-	float disable_time = 1.3f;
-
-	switch (judge)
-	{
-	case 0:
-		animator->SetNextAnim(AKind::Attack00);
-		enableColliderTimer = TimerFactory::CreateTimer(enable_time, owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
-		disableColliderTimer = TimerFactory::CreateTimer(disable_time, owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
-		break;
-	case 1:
-		disable_time = 1.45f;
-		animator->SetNextAnim(AKind::Attack01);
-		enableColliderTimer = TimerFactory::CreateTimer(enable_time, owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
-		disableColliderTimer = TimerFactory::CreateTimer(disable_time, owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
-		break;
-	case 2:
-		animator->SetNextAnim(AKind::Attack02);
-		enableColliderTimer = TimerFactory::CreateTimer(enable_time, owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
-		disableColliderTimer = TimerFactory::CreateTimer(disable_time, owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
-		break;
-	}
+	animator->SetNextAnim(anim_kind_);
+	enableColliderTimer = TimerFactory::CreateTimer(animator->GetActivationTime(), owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
+	disableColliderTimer = TimerFactory::CreateTimer(animator->GetDeactivationTime(), owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
 
 	return Status::Success;
 }

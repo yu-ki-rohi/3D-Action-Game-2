@@ -1,8 +1,6 @@
 #include "Profiler.h"
 #include "../Common.h"
 
-#ifdef DEBUG
-
 #include "../Systems/Time.h"
 #include "../Systems/SystemTimeProcess.h"
 
@@ -75,4 +73,3 @@ void Profiler::ResetTimes()
 		stampedTime[i] = 0.0f;
 	}
 }
-#endif

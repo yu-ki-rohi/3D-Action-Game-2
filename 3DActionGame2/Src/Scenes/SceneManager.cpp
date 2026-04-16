@@ -3,6 +3,7 @@
 #include "SceneFactory.h"
 #include "../Systems/TimerManager.h"
 #include "../Input/InputManager.h"
+#include "../Debug/DebugManager.h"
 #include <DxLib.h>
 
 #define FIXEDUPDATE_LOOP
@@ -62,7 +63,7 @@ void SceneManager::Main(float elapsed_time_)
 	}
 #endif
 	// VSync - FixedUpdate の間の処理時間を記録
-	profiler.Stamp(Profiler::Type::Other);
+	DebugManager::Instance().Stamp(Profiler::Type::Other);
 #endif
 
 	// 固定フレームの更新処理
@@ -73,7 +74,7 @@ void SceneManager::Main(float elapsed_time_)
 
 #ifdef DEBUG
 	// Input の処理時間を記録
-	profiler.Stamp(Profiler::Type::Input);
+	DebugManager::Instance().Stamp(Profiler::Type::Input);
 #endif
 
 	// フレーム毎の更新処理
@@ -115,7 +116,8 @@ void SceneManager::FixedUpdate(float elapsed_time_)
 
 #endif
 #ifdef DEBUG
-	profiler.Stamp(Profiler::Type::FixedUpdate);
+
+	DebugManager::Instance().Stamp(Profiler::Type::FixedUpdate);
 #endif       
 }
 
@@ -131,7 +133,7 @@ void SceneManager::Update(float elapsed_time_)
 	}
 	
 #ifdef DEBUG
-	profiler.Stamp(Profiler::Type::Update);
+	DebugManager::Instance().Stamp(Profiler::Type::Update);
 
 	num++;
 	if (debugTimer == nullptr || !debugTimer->IsActive())
@@ -160,18 +162,19 @@ void SceneManager::Render(float elapsed_time_)
 
 		elapsedTimeSinceLastRenderUpdate -= Time::MinSPF;
 #ifdef DEBUG
-		profiler.Render();
+
+		DebugManager::Instance().Render();
 
 		DrawFormatString(10, 20, GetColor(255, 255, 255), "Logic Update : %d", numView);
 		DrawFormatString(10, 40, GetColor(255, 255, 255), "Fixed Update : %d", fixedNumView);
 		DrawFormatString(10, 60, GetColor(255, 255, 255), "FPS          : %d", fpsView);
 
-		profiler.Stamp(Profiler::Type::Render);
+		DebugManager::Instance().Stamp(Profiler::Type::Render);
 		fps++;
 #endif	
 		ScreenFlip();
 #ifdef DEBUG
-		profiler.Stamp(Profiler::Type::VSync);
+		DebugManager::Instance().Stamp(Profiler::Type::VSync);
 #endif
 	}
 
@@ -185,8 +188,8 @@ void SceneManager::Render(float elapsed_time_)
 #ifdef DEBUG
 void SceneManager::DebugView()
 {
-	profiler.Update();
-	profiler.ResetTimes();
+	DebugManager::Instance().Update();
+	DebugManager::Instance().ResetTimes();
 	numView = num;
 	fixedNumView = fixedNum;
 	fpsView = fps;

@@ -151,8 +151,8 @@ struct AnimationParametersList
 			0.3f,
 			1.9f,
 			0.3f,
-			0.0f,
-			0.0f,
+			0.6f,
+			0.5f,
 			0.0f,
 			0.0f,
 			false
@@ -163,8 +163,8 @@ struct AnimationParametersList
 			0.3f,
 			2.4f,
 			0.3f,
-			0.0f,
-			0.0f,
+			1.3f,
+			0.5f,
 			0.0f,
 			0.0f,
 			false
@@ -175,8 +175,8 @@ struct AnimationParametersList
 			0.3f,
 			1.8f,
 			0.5f,
-			0.0f,
-			0.0f,
+			0.8f,
+			0.4f,
 			0.0f,
 			0.0f,
 			false
