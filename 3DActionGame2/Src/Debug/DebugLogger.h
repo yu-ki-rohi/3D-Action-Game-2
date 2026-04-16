@@ -2,9 +2,6 @@
 
 #include "../Common.h"
 
-// デバッグ系の処理は最終的にはなるべくここにまとめたい
-// todo LogやAssertを画面に出力する機能の追加
-
 #include <memory>
 #include <source_location>
 

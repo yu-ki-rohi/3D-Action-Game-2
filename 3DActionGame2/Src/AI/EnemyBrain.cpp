@@ -9,7 +9,7 @@
 #include "BehaviorTree/SequenceNode.h"
 #include "BehaviorTree/RandomNode.h"
 #include "BehaviorTree/LeafNode.h"
-
+#include "../Debug/DebugMessenger.h"
 
 using namespace BehaviorTree;
 using namespace EnemyAI;
@@ -116,6 +116,7 @@ Status EnemyBrain::MoveStart(float elapsed_time_)
 	animator->SetNextAnim(AKind::WalkF);
 
 	transform->SetForward(directive->GetDirectedPosition(id) - transform->Position);
+	DebugMessenger::Log("“G‚ªˆÚ“®‚ðŠJŽn‚µ‚½‚æ");
 	return Status::Success;
 }
 
@@ -123,6 +124,7 @@ Status EnemyBrain::Move(float elapsed_time_)
 {
 	if ((directive->GetDirectedPosition(id) - transform->Position).sqrLength() < moveThreshold * moveThreshold)
 	{
+		DebugMessenger::Log("“G‚ªˆÚ“®‚ðI‚¦‚½‚æ");
 		return Status::Success;
 	}
 
@@ -152,13 +154,13 @@ Status EnemyBrain::AttackStart2(float elapsed_time_)
 
 Status EnemyBrain::AttackStart(AKind anim_kind_)
 {
-	// TODO: ‚»‚ê‚¼‚ê‚Ì‚É•ª‚¯‚é
 	animator->SetNextAnim(anim_kind_);
 	enableColliderTimer = TimerFactory::CreateTimer(animator->GetActivationTime(), owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
 	disableColliderTimer = TimerFactory::CreateTimer(animator->GetDeactivationTime(), owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);
 
 	return Status::Success;
 }
+
 Status EnemyBrain::Attack(float elapsed_time_)
 {
 	if (animator->GetTimeUntilStartTransition() < 0)

@@ -160,6 +160,7 @@
     <ClCompile Include="Src\DataBase\DataBase.cpp" />
     <ClCompile Include="Src\Debug\DebugLogger.cpp" />
     <ClCompile Include="Src\Debug\DebugManager.cpp" />
+    <ClCompile Include="Src\Debug\DebugMessenger.cpp" />
     <ClCompile Include="Src\Debug\Profiler.cpp" />
     <ClCompile Include="Src\Input\ButtonBehavior.cpp" />
     <ClCompile Include="Src\Input\InputBehavior.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Src\DataBase\ShaderData.h" />
     <ClInclude Include="Src\Debug\DebugLogger.h" />
     <ClInclude Include="Src\Debug\DebugManager.h" />
+    <ClInclude Include="Src\Debug\DebugMessenger.h" />
     <ClInclude Include="Src\Debug\Profiler.h" />
     <ClInclude Include="Src\Input\ButtonBehavior.h" />
     <ClInclude Include="Src\Input\InputBehavior.h" />
