@@ -87,10 +87,10 @@ struct AnimationParametersList
 		std::make_shared<AnimationParameters>(
 			0.9f,
 			0.3f,
-			0.7f,
+			0.6f,
 			0.3f,
-			0.0f,
-			0.0f,
+			0.3f,
+			0.2f,
 			0.0f,
 			0.0f,
 			false
@@ -101,8 +101,8 @@ struct AnimationParametersList
 			0.3f,
 			0.7f,
 			0.3f,
-			0.0f,
-			0.0f,
+			0.3f,
+			0.3f,
 			0.0f,
 			0.0f,
 			false
@@ -113,8 +113,8 @@ struct AnimationParametersList
 			0.3f,
 			0.7f,
 			0.3f,
-			0.0f,
-			0.0f,
+			0.3f,
+			0.3f,
 			0.0f,
 			0.0f,
 			false
@@ -123,10 +123,10 @@ struct AnimationParametersList
 		std::make_shared<AnimationParameters>(
 			1.65f,
 			0.3f,
-			0.7f,
+			1.1f,
 			0.3f,
-			0.0f,
-			0.0f,
+			0.3f,
+			0.5f,
 			0.0f,
 			0.0f,
 			false
@@ -135,10 +135,10 @@ struct AnimationParametersList
 	#pragma region Enemy
 	std::make_pair(MKind::Enemy,std::make_pair(AKind::Idle,
 		std::make_shared<AnimationParameters>(
-			1.0f,
-			1.0f,
+			2.0f,
+			0.5f,
 			0.0f,
-			1.0f,
+			0.5f,
 			0.0f,
 			0.0f,
 			0.0f,

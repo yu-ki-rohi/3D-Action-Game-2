@@ -116,13 +116,20 @@ void Animator::SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_
 {
 	try
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
+		if (animResource == nullptr) { throw "animResourceがnullptrです"; }
 	}
 	catch (char* message)
 	{
 		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
 		return ;
 	}
+
+	if (isAllowedToTransitionSameCurrent == false &&
+		currentAnim.Kind == anim_kind_)
+	{
+		return;
+	}
+
 	nextAnim.Kind = anim_kind_;
 	nextAnim.Handle = animResource->Handles[anim_kind_];
 	nextAnim.AttachIndex = -1;
@@ -149,6 +156,11 @@ void Animator::SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_
 void Animator::SetAnimTimerAdjuster(float value_)
 {
 	animTimerAdjuster = value_;
+}
+
+void Animator::SetIsAllowedToTransitionSameCurrent(bool value_)
+{
+	isAllowedToTransitionSameCurrent = value_;
 }
 
 void Animator::SetupRenderAnim(int model_handle_)
@@ -226,7 +238,6 @@ void Animator::HandleLooping(AnimInstance& anim_instance_)
 void Animator::HandleTransition()
 {
 	// 次のアニメーションハンドルが設定されていない場合は処理しない
-	// 
 	if (nextAnim.Handle == -1 ||
 		(isTransitioningImmediately == false &&
 		 currentAnim.PlayTime < animResource->AnimationParameters[currentAnim.Kind]->TransitionOutStartTime))

@@ -17,6 +17,14 @@ Quaternion Quaternion::GetRotateQuaternion(float degree_, Vector3 axis_)
 	return Quaternion(axis_.x * sin, axis_.y * sin, axis_.z * sin, cos);
 }
 
+Quaternion Quaternion::GetQuaternionByForward(const Vector3& forward_)
+{
+	float virtical_theta = asinf(forward_.y);
+	float horizontal_theta = atan2f(-forward_.x, -forward_.z);
+
+	return Quaternion::GetRotateQuaternion(horizontal_theta * 180.0f / (float)DX_PI, Vector3::UP) * Quaternion::GetRotateQuaternion(virtical_theta * 180.0f / (float)DX_PI, Vector3::RIGHT);
+}
+
 Quaternion Quaternion::Slearp(const Quaternion& q_00_, Quaternion q_01_, float t_)
 {
 	// クォータニオンの補間についてChatGPTに確認し、提示されたソースをベースにしています

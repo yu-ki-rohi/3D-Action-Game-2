@@ -34,10 +34,7 @@ void DebugManager::Render()
 {
 #ifdef DEBUG
 	profiler.Render();
+	logger.Render();
 
-	if (CheckHitKey(KEY_INPUT_L))
-	{
-		logger.Render();
-	}
 #endif
 }

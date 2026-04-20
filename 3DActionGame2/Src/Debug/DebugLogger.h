@@ -53,21 +53,21 @@ public:
 private:
 	// Chat GPT‚ğg—p‚µ‚Ä¶¬
 	// •¶š—ñ‚ğ•Ê‚Ìƒƒ‚ƒŠ‚É•¡»
-	char* DuplicateString(const char* src);
+	char* DuplicateString(const char* src_);
 
 	void RenderLog(int num_, const DebugLog& log_);
 
 private:
-	static constexpr int maxNum = 25;
-	static constexpr int left = 200;
+	static constexpr int maxNum = 23;
 	static constexpr int messageLeft = 500;
 	static constexpr int line = 20;
-	static constexpr int up = 10;
 	static constexpr int padding = 5;
-	static constexpr int width = WindowSettings::WindowWidth - left * 2;
-	static constexpr int height = 45;
 	static constexpr int space = 3;
-
+	static constexpr int widthOnSimple = 300;
+	static constexpr int up = 10;
+	static constexpr int leftOnSimple = WindowSettings::WindowWidth - widthOnSimple;
+	static constexpr int leftOnDetail = 200;
+	static constexpr int widthOnDetail = WindowSettings::DefaultWidth - leftOnDetail * 2;
 
 private:
 	const unsigned int messageColor;

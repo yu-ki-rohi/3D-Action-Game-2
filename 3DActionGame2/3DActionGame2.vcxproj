@@ -149,7 +149,9 @@
     <ClCompile Include="Src\AI\BehaviorTree\SelectorNode.cpp" />
     <ClCompile Include="Src\AI\BehaviorTree\SequenceNode.cpp" />
     <ClCompile Include="Src\AI\EnemyBrain.cpp" />
+    <ClCompile Include="Src\AI\EnemyCommnder.cpp" />
     <ClCompile Include="Src\AI\EnemyDirective.cpp" />
+    <ClCompile Include="Src\AI\WorldBlackboard.cpp" />
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Assets\AssetsManager.cpp" />
     <ClCompile Include="Src\Audio\AudioManager.cpp" />
@@ -218,10 +220,10 @@
     <ClInclude Include="Src\AI\IEnemyDirectiveWriter.h" />
     <ClInclude Include="Src\AI\IEnemyReportReader.h" />
     <ClInclude Include="Src\AI\IEnemyReportWriter.h" />
-    <ClInclude Include="Src\AI\NPCActionBase.h" />
     <ClInclude Include="Src\AI\EnemyBrain.h" />
     <ClInclude Include="Src\AI\EnemyCommander.h" />
     <ClInclude Include="Src\AI\EnemyDirective.h" />
+    <ClInclude Include="Src\AI\WorldBlackboard.h" />
     <ClInclude Include="Src\App.h" />
     <ClInclude Include="Src\Assets\AnimationResource.h" />
     <ClInclude Include="Src\Assets\AssetsManager.h" />

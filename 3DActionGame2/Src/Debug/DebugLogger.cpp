@@ -64,8 +64,19 @@ void DebugLogger::RenderLog(int num_, const DebugLog& log_)
         break;
     }
 
-    int this_up = up + (height + space) * num_;
-    DrawBox(left, this_up, left + width, this_up + height, color, TRUE);
-    DrawFormatString(left + padding, this_up + padding, characterColor, "%s ( %d ) : %s", log_.FileName, log_.Line, log_.FuncName);
-    DrawString(left + padding, this_up + padding + line, log_.Message, characterColor);
+    if (CheckHitKey(KEY_INPUT_L))
+    {
+        int height = line * 2 + padding;
+        int this_up = up + (height + space) * num_;
+        DrawBox(leftOnDetail, this_up, leftOnDetail + widthOnDetail, this_up + height, color, TRUE);
+        DrawFormatString(leftOnDetail + padding, this_up + padding, characterColor, "%s ( %d ) : %s", log_.FileName, log_.Line, log_.FuncName);
+        DrawString(leftOnDetail + padding, this_up + padding + line, log_.Message, characterColor);
+    }
+    else
+    {
+        int height = line + padding;
+        int this_up = up + (height + space) * num_;
+        DrawBox(leftOnSimple, this_up, leftOnSimple + widthOnSimple, this_up + height, color, TRUE);
+        DrawString(leftOnSimple + padding, this_up + padding, log_.Message, characterColor);
+    }
 }

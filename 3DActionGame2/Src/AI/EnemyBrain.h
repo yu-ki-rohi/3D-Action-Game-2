@@ -1,14 +1,16 @@
 #pragma once
 #include<memory>
-#include "BehaviorTree/Node.h"
-
-// todo: 前方宣言で出来ないかどうか調べる
-#include "BehaviorTree/CompositeNode.h"
 
 #include "../Common.h"
 #include "../DataBase/DataKind.h"
 
 // AI関連
+
+namespace BehaviorTree
+{
+	enum class Status;
+	class CompositeNode;
+}
 
 // Component関連
 class Animator;
@@ -34,6 +36,8 @@ namespace EnemyAI
 			std::shared_ptr<Collider> attackCollider_,
 			std::shared_ptr<Collider> justAvoidIgnitionCollider_);
 
+		~EnemyBrain();
+
 	public:
 		// NOTE: 既存の枠組みに合わせるため一旦この関数でAnimatorとTransformをセットする形に
 		void SetReference(std::shared_ptr<ObjectBase> owner_, std::shared_ptr<Animator> animator_, std::shared_ptr<Transform> transform_);
@@ -56,21 +60,26 @@ namespace EnemyAI
 		BehaviorTree::Status AttackStart0(float elapsed_time_);
 		BehaviorTree::Status AttackStart1(float elapsed_time_);
 		BehaviorTree::Status AttackStart2(float elapsed_time_);
-		BehaviorTree::Status AttackStart(AKind anim_kind_);
 		BehaviorTree::Status Attack(float elapsed_time_);
+
+
+		BehaviorTree::Status AttackStart(AKind anim_kind_);
 
 		void EnableAttackCollider();
 		void DisableAttackCollider();
+
+		bool IsNullPtrToComponent();
 
 	private:
 		// HACK: 値を適切な場所に移動
 		 
 		// 移動をする閾値
-		static constexpr float moveThreshold = 1.0f;
+		static constexpr float moveStartThreshold = 20.0f;
+		static constexpr float moveEndThreshold = 10.0f;
 		// アニメーション変更のボーダー
 		static constexpr float animationChangeBorderPercentage = 0.9f;
 
-		static constexpr float moveSpeed = 30.0f;
+		static constexpr float moveSpeed = 25.0f;
 
 	private:
 		int id;

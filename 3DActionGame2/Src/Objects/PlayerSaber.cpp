@@ -123,10 +123,6 @@ void PlayerSaber::IgnitAttack()
 
 	// HACK: ƒpƒ‰ƒ[ƒ^‚Ì•ª—£
 
-	float enable_time = 0.38f;
-	float disable_time = 0.85f;
-	float motion_time = 0.8f;
-
 	switch (attackStep)
 	{
 	case 0:
@@ -135,18 +131,15 @@ void PlayerSaber::IgnitAttack()
 		break;
 	case 1:
 		animator->SetNextAnim(AKind::Attack01);
-		motion_time = 0.95f;
 		StepForwardOnAttack(1.5f);
 		break;
 	case 2:
 		animator->SetNextAnim(AKind::Attack02);
 		StepForwardOnAttack(2.2f);
-		motion_time = 0.95f;
 		break;
 	case 3:
 		animator->SetNextAnim(AKind::Attack03);
 		StepForwardOnAttack(2.5f);
-		motion_time = 1.2f;
 		attackStep = -1;
 		break;
 	default:
@@ -155,10 +148,11 @@ void PlayerSaber::IgnitAttack()
 	}
 	attackStep++;
 	canMove = false;
-	PrepareTimer(myTimers[TimerKind::EnableAttackCollider], enable_time, this, &PlayerSaber::EnableAttackCollider);
-	PrepareTimer(myTimers[TimerKind::DisableAttackCollider], disable_time, this, &PlayerSaber::DisableAttackCollider);
-	PrepareTimer(myTimers[TimerKind::FinishAttack], motion_time, this, &PlayerSaber::FinishAttack);
-	PrepareTimer(myTimers[TimerKind::ResetAttackStep], motion_time + 0.4f, this, &PlayerSaber::ResetAttackStep);
+	float combo_continue_grace_period = 0.4f;	// ƒRƒ“ƒ{‚ðŒp‘±‚³‚¹‚é—P—\ŽžŠÔ
+	PrepareTimer(myTimers[TimerKind::EnableAttackCollider], animator->GetActivationTime(), this, &PlayerSaber::EnableAttackCollider);
+	PrepareTimer(myTimers[TimerKind::DisableAttackCollider], animator->GetDeactivationTime(), this, &PlayerSaber::DisableAttackCollider);
+	PrepareTimer(myTimers[TimerKind::FinishAttack], animator->GetTimeUntilStartTransition(), this, &PlayerSaber::FinishAttack);
+	PrepareTimer(myTimers[TimerKind::ResetAttackStep], animator->GetTimeUntilStartTransition() + combo_continue_grace_period, this, &PlayerSaber::ResetAttackStep);
 }
 
 void PlayerSaber::EnableAttackCollider()

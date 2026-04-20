@@ -1,10 +1,12 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "IEnemyDirectiveReader.h"
 #include "IEnemyDirectiveWriter.h"
 #include "EnemyAICommons.h"
 
 struct Vector3;
+class WorldBlackboard;
 
 // 各エネミーに対する指令書のようなもの
 namespace EnemyAI
@@ -12,11 +14,15 @@ namespace EnemyAI
 	class EnemyDirective : public IEnemyDirectiveReader, IEnemyDirectiveWriter
 	{
 	public:
+		EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_);
 
 	public:
-		// TODO: IEnemyDirectiveReaderに純粋仮想関数として宣言
+		static unsigned char MakeDirective(Direction direction_, CombatRange range_, Actions action_);
+	public:
 		Vector3 GetDirectedPosition(int id_) const override;
 		Actions GetDirectedAciton(int id_) const override;
+		Vector3 GetPlayerPosition() const override;
+		int GetDirectivesNum() const override;
 
 		// TODO: IEnemyDirectiveWriterに純粋仮想関数として宣言
 		void SetDirective(int id_, unsigned char directive_);
@@ -30,7 +36,7 @@ namespace EnemyAI
 		void RotatePosition(int id_, signed char num_);
 
 		// 戻り値はインデックス
-		int AddDirective(unsigned char directive_);
+		int AddDirective(unsigned char directive_ = 0);
 
 	private:
 		// 検討事項：マスクの定義の仕方
@@ -45,10 +51,10 @@ namespace EnemyAI
 
 	private:
 		// 待機距離の値
-		static constexpr float inFightDistance = 30.0f;
-		static constexpr float closeRangeDistance = 70.0f;
-		static constexpr float middleRangeDistance = 110.0f;
-		static constexpr float outRangeDistance = 170.0f;
+		static constexpr float inFightDistance = 20.0f;
+		static constexpr float closeRangeDistance = 50.0f;
+		static constexpr float middleRangeDistance = 80.0f;
+		static constexpr float outRangeDistance = 120.0f;
 
 
 	private:
@@ -67,7 +73,7 @@ namespace EnemyAI
 
 
 		// TODO：プレイヤーの座標をどのような経由で参照するか決定
-
+		std::shared_ptr<const WorldBlackboard> worldBrackbord;
 	};
 
 }

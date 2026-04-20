@@ -1,5 +1,7 @@
 #include "EnemyDirective.h"
 #include "../Mathmatics/Vector3.h"
+#include "../Debug/DebugMessenger.h"
+#include "WorldBlackboard.h"
 
 // directives[n]内のビット割り当て内訳
 #define DIRECTION_BIT_NUM 4
@@ -17,9 +19,47 @@
 
 using namespace EnemyAI;
 
+EnemyDirective::EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_) :
+	worldBrackbord(world_blackboard_)
+{
+
+}
+
+unsigned char EnemyDirective::MakeDirective(Direction direction_, CombatRange range_, Actions action_)
+{
+	if (direction_ == Direction::End || range_ == CombatRange::End || action_ == Actions::End)
+	{
+		DebugMessenger::LogError("無効な値が入力されました");
+		return 0;
+	}
+	unsigned char direction = (unsigned char)direction_;
+	unsigned char range = (unsigned char)range_ << DIRECTION_BIT_NUM;
+	unsigned char action = (unsigned char)action_ << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
+	return direction | range | action;
+}
+
 Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 {
-	if (id_ >= directives.size()) { /* todo: 範囲外を指定されたことを表示 */ return Vector3::ZERO; }
+	if (id_ < 0 || id_ >= directives.size())
+	{ 
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return Vector3::ZERO;
+	}
+	if (worldBrackbord == nullptr)
+	{
+		DebugMessenger::LogError("worldBrackbordがnullptrです");
+		return Vector3::ZERO;
+	}
+	try
+	{
+		
+	}
+
+	catch (char* message)
+	{
+		
+	}
+	// TODO: 長いので関数を分ける
 
 	// 現状ステージ内に高低差が存在しないので、yは0.0固定
 	float x, y = 0.0f, z;
@@ -103,7 +143,7 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 		range >>= DIRECTION_BIT_NUM;
 
 		float distance = 0.0f;
-		// 要検討：このキャストの妥当性
+		// 検討事項：このキャストの妥当性
 		switch ((CombatRange)range)
 		{
 		case CombatRange::IN_FIGHT:
@@ -127,42 +167,75 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 	}
 
 	// TODO: プレイヤーの座標を足す
-	return Vector3(x, y, z);
+	return Vector3(x, y, z) + worldBrackbord->GetPlayerPosition();
 }
 
 Actions EnemyDirective::GetDirectedAciton(int id_) const
 {
-	if (id_ >= directives.size()){ /* todo: 範囲外を指定されたことを表示 */ return Actions::STAND_BY; }
+	if (id_ < 0 || id_ >= directives.size())
+	{
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return Actions::STAND_BY;
+	}
+
 	// 検討事項：このキャストの妥当性
 	return (Actions)(directives[id_] >> (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM));
 }
 
+Vector3 EnemyDirective::GetPlayerPosition() const
+{
+	return worldBrackbord->GetPlayerPosition();
+}
+
+int EnemyDirective::GetDirectivesNum() const
+{
+	return directives.size();
+}
 
 void EnemyDirective::SetDirective(int id_, unsigned char directive_)
 {
-	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
+	if (id_ < 0 || id_ >= directives.size())
+	{
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return;
+	}
 	directives[id_] = directive_;
 }
 
 
 void EnemyDirective::SetDirective(int id_, Direction direction_, CombatRange range_, Actions action_)
 {
-	unsigned char direction = (unsigned char)direction_;
-	unsigned char range = (unsigned char)range_ << DIRECTION_BIT_NUM;
-	unsigned char action = (unsigned char)action_ << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
-	SetDirective(id_, direction | range | action);
+	SetDirective(id_, MakeDirective(direction_, range_, action_));
 }
 
 void EnemyDirective::SetDirective(int id_, Direction direction_)
 {
-	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
+	if (id_ < 0 || id_ >= directives.size())
+	{
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return;
+	}
+	if (direction_ == Direction::End)
+	{
+		DebugMessenger::LogError("無効な値が入力されました");
+		return;
+	}
 	directives[id_] &= ~(unsigned char)Mask::DIRECTION;
 	directives[id_] |= (unsigned char)direction_;
 }
 
 void EnemyDirective::SetDirective(int id_, CombatRange range_)
 {
-	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
+	if (id_ < 0 || id_ >= directives.size())
+	{
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return;
+	}
+	if (range_ == CombatRange::End)
+	{
+		DebugMessenger::LogError("無効な値が入力されました");
+		return;
+	}
 	directives[id_] &= ~(unsigned char)Mask::COMBAT_RANGE;
 	unsigned char range = (unsigned char)range_ << DIRECTION_BIT_NUM;
 	directives[id_] |= range;
@@ -170,7 +243,16 @@ void EnemyDirective::SetDirective(int id_, CombatRange range_)
 
 void EnemyDirective::SetDirective(int id_, Actions action_)
 {
-	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
+	if (id_ < 0 || id_ >= directives.size())
+	{
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return;
+	}
+	if (action_ == Actions::End)
+	{
+		DebugMessenger::LogError("無効な値が入力されました");
+		return;
+	}
 	directives[id_] &= ~(unsigned char)Mask::ACTION;
 	unsigned char action = (unsigned char)action_ << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
 	directives[id_] |= action;
@@ -179,7 +261,11 @@ void EnemyDirective::SetDirective(int id_, Actions action_)
 // 現在位置から時計回り正で num_ 移動する地点をセット
 void EnemyDirective::RotatePosition(int id_, signed char num_)
 {
-	if (id_ >= directives.size()) { /* todo: 範囲外が指定されたことを表示 */ return; }
+	if (id_ < 0 || id_ >= directives.size())
+	{
+		DebugMessenger::LogError("配列の範囲外が指定されました");
+		return;
+	}
 
 }
 

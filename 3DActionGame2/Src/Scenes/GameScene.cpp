@@ -22,7 +22,9 @@
 #include "../Input/InputManager.h"
 #include "../Audio/AudioManager.h"
 
+#include "../AI/WorldBlackboard.h"
 #include "../AI/EnemyDirective.h"
+#include "../AI/EnemyCommander.h"
 
 #include "../Debug/DebugManager.h"
 
@@ -151,8 +153,9 @@ void GameScene::UpdateInLoading(float elapsed_time_)
 			MFPCFactory::CreateMFPC(shared_from_this(), this, &GameScene::ReturnTitle)
 		);
 		InputManager::Instance().ChangeMap(InputManager::Map::Player);
+		AudioManager::Instance().SetVolume(155, BGMKind::Main);
 		AudioManager::Instance().PlayMusic(BGMKind::Main);
-		AudioManager::Instance().SetVolume(125, SEKind::HitSlash);
+		AudioManager::Instance().SetVolume(75, SEKind::HitSlash);
 
 		currentStep = Step::Update;
 	}
@@ -228,7 +231,7 @@ void GameScene::SuccessJustAvoid()
 	ChangeBlurRequest(initial, target, duration);
 
 
-	AudioManager::Instance().SetVolume(155, BGMKind::Main);
+	AudioManager::Instance().SetVolume(75, BGMKind::Main);
 
 	const float time_to_reset = 0.08f;
 	const float change_monochrome_time = 2.0f;
@@ -424,19 +427,17 @@ void GameScene::GenerateObjects()
 		Vector3(0.0f, 0.0f, 0.0f),
 	};
 
-	auto directive = std::make_shared<EnemyAI::EnemyDirective>();
-
-	unsigned char derectives[enemy_num] = {
-		0,
-		16,
-		32
-	};
+	auto world_blackboard = std::make_shared<WorldBlackboard>(player->GetComponent<Transform>());
+	auto directive = std::make_shared<EnemyAI::EnemyDirective>(world_blackboard);
 
 	for (int i = 0; i < enemy_num; ++i)
 	{
-		auto enemy = objectFactory->CreateEnemy(initial_positions[i], initial_rotations[i], directive->AddDirective(derectives[i]), directive);
+		auto enemy = objectFactory->CreateEnemy(initial_positions[i], initial_rotations[i], directive->AddDirective(), directive);
 
 	}
+
+	enemyCommander = std::make_shared<EnemyAI::EnemyCommander>(directive);
+	enemyCommander->Command();
 
 	objectFactory->CreateStage();
 
@@ -477,7 +478,7 @@ void GameScene::FinishJustAvoidTime()
 		objectFactory->SetIsJustAvoidTime(false);
 	}
 
-	AudioManager::Instance().SetVolume(255, BGMKind::Main);
+	AudioManager::Instance().SetVolume(155, BGMKind::Main);
 
 	isJustAvoidTime = false;
 }

@@ -50,26 +50,47 @@ const Quaternion& Transform::GetQuaternion() const
 
 void Transform::SetForward(const Vector3& forward_)
 {
-	float virtical_theta = asinf(forward_.y);
-	float horizontal_theta = atan2f(-forward_.x, -forward_.z);
-
-	quaternion = 
-		Quaternion::GetRotateQuaternion(horizontal_theta * 180.0f / (float)DX_PI, Vector3::UP) *
-		Quaternion::GetRotateQuaternion(virtical_theta * 180.0f / (float)DX_PI, Vector3::RIGHT);
-
+	StartSlearpByForwardAndDuration(forward_, 0.0f);/*
+	quaternion = Quaternion::GetQuaternionByForward(forward_);
 	rotateAngle = quaternion.ToEuler();
+	isSlearp = false;*/
 }
 
 void Transform::SetRotate(const Vector3& rotate_)
 {
 	rotateAngle = rotate_;
 	quaternion = Quaternion::ConvertFromEular(rotate_);
+	isSlearp = false;
 }
 
 void Transform::SetQuaternion(const Quaternion& quaternion_)
 {
 	quaternion = quaternion_;
 	rotateAngle = quaternion.ToEuler();
+	isSlearp = false;
+}
+
+void Transform::StartSlearpByForwardAndDuration(const Vector3& target_forward_, float duration_)
+{
+	slearpTarget = Quaternion::GetQuaternionByForward(target_forward_);
+	slearpDuration = duration_;
+
+	slearpInit = quaternion;
+	slearpTime = 0.0f;
+
+	isSlearp = true;
+}
+
+void Transform::StartSlearpByForwardAndAngularVelocity(const Vector3& target_forward_, float angular_velocity_)
+{
+	// 角速度0ならば回転しない
+	if (angular_velocity_ == 0.0f) { return; }
+	float dot = Vector3::Dot(target_forward_.Normalize(), quaternion.GetForward());
+	float radian = acosf(dot);
+
+	float duration = radian * 180.0f / DX_PI / angular_velocity_;
+	
+	StartSlearpByForwardAndDuration(target_forward_, duration);
 }
 
 void Transform::UpdateFromMatrix(const MATRIX& transform_mat_)
@@ -98,6 +119,30 @@ void Transform::UpdateFromMatrix(const MATRIX& transform_mat_)
 	// colを並べたものが回転行列なので、ここではクォータニオンへの変換をする。
 	quaternion = Quaternion::ConvertFrom3x3Matrix(col[0], col[1], col[2]);
 
+}
+
+void Transform::Update(float elapsed_time_)
+{
+	if (isSlearp)
+	{
+		SlearpRotation(elapsed_time_);
+	}
+}
+
+void Transform::SlearpRotation(float elapsed_time_)
+{
+	if (slearpTime < fabsf(slearpDuration))
+	{
+		slearpTime += elapsed_time_;
+		quaternion = Quaternion::Slearp(slearpInit, slearpTarget, slearpTime / slearpDuration);
+		rotateAngle = quaternion.ToEuler();
+	}
+	else
+	{
+		quaternion = slearpTarget;
+		rotateAngle = quaternion.ToEuler();
+		isSlearp = false;
+	}
 }
 
 void Transform::RotateAxisX(float angle_)

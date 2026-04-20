@@ -61,6 +61,8 @@ public:
 
 	void SetAnimTimerAdjuster(float value_);
 
+	// 現在再生中のものと同一のアニメーションへの遷移を許可するか設定する
+	void SetIsAllowedToTransitionSameCurrent(bool value_);
 
 public:
 
@@ -96,6 +98,8 @@ private:
 	float currentAnimBlendRate = 1.0f;
 
 	bool isTransitioningImmediately = false;
+
+	bool isAllowedToTransitionSameCurrent = false;
 
 private:
 	static constexpr float minChangingTime = 0.001f;

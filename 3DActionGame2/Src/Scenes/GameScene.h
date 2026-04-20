@@ -10,6 +10,11 @@ class AssetsManager;
 class CameraManager;
 class ObjectFactory;
 class PlayerEventNotifier;
+class WorldBlackboard;
+namespace EnemyAI
+{
+	class EnemyCommander;
+}
 
 class GameScene : public SceneBase
 {
@@ -79,6 +84,9 @@ private:
 	std::shared_ptr<ObjectFactory> objectFactory;
 
 	std::shared_ptr<PlayerEventNotifier> playerEventNotifier;
+
+	std::shared_ptr<WorldBlackboard> worldBrackboard;
+	std::shared_ptr<EnemyAI::EnemyCommander> enemyCommander;
 
 	// ÉçÅ[Éhóp
 

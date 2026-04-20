@@ -23,6 +23,9 @@ public:
 	// 角度の単位は度数
 	static Quaternion GetRotateQuaternion(float degree_, Vector3 axis_);
 
+	// ワールド空間における上方向を上向きとして回転
+	static Quaternion GetQuaternionByForward(const Vector3& forward_);
+
 	// 球面線形補間
 	static Quaternion Slearp(const Quaternion& q_00_, Quaternion q_01_, float t_);
 

@@ -30,6 +30,10 @@ void CharacterBase::Start()
 	{
 		isActive = false;
 	}
+
+	animator->SetIsAllowedToTransitionSameCurrent(true);
+	animator->SetNextAnim(AKind::Idle);
+	animator->SetIsAllowedToTransitionSameCurrent(false);
 }
 
 void  CharacterBase::FixedUpdate()
@@ -42,6 +46,8 @@ void CharacterBase::Update(float elapsed_time_)
 	UpdateBehavior(elapsed_time_ * localTimeScale);
 
 	animator->Update(elapsed_time_ * localTimeScale);
+
+	transform->Update(elapsed_time_ * localTimeScale);
 
 	UpdateMonochrome(elapsed_time_);
 }

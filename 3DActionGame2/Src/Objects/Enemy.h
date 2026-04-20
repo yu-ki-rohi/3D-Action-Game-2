@@ -26,8 +26,6 @@ public:
 	void FixedUpdate() override;
 	void Render() override;
 
-	
-
 protected:
 	virtual void UpdateBehavior(float elapsed_time_) override;
 	void UpdateCollider() override;
@@ -37,10 +35,11 @@ private:
 	void DisableAttackCollider();
 
 	// NOTE: オブジェクトの生成とコンポーネントアタッチに時差があるため用意
-	// HACK: 設計の見直し
+	// HACK: 設計の見直しを検討
 	void SetupBrain();
 
 	void SetupColliders();
+
 private:
 	const std::shared_ptr<BoxCollider> attackCollider;
 	const std::shared_ptr<BoxCollider> bodyCollider;
