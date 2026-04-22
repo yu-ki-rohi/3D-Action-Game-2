@@ -1,6 +1,7 @@
 #include "DebugLogger.h"
-#include <cstring>
 #include "DxLib.h"
+
+#include "DebugMessenger.h"
 
 DebugLogger::DebugLogger() :
     messageColor(GetColor( 0, 255, 0)),
@@ -10,9 +11,10 @@ DebugLogger::DebugLogger() :
 {
 
 }
+
 void DebugLogger::AddDebugLog(DebugLog::Type type_, const char* message_, const std::source_location& loc_)
 {
-    logs[nextIndex] = std::make_unique<DebugLog>(type_, DuplicateString(message_), DuplicateString(loc_.file_name()), loc_.line(), DuplicateString(loc_.function_name()));
+    logs[nextIndex] = std::make_unique<DebugLog>(type_, message_, loc_.file_name(), loc_.line(), loc_.function_name());
     ++nextIndex;
     if (nextIndex >= maxNum)
     {
@@ -20,15 +22,34 @@ void DebugLogger::AddDebugLog(DebugLog::Type type_, const char* message_, const 
     }
 }
 
-char* DebugLogger::DuplicateString(const char* src)
+
+void DebugLogger::Update(float elapsed_time_)
 {
-    if (src == nullptr) { return nullptr; }
+    int currentLKeyState = CheckHitKey(KEY_INPUT_L);
+    if (currentLKeyState == 1 && previousLKyeState == 0)
+    {
+        state = (State)((state + 1) % State::Max);
+        scroll = 0;
+    }
+    previousLKyeState = currentLKeyState;
 
-    size_t len = std::strlen(src) + 1;
-    char* dst = new char[len];
-    strcpy_s(dst, len, src);
-
-    return dst;
+    if (state == State::Detail)
+    {
+        if (CheckHitKey(KEY_INPUT_UP))
+        {
+            int new_scroll = scroll + scrollSpeed * elapsed_time_;
+            int scroll_max = defaultUp + (line * 2 + padding + space) * (maxNum + 1) - WindowSettings::WindowHeight;
+            scroll_max <<= pointPosition;
+            scroll = (new_scroll < scroll_max) ? new_scroll : scroll_max;
+        }
+        else if (CheckHitKey(KEY_INPUT_DOWN))
+        {
+            int new_scroll = scroll - scrollSpeed * elapsed_time_;
+            int scroll_min = 0;
+            scroll_min <<= pointPosition;
+            scroll = (scroll_min < new_scroll) ? new_scroll : scroll_min;
+        }
+    }
 }
 
 void DebugLogger::Render()
@@ -64,19 +85,22 @@ void DebugLogger::RenderLog(int num_, const DebugLog& log_)
         break;
     }
 
-    if (CheckHitKey(KEY_INPUT_L))
+    if (state == State::Detail)
     {
         int height = line * 2 + padding;
-        int this_up = up + (height + space) * num_;
+        int this_up = defaultUp - (scroll >> pointPosition) + (height + space) * num_;
+        if (this_up > WindowSettings::WindowHeight ||
+            this_up + height < 0) { return; }
         DrawBox(leftOnDetail, this_up, leftOnDetail + widthOnDetail, this_up + height, color, TRUE);
-        DrawFormatString(leftOnDetail + padding, this_up + padding, characterColor, "%s ( %d ) : %s", log_.FileName, log_.Line, log_.FuncName);
-        DrawString(leftOnDetail + padding, this_up + padding + line, log_.Message, characterColor);
+        DrawFormatString(leftOnDetail + padding, this_up + padding, characterColor, "%s ( %d ) : %s", log_.FileName.c_str(), log_.Line, log_.FuncName.c_str());
+        DrawString(leftOnDetail + padding, this_up + padding + line, log_.Message.c_str(), characterColor);
     }
-    else
+    else if(state == State::Simple)
     {
         int height = line + padding;
-        int this_up = up + (height + space) * num_;
+        int this_up = defaultUp + (height + space) * num_;
+        if (this_up > WindowSettings::WindowHeight) { return; }
         DrawBox(leftOnSimple, this_up, leftOnSimple + widthOnSimple, this_up + height, color, TRUE);
-        DrawString(leftOnSimple + padding, this_up + padding, log_.Message, characterColor);
+        DrawString(leftOnSimple + padding, this_up + padding, log_.Message.c_str(), characterColor);
     }
 }

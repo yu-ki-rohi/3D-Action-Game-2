@@ -31,6 +31,8 @@ public:
 		}
 	}
 
+	virtual ~Collider() = default;
+
 public:
 	// アクセサ
 	virtual Vector3 GetPosition() const = 0;

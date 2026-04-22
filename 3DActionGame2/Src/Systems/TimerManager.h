@@ -9,8 +9,6 @@ class TimerManager
 public:
 	// Timer‚Ì’Ç‰Á
 	std::shared_ptr<TimerBase> Add(std::shared_ptr<TimerBase> timer_);
-	// w’èTimer‚Ìœ‹
-	void Remove(std::shared_ptr<TimerBase> timer_);
 
 	void Update(float elapsed_time_);
 

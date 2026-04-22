@@ -20,6 +20,7 @@ namespace EnemyAI
 		static unsigned char MakeDirective(Direction direction_, CombatRange range_, Actions action_);
 	public:
 		Vector3 GetDirectedPosition(int id_) const override;
+		Vector3 GetDirectedRelativePositionToPlayer(int id_) const override;
 		Actions GetDirectedAciton(int id_) const override;
 		Vector3 GetPlayerPosition() const override;
 		int GetDirectivesNum() const override;

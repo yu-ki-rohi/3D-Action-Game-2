@@ -75,6 +75,8 @@ void SceneManager::Main(float elapsed_time_)
 #ifdef DEBUG
 	// Input の処理時間を記録
 	DebugManager::Instance().Stamp(Profiler::Type::Input);
+
+	DebugManager::Instance().Update(elapsed_time_);
 #endif
 
 	// フレーム毎の更新処理
@@ -188,7 +190,7 @@ void SceneManager::Render(float elapsed_time_)
 #ifdef DEBUG
 void SceneManager::DebugView()
 {
-	DebugManager::Instance().Update();
+	DebugManager::Instance().UpdateProfiler();
 	DebugManager::Instance().ResetTimes();
 	numView = num;
 	fixedNumView = fixedNum;

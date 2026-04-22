@@ -65,9 +65,13 @@ public:
 	float sqrLength() const;
 
 	// 線への射影
-	Vector3 Projection(Vector3 axis_);
+	Vector3 Projection(Vector3 axis_) const;
 	// 面への射影
-	Vector3 Projection(Vector3 axis_01_, Vector3 axis_02_);
+	Vector3 Projection(Vector3 axis_01_, Vector3 axis_02_) const;
+
+	// 引数のベクトルが自身に対して右か左かを返す
+	// 右: 1, 左: -1, それ以外: 0
+	float JudgeLeftOrRight(const Vector3& other_) const;
 
 	VECTOR ToVECTOR() const;
 	DirectX::XMFLOAT3 ToXMFLOAT3() const;

@@ -5,5 +5,7 @@
 class MemberFunctionPointerContainerBase
 {
 public:
+	virtual ~MemberFunctionPointerContainerBase() = default;
+public:
 	virtual void CallFunction() = 0;
 };

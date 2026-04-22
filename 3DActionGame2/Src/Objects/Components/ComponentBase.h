@@ -9,6 +9,10 @@ class Collider;
 class ComponentBase
 {
 public:
+
+	virtual ~ComponentBase() = default;
+
+public:
 	// “–‚½‚è”»’è
 	virtual void OnTriggerEnter(std::shared_ptr<Collider> other_) {}
 	virtual void OnTriggerStay(std::shared_ptr<Collider> other_){}

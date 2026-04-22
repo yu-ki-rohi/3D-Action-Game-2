@@ -3,7 +3,7 @@
 #include <memory>
 #include "DataKind.h"
 
-#define ANIMATION_NUM 13
+#define ANIMATION_NUM 16
 
 // ファイル名とかの管理はもっといいやり方を模索したい
 // csvからの読み込みやVBAを使って生成するなど
@@ -24,7 +24,10 @@ struct AnimationFileList
 		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack00,"Res/Models/Enemy/Enemy_Attack1.mv1")),
 		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack01,"Res/Models/Enemy/Enemy_Attack2.mv1")),
 		std::make_pair(MKind::Enemy,std::make_pair(AKind::Attack02,"Res/Models/Enemy/Enemy_Attack3.mv1")),
-		std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkF,"Res/Models/Enemy/Enemy_WalkF.mv1"))
+		std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkF,"Res/Models/Enemy/Enemy_WalkF.mv1")),
+		std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkL,"Res/Models/Enemy/Enemy_WalkL.mv1")),
+		std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkR,"Res/Models/Enemy/Enemy_WalkR.mv1")),
+		std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkB,"Res/Models/Enemy/Enemy_WalkB.mv1"))
 	};
 };
 
@@ -184,6 +187,42 @@ struct AnimationParametersList
 	std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkF,
 		std::make_shared<AnimationParameters>(
 			1.0f,
+			0.3f,
+			0.0f,
+			0.3f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			true
+		))),
+	std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkL,
+		std::make_shared<AnimationParameters>(
+			0.8f,
+			0.3f,
+			0.0f,
+			0.3f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			true
+		))),
+	std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkR,
+		std::make_shared<AnimationParameters>(
+			0.8f,
+			0.3f,
+			0.0f,
+			0.3f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			true
+		))),
+	std::make_pair(MKind::Enemy,std::make_pair(AKind::WalkB,
+		std::make_shared<AnimationParameters>(
+			2.5f,
 			0.3f,
 			0.0f,
 			0.3f,

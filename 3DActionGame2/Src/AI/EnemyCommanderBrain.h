@@ -1,7 +1,6 @@
 #pragma once
 #include<memory>
 
-class IEnemyReportReader;
 
 class TimerBase;
 
@@ -10,18 +9,18 @@ class TimerBase;
 namespace EnemyAI
 {
 	class EnemyDirective;
+	class IEnemyReportReader;
 
-	class EnemyCommander : public std::enable_shared_from_this<EnemyCommander>
+	class EnemyCommanderBrain : public std::enable_shared_from_this<EnemyCommanderBrain>
 	{
 	public:
-		EnemyCommander(std::shared_ptr<EnemyDirective> directives_);
+		EnemyCommanderBrain(std::shared_ptr<EnemyDirective> directives_);
 
 	public:
 		void Command();
 
 	private:
 		std::shared_ptr<EnemyDirective> directives;
-		std::shared_ptr<TimerBase> commandTimer;
 
 	};
 }

@@ -55,7 +55,12 @@ namespace EnemyAI
 		// 実際の行動として登録する関数
 		// HACK: 関数の中身の修正
 		BehaviorTree::Status MoveStart(float elapsed_time_);
-		BehaviorTree::Status Move(float elapsed_time_);
+		BehaviorTree::Status MoveForwardStart(float elapsed_time_);
+		BehaviorTree::Status MoveForward(float elapsed_time_);
+		BehaviorTree::Status MoveSide(float elapsed_time_);
+		BehaviorTree::Status MoveSideStart(float elapsed_time_);
+		BehaviorTree::Status MoveBackward(float elapsed_time_);
+		BehaviorTree::Status MoveBackwardStart(float elapsed_time_);
 		BehaviorTree::Status Idle(float elapsed_time_);
 		BehaviorTree::Status AttackStart0(float elapsed_time_);
 		BehaviorTree::Status AttackStart1(float elapsed_time_);
@@ -79,7 +84,10 @@ namespace EnemyAI
 		// アニメーション変更のボーダー
 		static constexpr float animationChangeBorderPercentage = 0.9f;
 
-		static constexpr float moveSpeed = 25.0f;
+		static constexpr float moveForwardSpeed = 25.0f;
+		static constexpr float moveSideSpeed = 60.0f;
+		static constexpr float moveBackwardSpeed = 15.0f;
+		static constexpr float rotateSpeed = 150.0f;
 
 	private:
 		int id;

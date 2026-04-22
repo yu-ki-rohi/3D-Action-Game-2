@@ -25,6 +25,9 @@ public:
 	}
 
 public:
+	virtual ~SceneBase() = default;
+
+public:
 	// Step::Update‚Ås‚í‚ê‚éˆ—
 	virtual void Start() = 0;
 	virtual void FixedUpdate() = 0;

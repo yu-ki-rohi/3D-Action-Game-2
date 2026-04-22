@@ -1,5 +1,4 @@
 #include "EnemyBrain.h"
-#include "EnemyCommander.h"
 #include "IEnemyDirectiveReader.h"
 #include "../Objects/Components/Transform.h"
 #include "../Objects/Components/Animator.h"
@@ -28,12 +27,22 @@ EnemyBrain::EnemyBrain(
 	
 	// 移動ノードの末端ノードを作成
 	std::unique_ptr<LeafNode> moveStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveStart(elapsed_time_); });
-	std::unique_ptr<LeafNode> move = std::make_unique<LeafNode>([this](float elapsed_time_) { return Move(elapsed_time_); });
+	std::unique_ptr<LeafNode> moveBackwardStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveBackwardStart(elapsed_time_); });
+	std::unique_ptr<LeafNode> moveBackward = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveBackward(elapsed_time_); });
+	std::unique_ptr<LeafNode> moveSideStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveSideStart(elapsed_time_); });
+	std::unique_ptr<LeafNode> moveSide = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveSide(elapsed_time_); });
+	std::unique_ptr<LeafNode> moveForwardStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveForwardStart(elapsed_time_); });
+	std::unique_ptr<LeafNode> moveForward = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveForward(elapsed_time_); });
 
 	// 移動シークエンスの作成・登録
 	std::unique_ptr<CompositeNode> moveSequence = std::make_unique<SequenceNode>();
 	moveSequence->AddNode(std::move(moveStart));
-	moveSequence->AddNode(std::move(move));
+	moveSequence->AddNode(std::move(moveBackwardStart));
+	moveSequence->AddNode(std::move(moveBackward));
+	moveSequence->AddNode(std::move(moveSideStart));
+	moveSequence->AddNode(std::move(moveSide));
+	moveSequence->AddNode(std::move(moveForwardStart));
+	moveSequence->AddNode(std::move(moveForward));
 
 
 	// 攻撃0ノードの末端ノードを作成
@@ -115,17 +124,20 @@ Status EnemyBrain::MoveStart(float elapsed_time_)
 	{
 		return Status::Failure;
 	}
-
-	animator->SetNextAnim(AKind::WalkF);
-
-	transform->SetForward(directive->GetDirectedPosition(id) - transform->Position);
-	transform->StartSlearpByForwardAndAngularVelocity(directive->GetDirectedPosition(id) - transform->Position, 150.0f);
-
 	DebugMessenger::Log("エネミー：移動シークエンス開始");
 	return Status::Success;
 }
 
-Status EnemyBrain::Move(float elapsed_time_)
+Status EnemyBrain::MoveForwardStart(float elapsed_time_)
+{
+	animator->SetNextAnim(AKind::WalkF);
+
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetDirectedPosition(id) - transform->Position, rotateSpeed);
+
+	return Status::Success;
+}
+
+Status EnemyBrain::MoveForward(float elapsed_time_)
 {
 	if ((directive->GetDirectedPosition(id) - transform->Position).sqrLength() < moveEndThreshold * moveEndThreshold)
 	{
@@ -133,10 +145,89 @@ Status EnemyBrain::Move(float elapsed_time_)
 		return Status::Success;
 	}
 
-	transform->SetForward(directive->GetDirectedPosition(id) - transform->Position);
-	transform->StartSlearpByForwardAndAngularVelocity(directive->GetDirectedPosition(id) - transform->Position, 150.0f);
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetDirectedPosition(id) - transform->Position, rotateSpeed);
 
-	transform->Position += transform->GetForward() * moveSpeed * elapsed_time_;
+	transform->Position += transform->GetForward() * moveForwardSpeed * elapsed_time_;
+	return Status::Running;
+}
+
+Status EnemyBrain::MoveSideStart(float elapsed_time_)
+{
+	// 現在のプレイヤー位置から見た相対位置
+	Vector3 relative_position_to_player = transform->Position - directive->GetPlayerPosition();
+	// 現在の位置ベクトルから目標位置ベクトルへの垂線ベクトル
+	Vector3 perpendicular = relative_position_to_player.Projection(directive->GetDirectedRelativePositionToPlayer(id)) - relative_position_to_player;
+	
+	// 垂線が十分短い且つ相対位置が指示座標と同方向の時
+	if (perpendicular.sqrLength() < moveEndThreshold * moveEndThreshold &&
+		Vector3::Dot(relative_position_to_player, directive->GetDirectedRelativePositionToPlayer(id)) > 0)
+	{
+		return Status::Success;
+	}
+
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
+
+	if (relative_position_to_player.JudgeLeftOrRight(directive->GetDirectedRelativePositionToPlayer(id)) > 0)
+	{
+		animator->SetNextAnim(AKind::WalkL);
+	}
+	else
+	{
+		animator->SetNextAnim(AKind::WalkR);
+	}
+
+	return Status::Success;
+}
+
+Status EnemyBrain::MoveSide(float elapsed_time_)
+{
+	// 現在のプレイヤー位置から見た相対位置
+	Vector3 relative_position_to_player = transform->Position - directive->GetPlayerPosition();
+	// 現在の位置ベクトルから目標位置ベクトルへの垂線ベクトル
+	Vector3 perpendicular = relative_position_to_player.Projection(directive->GetDirectedRelativePositionToPlayer(id)) - relative_position_to_player;
+
+	// 垂線が十分短い且つ相対位置が指示座標と同方向の時
+	if (perpendicular.sqrLength() < moveEndThreshold * moveEndThreshold &&
+		Vector3::Dot(relative_position_to_player, directive->GetDirectedRelativePositionToPlayer(id)) > 0)
+	{
+		return Status::Success;
+	}
+
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
+
+	if (relative_position_to_player.JudgeLeftOrRight(directive->GetDirectedRelativePositionToPlayer(id)) > 0)
+	{
+		transform->Position -= transform->GetRight() * moveSideSpeed * elapsed_time_;
+	}
+	else
+	{
+		transform->Position += transform->GetRight() * moveSideSpeed * elapsed_time_;
+	}
+	return Status::Running;
+}
+
+Status EnemyBrain::MoveBackwardStart(float elapsed_time_)
+{
+	// 「自身とプレイヤーの距離」が「指示位置とプレイヤーの距離」より離れているときは即終了
+	if (directive->GetDirectedRelativePositionToPlayer(id).sqrLength() < (transform->Position - directive->GetPlayerPosition()).sqrLength())
+	{
+		return Status::Success;
+	}
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
+	animator->SetNextAnim(AKind::WalkB);
+	return Status::Success;
+}
+
+Status EnemyBrain::MoveBackward(float elapsed_time_)
+{
+	// 「自身とプレイヤーの距離」が「指示位置とプレイヤーの距離」より離れているときに終了
+	if ((directive->GetDirectedPosition(id) - directive->GetPlayerPosition()).sqrLength() < (transform->Position - directive->GetPlayerPosition()).sqrLength())
+	{
+		return Status::Success;
+	}
+
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
+	transform->Position -= transform->GetForward() * moveBackwardSpeed * elapsed_time_;
 	return Status::Running;
 }
 
@@ -144,6 +235,8 @@ Status EnemyBrain::Idle(float elapsed_time_)
 {
 	animator->SetIsAllowedToTransitionSameCurrent(false);
 	animator->SetNextAnim(AKind::Idle);
+	animator->SetIsAllowedToTransitionSameCurrent(true);
+	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
 	return Status::Success;
 }
 

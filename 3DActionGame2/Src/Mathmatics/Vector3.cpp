@@ -177,19 +177,36 @@ float Vector3::sqrLength() const
 	return Dot(*this, *this);
 }
 
-Vector3 Vector3::Projection(Vector3 axis_)
+Vector3 Vector3::Projection(Vector3 axis_) const
 {
 	axis_ = axis_.Normalize();
 	
 	return axis_ * Dot(*this, axis_);
 }
 
-Vector3 Vector3::Projection(Vector3 axis_01_, Vector3 axis_02_)
+Vector3 Vector3::Projection(Vector3 axis_01_, Vector3 axis_02_) const
 {
 	axis_01_ = axis_01_.Normalize();
 	axis_02_ = axis_02_.Normalize();
 
 	return *this - Projection(Cross(axis_01_, axis_02_));
+}
+
+float Vector3::JudgeLeftOrRight(const Vector3& other_) const
+{
+	Vector3 cross = Cross(*this, other_);
+	if (cross.y > 0)
+	{
+		return 1.0f;
+	}
+	else if(cross.y < 0)
+	{
+		return -1.0f;
+	}
+	else
+	{
+		return 0.0f;
+	}
 }
 
 VECTOR Vector3::ToVECTOR() const

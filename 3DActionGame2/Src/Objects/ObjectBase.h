@@ -18,7 +18,7 @@ public:
 	};
 public:
 	ObjectBase() : isActive(true) {}
-	~ObjectBase() = default;
+	virtual ~ObjectBase() = default;
 
 public:
 	// アクセサ

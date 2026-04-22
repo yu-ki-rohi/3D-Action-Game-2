@@ -7,16 +7,11 @@ std::shared_ptr<TimerBase> TimerManager::Add(std::shared_ptr<TimerBase> timer_)
 	return timer_;
 }
 
-void TimerManager::Remove(std::shared_ptr<TimerBase> timer_)
-{
-	timers.erase(std::remove(timers.begin(), timers.end(), timer_), timers.end());
-}
-
 void TimerManager::Erase()
 {
 	for (auto itr = timers.begin(); itr != timers.end(); )
 	{
-		if (*itr != nullptr && (*itr)->IsActive() == false)
+		if (*itr == nullptr || (*itr)->IsActive() == false)
 		{
 			itr = timers.erase(itr);
 		}

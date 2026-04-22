@@ -226,8 +226,11 @@
     <ClCompile Include="Src\AI\WorldBlackboard.cpp">
       <Filter>Src\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Src\AI\EnemyCommnder.cpp">
+    <ClCompile Include="Src\AI\EnemyCommnderBrain.cpp">
       <Filter>Src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Objects\EnemyCommander.cpp">
+      <Filter>Src\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -456,7 +459,7 @@
     <ClInclude Include="Src\Collision\IColliderRegister.h">
       <Filter>Src\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Src\AI\EnemyCommander.h">
+    <ClInclude Include="Src\AI\EnemyCommanderBrain.h">
       <Filter>Src\AI</Filter>
     </ClInclude>
     <ClInclude Include="Src\AI\EnemyBrain.h">
@@ -521,6 +524,9 @@
     </ClInclude>
     <ClInclude Include="Src\AI\WorldBlackboard.h">
       <Filter>Src\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Objects\EnemyCommander.h">
+      <Filter>Src\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

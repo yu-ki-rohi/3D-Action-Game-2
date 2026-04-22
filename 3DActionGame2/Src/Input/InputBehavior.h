@@ -15,7 +15,7 @@ class InputBehavior
 {
 public:
 	InputBehavior();
-	~InputBehavior();
+	virtual ~InputBehavior();
 public:
 	
 public:

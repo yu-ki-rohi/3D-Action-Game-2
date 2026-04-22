@@ -11,9 +11,12 @@ public:
 
 	void Stamp(Profiler::Type type_);
 	void ResetTimes();
+	void UpdateProfiler();
 
-	void Update();
+	void Update(float elapsed_time_);
 	void Render();
+
+
 
 private:
 #ifdef DEBUG

@@ -11,6 +11,8 @@ public:
 
 	}
 
+	virtual ~TimerBase() = default;
+
 	// Œo‰ßŽžŠÔ
 	float GetElapsedTime()
 	{

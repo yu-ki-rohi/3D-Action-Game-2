@@ -18,6 +18,7 @@
 #include "CameraTPS.h"
 #include "PlayerSaber.h"
 #include "Enemy.h"
+#include "EnemyCommander.h"
 
 #include "FlashEffect.h"
 
@@ -96,6 +97,15 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rot
 
 	obj->SetColliderRegisterInterface(collider_interface);
 
+	CommonProcessWhenCreate(obj, object_manager);
+	return obj;
+}
+
+std::shared_ptr<EnemyCommander> ObjectFactory::CreateEnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directive_)
+{
+	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
+	if (!object_manager) { return nullptr; }
+	auto obj = std::make_shared<EnemyCommander>(directive_);
 	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
 }

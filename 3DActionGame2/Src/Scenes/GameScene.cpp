@@ -24,7 +24,7 @@
 
 #include "../AI/WorldBlackboard.h"
 #include "../AI/EnemyDirective.h"
-#include "../AI/EnemyCommander.h"
+#include "../Objects/EnemyCommander.h"
 
 #include "../Debug/DebugManager.h"
 
@@ -436,8 +436,7 @@ void GameScene::GenerateObjects()
 
 	}
 
-	enemyCommander = std::make_shared<EnemyAI::EnemyCommander>(directive);
-	enemyCommander->Command();
+	objectFactory->CreateEnemyCommander(directive);
 
 	objectFactory->CreateStage();
 

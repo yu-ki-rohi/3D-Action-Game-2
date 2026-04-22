@@ -40,8 +40,13 @@ unsigned char EnemyDirective::MakeDirective(Direction direction_, CombatRange ra
 
 Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 {
+	return GetDirectedRelativePositionToPlayer(id_) + worldBrackbord->GetPlayerPosition();
+}
+
+Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
+{
 	if (id_ < 0 || id_ >= directives.size())
-	{ 
+	{
 		DebugMessenger::LogError("配列の範囲外が指定されました");
 		return Vector3::ZERO;
 	}
@@ -49,15 +54,6 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 	{
 		DebugMessenger::LogError("worldBrackbordがnullptrです");
 		return Vector3::ZERO;
-	}
-	try
-	{
-		
-	}
-
-	catch (char* message)
-	{
-		
 	}
 	// TODO: 長いので関数を分ける
 
@@ -88,7 +84,7 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 		// 符号の抽出
 		float sign = (float)(direction >> (DIRECTION_BIT_NUM - 1));
 		sign = sign * 2.0f * -1.0f + 1.0f;	// 0 → 1, 1 → -1 に変換
-		
+
 		// 方位情報から符号情報を除去
 		direction &= ~(1 << (DIRECTION_BIT_NUM - 1));
 
@@ -116,7 +112,7 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 			break;
 
 		case 1:
-			x = sin_table[SIN_TABLE_NUM - 1 - direction];	
+			x = sin_table[SIN_TABLE_NUM - 1 - direction];
 			z = -sin_table[direction];
 			break;
 
@@ -135,7 +131,7 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 		z *= sign;
 
 	}
-	
+
 	// 距離確認
 	{
 		// 距離情報の抜き出し
@@ -167,9 +163,8 @@ Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 	}
 
 	// TODO: プレイヤーの座標を足す
-	return Vector3(x, y, z) + worldBrackbord->GetPlayerPosition();
+	return Vector3(x, y, z);
 }
-
 Actions EnemyDirective::GetDirectedAciton(int id_) const
 {
 	if (id_ < 0 || id_ >= directives.size())

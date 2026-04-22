@@ -23,10 +23,17 @@ void DebugManager::ResetTimes()
 #endif
 }
 
-void DebugManager::Update()
+void DebugManager::UpdateProfiler()
 {
 #ifdef DEBUG
 	profiler.Update();
+#endif
+}
+
+void DebugManager::Update(float elapsed_time_)
+{
+#ifdef DEBUG
+	logger.Update(elapsed_time_);
 #endif
 }
 
