@@ -3,7 +3,7 @@
 
 std::shared_ptr<TimerBase> TimerManager::Add(std::shared_ptr<TimerBase> timer_)
 {
-	timers.push_back(timer_);
+	pendingStartTimers.push_back(timer_);
 	return timer_;
 }
 
@@ -25,6 +25,15 @@ void TimerManager::Erase()
 void TimerManager::EraseAll()
 {
 	timers.clear();
+}
+
+void TimerManager::Entry()
+{
+	for (auto& pending : pendingStartTimers)
+	{
+		timers.push_back(pending);
+	}
+	pendingStartTimers.clear();
 }
 
 void TimerManager::Update(float elapsed_time_)

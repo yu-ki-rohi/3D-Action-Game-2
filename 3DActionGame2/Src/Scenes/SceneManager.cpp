@@ -53,7 +53,9 @@ void SceneManager::Main(float elapsed_time_)
 	currentScene->Start();
 
 	// タイマー更新
+	TimerManager::Instance().Entry();
 	TimerManager::Instance().Update(elapsed_time_ * Time::TimeScale);
+
 #ifdef DEBUG
 #ifdef DELAY_EMULATE
 	for (long i = 0; i < delayLoopNum; ++i)

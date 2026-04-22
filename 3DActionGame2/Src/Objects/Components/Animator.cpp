@@ -12,13 +12,9 @@ Animator::Animator(std::shared_ptr<AnimationResource> anim_resource_) :
 
 float Animator::GetAnimationProgressPercentage()
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
 		return 0.0f;
 	}
 	float duration = animResource->AnimationParameters[currentAnim.Kind]->Duration;
@@ -28,13 +24,9 @@ float Animator::GetAnimationProgressPercentage()
 
 float Animator::GetAnimationTimeByNormalizedValue(float normalized_value_)
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
 		return 0.0f;
 	}
 	return animResource->AnimationParameters[currentAnim.Kind]->Duration * normalized_value_;
@@ -42,15 +34,12 @@ float Animator::GetAnimationTimeByNormalizedValue(float normalized_value_)
 
 float Animator::GetTimeUntilStartTransition()
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
 		return 0.0f;
 	}
+
 	if (isTransitioningImmediately)
 	{
 		return animResource->AnimationParameters[nextAnim.Kind]->TransitionOutStartTime - nextAnim.PlayTime;
@@ -68,13 +57,9 @@ bool Animator::IsTransitioning()
 
 float Animator::GetActivationTime()
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
 		return 0.0f;
 	}
 	if (isTransitioningImmediately)
@@ -89,13 +74,9 @@ float Animator::GetActivationTime()
 
 float Animator::GetDeactivationTime()
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
 		return 0.0f;
 	}
 	std::shared_ptr<AnimationParameters> anim_params;
@@ -114,14 +95,10 @@ float Animator::GetDeactivationTime()
 
 void Animator::SetNextAnim(AKind anim_kind_, AnimTransitionType transition_type_)
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource‚ªnullptr‚Å‚·"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
-		return ;
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
+		return;
 	}
 
 	if (isAllowedToTransitionSameCurrent == false &&
@@ -189,13 +166,9 @@ void Animator::DetachAnim(int model_handle_)
 
 void Animator::Update(float elapsed_time_)
 {
-	try
+	if (animResource == nullptr)
 	{
-		if (animResource == nullptr) { throw "animResource is nullptr"; }
-	}
-	catch (char* message)
-	{
-		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, message);
+		DebugManager::Instance().AddDebugLog(DebugLog::Type::Error, "animResource‚ªnullptr‚Å‚·");
 		return;
 	}
 

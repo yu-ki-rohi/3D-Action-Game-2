@@ -1,13 +1,18 @@
 #include "EnemyBrain.h"
 #include "IEnemyDirectiveReader.h"
+
 #include "../Objects/Components/Transform.h"
 #include "../Objects/Components/Animator.h"
-#include "../Systems/TimerFactory.h"
 #include "../Collision/Collider.h"
+
 #include "BehaviorTree/SelectorNode.h"
 #include "BehaviorTree/SequenceNode.h"
 #include "BehaviorTree/RandomNode.h"
 #include "BehaviorTree/LeafNode.h"
+
+#include "../Systems/TimerFactory.h"
+#include "DxLib.h"
+#include <math.h>
 #include "../Debug/DebugMessenger.h"
 
 using namespace BehaviorTree;
@@ -25,7 +30,7 @@ EnemyBrain::EnemyBrain(
 {
 	// HACK: behaviorTreeの構成の仕方の変更
 	
-	// 移動ノードの末端ノードを作成
+	// 移動の末端ノードを作成
 	std::unique_ptr<LeafNode> moveStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveStart(elapsed_time_); });
 	std::unique_ptr<LeafNode> moveBackwardStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveBackwardStart(elapsed_time_); });
 	std::unique_ptr<LeafNode> moveBackward = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveBackward(elapsed_time_); });
@@ -34,58 +39,62 @@ EnemyBrain::EnemyBrain(
 	std::unique_ptr<LeafNode> moveForwardStart = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveForwardStart(elapsed_time_); });
 	std::unique_ptr<LeafNode> moveForward = std::make_unique<LeafNode>([this](float elapsed_time_) { return MoveForward(elapsed_time_); });
 
+	// 後方移動シークエンス作成・ノード登録
+	std::unique_ptr<CompositeNode> moveBackwardSequence = std::make_unique<SequenceNode>();
+	moveBackwardSequence->AddNode(std::move(moveBackwardStart));
+	moveBackwardSequence->AddNode(std::move(moveBackward));
+
+	// 横移動シークエンス作成・ノード登録
+	std::unique_ptr<CompositeNode> moveSideSequence = std::make_unique<SequenceNode>();
+	moveSideSequence->AddNode(std::move(moveSideStart));
+	moveSideSequence->AddNode(std::move(moveSide));
+
+	// 前方移動シークエンス作成・ノード登録
+	std::unique_ptr<CompositeNode> moveForwardSequence = std::make_unique<SequenceNode>();
+	moveForwardSequence->AddNode(std::move(moveForwardStart));
+	moveForwardSequence->AddNode(std::move(moveForward));
+
+	// 移動方向セレクターを作成・ノード登録
+	std::unique_ptr<SelectorNode> moveDirSelector = std::make_unique<SelectorNode>();
+	moveDirSelector->AddNode(std::move(moveBackwardSequence));
+	moveDirSelector->AddNode(std::move(moveSideSequence));
+	moveDirSelector->AddNode(std::move(moveForwardSequence));
+
 	// 移動シークエンスの作成・登録
 	std::unique_ptr<CompositeNode> moveSequence = std::make_unique<SequenceNode>();
 	moveSequence->AddNode(std::move(moveStart));
-	moveSequence->AddNode(std::move(moveBackwardStart));
-	moveSequence->AddNode(std::move(moveBackward));
-	moveSequence->AddNode(std::move(moveSideStart));
-	moveSequence->AddNode(std::move(moveSide));
-	moveSequence->AddNode(std::move(moveForwardStart));
-	moveSequence->AddNode(std::move(moveForward));
+	moveSequence->AddNode(std::move(moveDirSelector));
 
 
-	// 攻撃0ノードの末端ノードを作成
+	// 攻撃の末端ノードを作成
+	std::unique_ptr<LeafNode> checkAttackable = std::make_unique<LeafNode>([this](float elapsed_time_) { return CheckAttackable(elapsed_time_); });
+	std::unique_ptr<LeafNode> turnToAttack = std::make_unique<LeafNode>([this](float elapsed_time_) { return Turn(elapsed_time_); });
 	std::unique_ptr<LeafNode> attackStart0 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart0(elapsed_time_); });
-	std::unique_ptr<LeafNode> attack0 = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
-
-	// 攻撃0シークエンスの作成・登録
-	std::unique_ptr<CompositeNode> attackSequence0 = std::make_unique<SequenceNode>();
-	attackSequence0->AddNode(std::move(attackStart0));
-	attackSequence0->AddNode(std::move(attack0));
-
-	
-	// 攻撃1ノードの末端ノードを作成
 	std::unique_ptr<LeafNode> attackStart1 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart1(elapsed_time_); });
-	std::unique_ptr<LeafNode> attack1 = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
+	std::unique_ptr<LeafNode> attackStart2 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart2(elapsed_time_); });
+	std::unique_ptr<LeafNode> attack = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
+	
+	// ランダム攻撃ノードの作成・ノード登録
+	std::unique_ptr<CompositeNode> attackRandom = std::make_unique<RandomNode>();
+	attackRandom->AddNode(std::move(attackStart0));
+	attackRandom->AddNode(std::move(attackStart1));
+	attackRandom->AddNode(std::move(attackStart2));
 
-	// 攻撃1シークエンスの作成・登録
-	std::unique_ptr<CompositeNode> attackSequence1 = std::make_unique<SequenceNode>();
-	attackSequence1->AddNode(std::move(attackStart1));
-	attackSequence1->AddNode(std::move(attack1));
+
+	// 攻撃シークエンスの作成・ノード登録
+	std::unique_ptr<CompositeNode> attackSequence = std::make_unique<SequenceNode>();
+	attackSequence->AddNode(std::move(checkAttackable));
+	attackSequence->AddNode(std::move(turnToAttack));
+	attackSequence->AddNode(std::move(attackRandom));
+	attackSequence->AddNode(std::move(attack));
 
 	
-	// 攻撃2ノードの末端ノードを作成
-	std::unique_ptr<LeafNode> attackStart2 = std::make_unique<LeafNode>([this](float elapsed_time_) { return AttackStart2(elapsed_time_); });
-	std::unique_ptr<LeafNode> attack2 = std::make_unique<LeafNode>([this](float elapsed_time_) { return Attack(elapsed_time_); });
-
-	// 攻撃2シークエンスの作成・登録
-	std::unique_ptr<CompositeNode> attackSequence2 = std::make_unique<SequenceNode>();
-	attackSequence2->AddNode(std::move(attackStart2));
-	attackSequence2->AddNode(std::move(attack2));
-
-	// ランダム攻撃ノードの作成・登録
-	std::unique_ptr<CompositeNode> attackRandom = std::make_unique<RandomNode>();
-
-	attackRandom->AddNode(std::move(attackSequence0));
-	attackRandom->AddNode(std::move(attackSequence1));
-	attackRandom->AddNode(std::move(attackSequence2));
-
+	// 待機の末端ノードを作成
 	std::unique_ptr<LeafNode> idle = std::make_unique<LeafNode>([this](float elapsed_time_) { return Idle(elapsed_time_); });
 
 	// rootに登録
 	behaviorTree->AddNode(std::move(moveSequence));
-	behaviorTree->AddNode(std::move(attackRandom));
+	behaviorTree->AddNode(std::move(attackSequence));
 	behaviorTree->AddNode(std::move(idle));
 }
 
@@ -141,7 +150,6 @@ Status EnemyBrain::MoveForward(float elapsed_time_)
 {
 	if ((directive->GetDirectedPosition(id) - transform->Position).sqrLength() < moveEndThreshold * moveEndThreshold)
 	{
-		DebugMessenger::Log("エネミー：移動シークエンス終了");
 		return Status::Success;
 	}
 
@@ -162,7 +170,7 @@ Status EnemyBrain::MoveSideStart(float elapsed_time_)
 	if (perpendicular.sqrLength() < moveEndThreshold * moveEndThreshold &&
 		Vector3::Dot(relative_position_to_player, directive->GetDirectedRelativePositionToPlayer(id)) > 0)
 	{
-		return Status::Success;
+		return Status::Failure;
 	}
 
 	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
@@ -175,7 +183,6 @@ Status EnemyBrain::MoveSideStart(float elapsed_time_)
 	{
 		animator->SetNextAnim(AKind::WalkR);
 	}
-
 	return Status::Success;
 }
 
@@ -197,10 +204,16 @@ Status EnemyBrain::MoveSide(float elapsed_time_)
 
 	if (relative_position_to_player.JudgeLeftOrRight(directive->GetDirectedRelativePositionToPlayer(id)) > 0)
 	{
+		animator->SetIsAllowedToTransitionSameCurrent(false);
+		animator->SetNextAnim(AKind::WalkL);
+		animator->SetIsAllowedToTransitionSameCurrent(true);
 		transform->Position -= transform->GetRight() * moveSideSpeed * elapsed_time_;
 	}
 	else
 	{
+		animator->SetIsAllowedToTransitionSameCurrent(false);
+		animator->SetNextAnim(AKind::WalkR);
+		animator->SetIsAllowedToTransitionSameCurrent(true);
 		transform->Position += transform->GetRight() * moveSideSpeed * elapsed_time_;
 	}
 	return Status::Running;
@@ -211,7 +224,7 @@ Status EnemyBrain::MoveBackwardStart(float elapsed_time_)
 	// 「自身とプレイヤーの距離」が「指示位置とプレイヤーの距離」より離れているときは即終了
 	if (directive->GetDirectedRelativePositionToPlayer(id).sqrLength() < (transform->Position - directive->GetPlayerPosition()).sqrLength())
 	{
-		return Status::Success;
+		return Status::Failure;
 	}
 	transform->StartSlearpByForwardAndAngularVelocity(directive->GetPlayerPosition() - transform->Position, rotateSpeed);
 	animator->SetNextAnim(AKind::WalkB);
@@ -240,6 +253,34 @@ Status EnemyBrain::Idle(float elapsed_time_)
 	return Status::Success;
 }
 
+Status EnemyBrain::Turn(float elapsed_time_)
+{
+	Vector3 vec_norm_enemy_to_player = (directive->GetPlayerPosition() - transform->Position).Normalize();
+	float dot = Vector3::Dot(transform->GetForward(), vec_norm_enemy_to_player);
+	float angle = acosf(dot) * 180.0f / DX_PI;
+	// 十分プレイヤーの方を向いていれば成功
+	if (angle < turnThreshold)
+	{
+		return Status::Success;
+	}
+	animator->SetIsAllowedToTransitionSameCurrent(false);
+	animator->SetNextAnim(AKind::WalkF);
+	animator->SetIsAllowedToTransitionSameCurrent(true);
+	transform->StartSlearpByForwardAndAngularVelocity(vec_norm_enemy_to_player, rotateSpeed);
+	return Status::Running;
+}
+
+Status EnemyBrain::CheckAttackable(float elapsed_time_)
+{
+	if (IsNullPtrToComponent()) { return Status::Failure; }
+	if (directive->GetDirectedAciton(id) != Actions::ATTACK)
+	{
+		return Status::Failure;
+	}
+
+	DebugMessenger::Log("エネミー：攻撃シークエンス開始");
+	return Status::Success;
+}
 Status EnemyBrain::AttackStart0(float elapsed_time_)
 {
 	return AttackStart(AKind::Attack00);
@@ -257,14 +298,6 @@ Status EnemyBrain::AttackStart2(float elapsed_time_)
 
 Status EnemyBrain::AttackStart(AKind anim_kind_)
 {
-	if (IsNullPtrToComponent()) { return Status::Failure; }
-
-	if (directive->GetDirectedAciton(id) != Actions::ATTACK)
-	{
-		return Status::Failure;
-	}
-
-	DebugMessenger::Log("エネミー：攻撃シークエンス開始");
 	animator->SetNextAnim(anim_kind_);
 	enableColliderTimer = TimerFactory::CreateTimer(animator->GetActivationTime(), owner.lock(), this, &EnemyAI::EnemyBrain::EnableAttackCollider);
 	disableColliderTimer = TimerFactory::CreateTimer(animator->GetDeactivationTime(), owner.lock(), this, &EnemyAI::EnemyBrain::DisableAttackCollider);

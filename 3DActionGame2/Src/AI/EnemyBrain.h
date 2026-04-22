@@ -62,6 +62,8 @@ namespace EnemyAI
 		BehaviorTree::Status MoveBackward(float elapsed_time_);
 		BehaviorTree::Status MoveBackwardStart(float elapsed_time_);
 		BehaviorTree::Status Idle(float elapsed_time_);
+		BehaviorTree::Status Turn(float elapsed_time_);
+		BehaviorTree::Status CheckAttackable(float elapsed_time_);
 		BehaviorTree::Status AttackStart0(float elapsed_time_);
 		BehaviorTree::Status AttackStart1(float elapsed_time_);
 		BehaviorTree::Status AttackStart2(float elapsed_time_);
@@ -81,13 +83,16 @@ namespace EnemyAI
 		// 移動をする閾値
 		static constexpr float moveStartThreshold = 20.0f;
 		static constexpr float moveEndThreshold = 10.0f;
-		// アニメーション変更のボーダー
-		static constexpr float animationChangeBorderPercentage = 0.9f;
 
 		static constexpr float moveForwardSpeed = 25.0f;
 		static constexpr float moveSideSpeed = 60.0f;
 		static constexpr float moveBackwardSpeed = 15.0f;
 		static constexpr float rotateSpeed = 150.0f;
+
+		// アニメーション変更のボーダー
+		static constexpr float animationChangeBorderPercentage = 0.9f;
+		// 攻撃を開始する角度の閾値
+		static constexpr float turnThreshold = 30.0f;
 
 	private:
 		int id;
