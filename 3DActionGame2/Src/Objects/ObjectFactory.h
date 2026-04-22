@@ -21,6 +21,7 @@ namespace EnemyAI
 {
 	class IEnemyDirectiveReader;
 	class EnemyDirective;
+	class EnemyReportHandler;
 }
 
 class ObjectFactory : public std::enable_shared_from_this<ObjectFactory>
@@ -34,8 +35,8 @@ public:
 public:
 	std::shared_ptr<CameraBase> CreateCameraTPS();
 	std::shared_ptr<Player> CreatePlayer(Vector3 position_, Vector3 rotation_, std::shared_ptr <PlayerEventNotifier> notifier_, std::shared_ptr<CameraManager> camera_manager_);
-	std::shared_ptr<Enemy> CreateEnemy(Vector3 position_, Vector3 rotation_, unsigned char id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
-	std::shared_ptr<EnemyCommander> CreateEnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directive_);
+	std::shared_ptr<Enemy> CreateEnemy(Vector3 position_, Vector3 rotation_, unsigned char id_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
+	std::shared_ptr<EnemyCommander> CreateEnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directive_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler);
 
 	std::shared_ptr<ObjectBase> CreateStage();
 

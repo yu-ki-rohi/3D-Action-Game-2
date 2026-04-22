@@ -25,6 +25,8 @@ class ObjectBase;
 namespace EnemyAI
 {
 	class IEnemyDirectiveReader;
+	class EnemyReport;
+	class EnemyReportHandler;
 
 	class EnemyBrain
 	{
@@ -32,6 +34,7 @@ namespace EnemyAI
 		// HACK: ˆø”•”•ª‚ğ\‘¢‘Ì‰»‚·‚é‚È‚Ç‚ÌH•v
 		EnemyBrain(
 			int id_,
+			std::shared_ptr<EnemyReportHandler> report_handler,
 			std::shared_ptr<IEnemyDirectiveReader> directive_,
 			std::shared_ptr<Collider> attackCollider_,
 			std::shared_ptr<Collider> justAvoidIgnitionCollider_);
@@ -99,6 +102,7 @@ namespace EnemyAI
 
 		// AIŠÖ˜A
 		std::shared_ptr<IEnemyDirectiveReader> directive;
+		std::shared_ptr<EnemyReport> report;
 
 		// ŒŸ“¢–€: BehaviorTree‚ğŒÂ•Ê‚É‚½‚¹‚é‚©‚Ç‚¤‚©
 		std::unique_ptr<BehaviorTree::CompositeNode> behaviorTree;

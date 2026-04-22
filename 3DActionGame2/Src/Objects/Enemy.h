@@ -2,9 +2,14 @@
 #include "CharacterBase.h"
 #include "../Collision/BoxCollider.h"
 
-// todo: ‘O•ûéŒ¾‚Åo—ˆ‚È‚¢‚©‚Ç‚¤‚©’²‚×‚é
-#include "../AI/EnemyBrain.h"
-#include "../AI/IEnemyDirectiveReader.h"
+
+
+namespace EnemyAI
+{
+	class EnemyBrain;
+	class IEnemyDirectiveReader;
+	class EnemyReportHandler;
+}
 
 class JustAvoidIgnition;
 class TimerBase;
@@ -13,7 +18,8 @@ class TimerBase;
 class Enemy : public CharacterBase
 {
 public:
-	Enemy(int id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
+	Enemy(int id_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_);
+	~Enemy();
 
 public:
 	Tag GetTag() const override;

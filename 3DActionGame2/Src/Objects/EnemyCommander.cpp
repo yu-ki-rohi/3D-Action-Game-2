@@ -5,8 +5,8 @@
 
 using namespace EnemyAI;
 
-EnemyCommander::EnemyCommander(std::shared_ptr<EnemyDirective> directives_) :
-	brain(std::make_shared<EnemyCommanderBrain>(directives_))
+EnemyCommander::EnemyCommander(std::shared_ptr<EnemyDirective> directives_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler_) :
+	brain(std::make_shared<EnemyCommanderBrain>(directives_, report_handler_))
 {
 
 }
@@ -37,4 +37,9 @@ void EnemyCommander::Update(float elapsed_time)
 	{
 		commandTimer = TimerFactory::CreateTimer(10.0f, brain, &*brain, &EnemyAI::EnemyCommanderBrain::Command);
 	}
+}
+
+int EnemyCommander::AllocateId()
+{
+	return brain->AllocateId();
 }

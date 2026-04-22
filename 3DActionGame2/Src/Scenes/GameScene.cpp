@@ -24,6 +24,7 @@
 
 #include "../AI/WorldBlackboard.h"
 #include "../AI/EnemyDirective.h"
+#include "../AI/EnemyReportHandler.h"
 #include "../Objects/EnemyCommander.h"
 
 #include "../Debug/DebugManager.h"
@@ -427,16 +428,16 @@ void GameScene::GenerateObjects()
 		Vector3(0.0f, 0.0f, 0.0f),
 	};
 
+	auto enemy_report_handler = std::make_shared<EnemyAI::EnemyReportHandler>();
 	auto world_blackboard = std::make_shared<WorldBlackboard>(player->GetComponent<Transform>());
-	auto directive = std::make_shared<EnemyAI::EnemyDirective>(world_blackboard);
+	auto directive = std::make_shared<EnemyAI::EnemyDirective>(world_blackboard, enemy_report_handler);
+	auto commander = objectFactory->CreateEnemyCommander(directive, enemy_report_handler);
 
 	for (int i = 0; i < enemy_num; ++i)
 	{
-		auto enemy = objectFactory->CreateEnemy(initial_positions[i], initial_rotations[i], directive->AddDirective(), directive);
-
+		auto enemy = objectFactory->CreateEnemy(initial_positions[i], initial_rotations[i], commander->AllocateId(), enemy_report_handler, directive);
 	}
 
-	objectFactory->CreateEnemyCommander(directive);
 
 	objectFactory->CreateStage();
 

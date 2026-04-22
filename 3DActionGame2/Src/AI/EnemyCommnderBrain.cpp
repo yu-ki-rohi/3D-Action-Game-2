@@ -1,5 +1,7 @@
 #include "EnemyCommanderBrain.h"
 #include "EnemyDirective.h"
+#include "EnemyReportHandler.h"
+#include "IEnemyReportReader.h"
 
 #include "../Systems/TimerFactory.h"
 #include "../Debug/DebugMessenger.h"
@@ -7,12 +9,23 @@
 
 using namespace EnemyAI;
 
-EnemyCommanderBrain::EnemyCommanderBrain(std::shared_ptr<EnemyDirective> directives_) :
-	directives(directives_)
+EnemyCommanderBrain::EnemyCommanderBrain(std::shared_ptr<EnemyDirective> directives_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler_) :
+	directives(directives_),
+	reportHandler(report_handler_)
 {
 
 }
 
+int EnemyCommanderBrain::AllocateId()
+{
+	int id = reportHandler->GetIdHasDead();
+
+	if (id < 0)
+	{
+		return directives->AddDirective();
+	}
+	return id;
+}
 
 void EnemyCommanderBrain::Command()
 {

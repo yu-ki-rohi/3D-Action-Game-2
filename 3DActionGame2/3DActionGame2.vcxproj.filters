@@ -232,6 +232,12 @@
     <ClCompile Include="Src\Objects\EnemyCommander.cpp">
       <Filter>Src\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Src\AI\EnemyReport.cpp">
+      <Filter>Src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AI\EnemyReportHandler.cpp">
+      <Filter>Src\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\App.h">

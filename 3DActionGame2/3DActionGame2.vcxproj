@@ -151,6 +151,8 @@
     <ClCompile Include="Src\AI\EnemyBrain.cpp" />
     <ClCompile Include="Src\AI\EnemyCommnderBrain.cpp" />
     <ClCompile Include="Src\AI\EnemyDirective.cpp" />
+    <ClCompile Include="Src\AI\EnemyReport.cpp" />
+    <ClCompile Include="Src\AI\EnemyReportHandler.cpp" />
     <ClCompile Include="Src\AI\WorldBlackboard.cpp" />
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Assets\AssetsManager.cpp" />

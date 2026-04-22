@@ -11,10 +11,12 @@ class WorldBlackboard;
 // 各エネミーに対する指令書のようなもの
 namespace EnemyAI
 {
+	class EnemyReportHandler;
+
 	class EnemyDirective : public IEnemyDirectiveReader, IEnemyDirectiveWriter
 	{
 	public:
-		EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_);
+		EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_, std::shared_ptr<EnemyReportHandler> report_handler_);
 
 	public:
 		static unsigned char MakeDirective(Direction direction_, CombatRange range_, Actions action_);
@@ -75,6 +77,7 @@ namespace EnemyAI
 
 		// TODO：プレイヤーの座標をどのような経由で参照するか決定
 		std::shared_ptr<const WorldBlackboard> worldBrackbord;
+		std::shared_ptr<EnemyReportHandler> reportHandler;
 	};
 
 }

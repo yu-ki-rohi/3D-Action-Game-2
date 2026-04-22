@@ -1,5 +1,7 @@
 #include "EnemyBrain.h"
 #include "IEnemyDirectiveReader.h"
+#include "EnemyReport.h"
+#include "EnemyReportHandler.h"
 
 #include "../Objects/Components/Transform.h"
 #include "../Objects/Components/Animator.h"
@@ -15,19 +17,31 @@
 #include <math.h>
 #include "../Debug/DebugMessenger.h"
 
+
 using namespace BehaviorTree;
 using namespace EnemyAI;
 EnemyBrain::EnemyBrain(
 	int id_,
+	std::shared_ptr<EnemyReportHandler> report_handler_,
 	std::shared_ptr<IEnemyDirectiveReader> directive_,
 	std::shared_ptr<Collider> attackCollider_,
 	std::shared_ptr<Collider> justAvoidIgnitionCollider_) :
 	id(id_),
 	directive(directive_),
+	report(std::make_shared<EnemyReport>(id_)),
 	behaviorTree(std::make_unique<SelectorNode>()),
 	attackCollider(attackCollider_),
 	justAvoidIgnitionCollider(justAvoidIgnitionCollider_)
 {
+	if (report_handler_ == nullptr)
+	{
+		DebugMessenger::LogError("EnemyReportHandlerにnullptrが渡されました");
+	}
+	else
+	{
+		report_handler_->AddReport(report);
+	}
+
 	// HACK: behaviorTreeの構成の仕方の変更
 	
 	// 移動の末端ノードを作成

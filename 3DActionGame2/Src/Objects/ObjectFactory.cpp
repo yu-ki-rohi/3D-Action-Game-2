@@ -77,14 +77,14 @@ std::shared_ptr<Player> ObjectFactory::CreatePlayer(Vector3 position_, Vector3 r
 	return obj;
 }
 
-std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rotation_, unsigned char id_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_)
+std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rotation_, unsigned char id_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler_, std::shared_ptr<EnemyAI::IEnemyDirectiveReader> directive_)
 {
 	auto object_manager = objectManager.lock();
 	auto assets_manager = assetsManager.lock();
 	auto collider_interface = colliderRegisterInterface.lock();
 	if (!object_manager || !assets_manager || !collider_interface) { return nullptr; }
 
-	auto obj = std::make_shared<Enemy>(id_, directive_);
+	auto obj = std::make_shared<Enemy>(id_, report_handler_, directive_);
 	obj->SetComponent(std::make_shared<Transform>(position_, Vector3(0.18f, 0.18f, 0.18f), rotation_));
 	obj->SetComponent(std::make_shared<Renderer>(
 		assets_manager->GetModel(MKind::Enemy)->Handle,
@@ -101,11 +101,11 @@ std::shared_ptr<Enemy> ObjectFactory::CreateEnemy(Vector3 position_, Vector3 rot
 	return obj;
 }
 
-std::shared_ptr<EnemyCommander> ObjectFactory::CreateEnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directive_)
+std::shared_ptr<EnemyCommander> ObjectFactory::CreateEnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directive_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler_)
 {
 	std::shared_ptr<ObjectManager> object_manager = objectManager.lock();
 	if (!object_manager) { return nullptr; }
-	auto obj = std::make_shared<EnemyCommander>(directive_);
+	auto obj = std::make_shared<EnemyCommander>(directive_, report_handler_);
 	CommonProcessWhenCreate(obj, object_manager);
 	return obj;
 }

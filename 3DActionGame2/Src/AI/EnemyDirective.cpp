@@ -19,8 +19,9 @@
 
 using namespace EnemyAI;
 
-EnemyDirective::EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_) :
-	worldBrackbord(world_blackboard_)
+EnemyDirective::EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_, std::shared_ptr<EnemyReportHandler> report_handler_) :
+	worldBrackbord(world_blackboard_),
+	reportHandler(report_handler_)
 {
 
 }

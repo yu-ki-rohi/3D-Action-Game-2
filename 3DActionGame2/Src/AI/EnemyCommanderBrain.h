@@ -9,18 +9,20 @@ class TimerBase;
 namespace EnemyAI
 {
 	class EnemyDirective;
-	class IEnemyReportReader;
+	class EnemyReportHandler;
 
-	class EnemyCommanderBrain : public std::enable_shared_from_this<EnemyCommanderBrain>
+	class EnemyCommanderBrain
 	{
 	public:
-		EnemyCommanderBrain(std::shared_ptr<EnemyDirective> directives_);
+		EnemyCommanderBrain(std::shared_ptr<EnemyDirective> directives_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler);
 
 	public:
-		void Command();
+		int AllocateId();
 
+		void Command();
 	private:
 		std::shared_ptr<EnemyDirective> directives;
+		std::shared_ptr<EnemyReportHandler> reportHandler;
 
 	};
 }

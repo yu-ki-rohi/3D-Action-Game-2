@@ -9,16 +9,19 @@
 
 #include "../Systems/TimerFactory.h"
 
+
 using namespace EnemyAI;
 
-Enemy::Enemy(int id_, std::shared_ptr<IEnemyDirectiveReader> directive_) :
+Enemy::Enemy(int id_, std::shared_ptr<EnemyReportHandler> report_handler, std::shared_ptr<IEnemyDirectiveReader> directive_) :
 	attackCollider(std::make_shared<BoxCollider>(Vector3(0.0f, 30.0f, -7.0f), Vector3(30.0f, 100.0f, 30.0f), Vector3(0.0f, -6.0f, 32.0f))),
 	bodyCollider(std::make_shared<BoxCollider>(Vector3(0.0f, -10.0f, -5.0f), Vector3(70.0f, 170.0f, 40.0f), Vector3(0.0f, 0.0f, 0.0f))),
 	justAvoidIgnitionCollider(std::make_shared<BoxCollider>(Vector3(0.0f, 30.0f, -7.0f), Vector3(70.0f, 140.0f, 80.0f), Vector3(0.0f, -6.0f, 32.0f))),
-	brain(std::make_unique<EnemyBrain>(id_, directive_, attackCollider, justAvoidIgnitionCollider))
+	brain(std::make_unique<EnemyBrain>(id_, report_handler, directive_, attackCollider, justAvoidIgnitionCollider))
 {
 
 }
+
+Enemy::~Enemy() = default;
 
 ObjectBase::Tag Enemy::GetTag() const
 {

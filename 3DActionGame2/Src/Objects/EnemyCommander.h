@@ -8,12 +8,13 @@ namespace EnemyAI
 {
 	class EnemyCommanderBrain;
 	class EnemyDirective;
+	class EnemyReportHandler;
 }
 
 class EnemyCommander : public ObjectBase
 {
 public:
-	EnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directives_);
+	EnemyCommander(std::shared_ptr<EnemyAI::EnemyDirective> directives_, std::shared_ptr<EnemyAI::EnemyReportHandler> report_handler);
 
 public:
 	Tag GetTag() const override;
@@ -33,6 +34,9 @@ public:
 	void Update(float elapsed_time) override;
 	void Render() override {}
 	void RenderShadow() override {}
+
+public:
+	int AllocateId();
 
 private:
 
