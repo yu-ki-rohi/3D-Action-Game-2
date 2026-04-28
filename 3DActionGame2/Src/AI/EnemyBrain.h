@@ -3,6 +3,7 @@
 
 #include "../Common.h"
 #include "../DataBase/DataKind.h"
+#include "../Mathmatics/Vector3.h"
 
 // AI関連
 
@@ -56,14 +57,7 @@ namespace EnemyAI
 
 	private:
 		// 実際の行動として登録する関数
-		// HACK: 関数の中身の修正
-		BehaviorTree::Status MoveStart(float elapsed_time_);
-		BehaviorTree::Status MoveForwardStart(float elapsed_time_);
-		BehaviorTree::Status MoveForward(float elapsed_time_);
-		BehaviorTree::Status MoveSide(float elapsed_time_);
-		BehaviorTree::Status MoveSideStart(float elapsed_time_);
-		BehaviorTree::Status MoveBackward(float elapsed_time_);
-		BehaviorTree::Status MoveBackwardStart(float elapsed_time_);
+		// HACK: 関数の中身の修正・メンバ関数にする必要はないかも?
 		BehaviorTree::Status Idle(float elapsed_time_);
 		BehaviorTree::Status Turn(float elapsed_time_);
 		BehaviorTree::Status CheckAttackable(float elapsed_time_);
@@ -75,22 +69,29 @@ namespace EnemyAI
 
 		BehaviorTree::Status AttackStart(AKind anim_kind_);
 
+		void RegisterMoveDicision();
+
 		void EnableAttackCollider();
 		void DisableAttackCollider();
 
 		bool IsNullPtrToComponent();
 
+
 	private:
 		// HACK: 値を適切な場所に移動
 		 
 		// 移動をする閾値
-		static constexpr float moveStartThreshold = 20.0f;
-		static constexpr float moveEndThreshold = 10.0f;
+		static constexpr float moveStartThreshold = 12.0f;
+		static constexpr float moveEndThreshold = 8.0f;
+		static constexpr float sideAnimThreshold = 25.0f;
+		
 
 		static constexpr float moveForwardSpeed = 25.0f;
 		static constexpr float moveSideSpeed = 60.0f;
-		static constexpr float moveBackwardSpeed = 15.0f;
-		static constexpr float rotateSpeed = 150.0f;
+		static constexpr float moveBackwardSpeed = 12.0f;
+		static constexpr float moveAcceleration = 250.0f;
+		static constexpr float moveDamp = 200.0f;
+		static constexpr float rotateSpeed = 160.0f;
 
 		// アニメーション変更のボーダー
 		static constexpr float animationChangeBorderPercentage = 0.9f;
@@ -119,6 +120,9 @@ namespace EnemyAI
 
 		std::shared_ptr<TimerBase> enableColliderTimer;
 		std::shared_ptr<TimerBase> disableColliderTimer;
+
+		Vector3 moveDir = Vector3::ZERO;
+		bool isAttack = false;
 
 	};
 

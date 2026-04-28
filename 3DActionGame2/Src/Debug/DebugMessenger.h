@@ -2,7 +2,7 @@
 
 #include <source_location>
 
-static class DebugMessenger
+class DebugMessenger
 {
 public:
 	static void Log(const char* message_, const std::source_location& loc_ = std::source_location::current());

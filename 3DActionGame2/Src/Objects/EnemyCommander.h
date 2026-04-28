@@ -42,6 +42,7 @@ private:
 
 
 private:
+	float localTimeScale = 1.0f;
 	std::shared_ptr<EnemyAI::EnemyCommanderBrain> brain;
 	std::shared_ptr<TimerBase> commandTimer;
 };

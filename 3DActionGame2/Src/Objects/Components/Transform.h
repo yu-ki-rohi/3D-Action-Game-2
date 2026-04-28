@@ -58,7 +58,7 @@ public:
 	// ローカル座標系の右軸による回転
 	void RotateAxisRight(float angle_);
 
-	// 自身のTransform情報に従って移動させる
+	// 自身のTransform情報に従った移動をさせる
 	// (右, 上, 前)
 	void Translate(const Vector3& vec_);
 
@@ -92,6 +92,7 @@ private:
 	float slearpTime = 0.0f;
 	bool isSlearp = false;
 
+	Vector3 velocity = Vector3::ZERO;
 
 
 	// いずれ階層構造を実装するとき用

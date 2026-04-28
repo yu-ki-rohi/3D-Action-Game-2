@@ -2,28 +2,6 @@
 
 namespace EnemyAI
 {
-	// ï˚à 
-	enum class Direction
-	{
-		N,
-		NNE,
-		NE,
-		ENE,
-		E,
-		ESE,
-		SE,
-		SSE,
-		S,
-		SSW,
-		SW,
-		WSW,
-		W,
-		WNW,
-		NW,
-		NNW,
-		End
-	};
-
 	// ÉvÉåÉCÉÑÅ[Ç∆ÇÃãóó£Ç…ä÷Ç∑ÇÈenum
 	enum class CombatRange
 	{
@@ -42,6 +20,18 @@ namespace EnemyAI
 		RUSH,
 		GUARD,
 		End
+	};
+
+	struct DirectiveInfo
+	{
+		int Direction;
+		CombatRange Range;
+		Actions Action;
+
+		DirectiveInfo(int dir_ = 0, CombatRange range_ = CombatRange::IN_FIGHT, Actions action_ = Actions::STAND_BY) :
+			Direction(dir_),
+			Range(range_),
+			Action(action_){}
 	};
 
 }

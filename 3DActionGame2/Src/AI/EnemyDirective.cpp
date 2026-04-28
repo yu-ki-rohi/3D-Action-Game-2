@@ -2,6 +2,7 @@
 #include "../Mathmatics/Vector3.h"
 #include "../Debug/DebugMessenger.h"
 #include "WorldBlackboard.h"
+#include "../Objects/Components/Transform.h"
 
 // directives[n]内のビット割り当て内訳
 #define DIRECTION_BIT_NUM 4
@@ -26,17 +27,17 @@ EnemyDirective::EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blac
 
 }
 
-unsigned char EnemyDirective::MakeDirective(Direction direction_, CombatRange range_, Actions action_)
+unsigned char EnemyDirective::MakeDirective(int direction_, CombatRange range_, Actions action_)
 {
-	if (direction_ == Direction::End || range_ == CombatRange::End || action_ == Actions::End)
-	{
-		DebugMessenger::LogError("無効な値が入力されました");
-		return 0;
-	}
-	unsigned char direction = (unsigned char)direction_;
-	unsigned char range = (unsigned char)range_ << DIRECTION_BIT_NUM;
-	unsigned char action = (unsigned char)action_ << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
+	unsigned char direction = static_cast<unsigned char>(direction_) & Mask::DIRECTION;
+	unsigned char range = (static_cast<unsigned char>(range_) << DIRECTION_BIT_NUM) & Mask::COMBAT_RANGE;
+	unsigned char action = static_cast<unsigned char>(action_) << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
 	return direction | range | action;
+}
+
+unsigned char EnemyDirective::MakeDirective(DirectiveInfo directive_info_)
+{
+	return EnemyDirective::MakeDirective(directive_info_.Direction, directive_info_.Range, directive_info_.Action);
 }
 
 Vector3 EnemyDirective::GetDirectedPosition(int id_) const
@@ -64,7 +65,7 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 	// 方位確認
 	{
 		// 方位情報の抜き出し
-		unsigned char direction = directives[id_] & (unsigned char)Mask::DIRECTION;
+		unsigned char direction = directives[id_] & Mask::DIRECTION;
 
 		// 三角関数を使う方が実装が楽かつ変更させやすいが、今回は別の方法を検討
 		// 現状は高々数パターンしか存在せず、また今後ここの分割を増やすとは思えないため
@@ -83,7 +84,7 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 
 
 		// 符号の抽出
-		float sign = (float)(direction >> (DIRECTION_BIT_NUM - 1));
+		float sign = static_cast<float>(direction >> (DIRECTION_BIT_NUM - 1));
 		sign = sign * 2.0f * -1.0f + 1.0f;	// 0 → 1, 1 → -1 に変換
 
 		// 方位情報から符号情報を除去
@@ -133,10 +134,21 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 
 	}
 
+	// 基準となるエネミーのTransformがあるなら、プレイヤーからそのエネミーへの向きのクロックポジションに変換
+	if (transformOfRepresentativeEnemy != nullptr)
+	{
+		Vector3 base = (transformOfRepresentativeEnemy->Position - GetPlayerPosition()).Normalize();
+		float tmp_x = x;
+		float tmp_z = z;
+
+		z =  base.z * tmp_z + base.x * tmp_x;
+		x = -base.z * tmp_x + base.x * tmp_z;
+	}
+
 	// 距離確認
 	{
 		// 距離情報の抜き出し
-		unsigned char range = directives[id_] & (unsigned char)Mask::COMBAT_RANGE;
+		unsigned char range = directives[id_] & Mask::COMBAT_RANGE;
 		range >>= DIRECTION_BIT_NUM;
 
 		float distance = 0.0f;
@@ -163,7 +175,9 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 		z *= distance;
 	}
 
-	// TODO: プレイヤーの座標を足す
+	
+	
+
 	return Vector3(x, y, z);
 }
 Actions EnemyDirective::GetDirectedAciton(int id_) const
@@ -175,7 +189,7 @@ Actions EnemyDirective::GetDirectedAciton(int id_) const
 	}
 
 	// 検討事項：このキャストの妥当性
-	return (Actions)(directives[id_] >> (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM));
+	return static_cast<Actions>(directives[id_] >> (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM));
 }
 
 Vector3 EnemyDirective::GetPlayerPosition() const
@@ -186,6 +200,12 @@ Vector3 EnemyDirective::GetPlayerPosition() const
 int EnemyDirective::GetDirectivesNum() const
 {
 	return directives.size();
+}
+
+float EnemyDirective::GetMaximumDistance() const
+{
+	float buffer = 30.0f;
+	return outRangeDistance + buffer;
 }
 
 void EnemyDirective::SetDirective(int id_, unsigned char directive_)
@@ -199,25 +219,25 @@ void EnemyDirective::SetDirective(int id_, unsigned char directive_)
 }
 
 
-void EnemyDirective::SetDirective(int id_, Direction direction_, CombatRange range_, Actions action_)
+void EnemyDirective::SetDirective(int id_, int direction_, CombatRange range_, Actions action_)
 {
 	SetDirective(id_, MakeDirective(direction_, range_, action_));
 }
 
-void EnemyDirective::SetDirective(int id_, Direction direction_)
+void EnemyDirective::SetDirective(int id_, DirectiveInfo directive_info_)
+{
+	SetDirective(id_, MakeDirective(directive_info_));
+}
+
+void EnemyDirective::SetDirective(int id_, int direction_)
 {
 	if (id_ < 0 || id_ >= directives.size())
 	{
 		DebugMessenger::LogError("配列の範囲外が指定されました");
 		return;
 	}
-	if (direction_ == Direction::End)
-	{
-		DebugMessenger::LogError("無効な値が入力されました");
-		return;
-	}
-	directives[id_] &= ~(unsigned char)Mask::DIRECTION;
-	directives[id_] |= (unsigned char)direction_;
+	directives[id_] &= ~Mask::DIRECTION;
+	directives[id_] |= static_cast<unsigned char>(direction_);
 }
 
 void EnemyDirective::SetDirective(int id_, CombatRange range_)
@@ -232,8 +252,8 @@ void EnemyDirective::SetDirective(int id_, CombatRange range_)
 		DebugMessenger::LogError("無効な値が入力されました");
 		return;
 	}
-	directives[id_] &= ~(unsigned char)Mask::COMBAT_RANGE;
-	unsigned char range = (unsigned char)range_ << DIRECTION_BIT_NUM;
+	directives[id_] &= ~Mask::COMBAT_RANGE;
+	unsigned char range = static_cast<unsigned char>(range_) << DIRECTION_BIT_NUM;
 	directives[id_] |= range;
 }
 
@@ -249,8 +269,8 @@ void EnemyDirective::SetDirective(int id_, Actions action_)
 		DebugMessenger::LogError("無効な値が入力されました");
 		return;
 	}
-	directives[id_] &= ~(unsigned char)Mask::ACTION;
-	unsigned char action = (unsigned char)action_ << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
+	directives[id_] &= ~Mask::ACTION;
+	unsigned char action = static_cast<unsigned char>(action_) << (DIRECTION_BIT_NUM + COMBAT_RANGE_BIT_NUM);
 	directives[id_] |= action;
 }
 
@@ -263,10 +283,29 @@ void EnemyDirective::RotatePosition(int id_, signed char num_)
 		return;
 	}
 
+	unsigned char directive = directives[id_];
+
+	directives[id_] &= ~Mask::DIRECTION;
+
+	directive += num_;
+	directives[id_] |= directive & Mask::DIRECTION;
 }
+
 
 int EnemyDirective::AddDirective(unsigned char directive_)
 {
 	directives.push_back(directive_);
 	return (int)directives.size() - 1;
+}
+
+
+void EnemyDirective::SetTransformOfRepresentativeEnemy(std::shared_ptr<const Transform> transform_of_representative_enemy_)
+{
+	DebugMessenger::Log("Transformをセットしました");
+	transformOfRepresentativeEnemy = transform_of_representative_enemy_;
+
+	if (transformOfRepresentativeEnemy == nullptr)
+	{
+		DebugMessenger::LogWarning("transformがnullptrです");
+	}
 }

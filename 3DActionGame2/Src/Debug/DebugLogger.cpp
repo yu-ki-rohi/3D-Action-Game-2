@@ -54,6 +54,7 @@ void DebugLogger::Update(float elapsed_time_)
 
 void DebugLogger::Render()
 {
+    if (state == State::Hidden) { return; }
     int num = 0;
 
     for (int i = nextIndex - 1; i >= 0; --i)
@@ -72,21 +73,21 @@ void DebugLogger::Render()
 void DebugLogger::RenderLog(int num_, const DebugLog& log_)
 {
     int color = 0;
-    switch (log_.LogType)
-    {
-    case DebugLog::Type::Message:
-        color = messageColor;
-        break;
-    case DebugLog::Type::Warning:
-        color = warningColor;
-        break;
-    case DebugLog::Type::Error:
-        color = errorColor;
-        break;
-    }
-
+   
     if (state == State::Detail)
     {
+        switch (log_.LogType)
+        {
+        case DebugLog::Type::Message:
+            color = messageColor;
+            break;
+        case DebugLog::Type::Warning:
+            color = warningColor;
+            break;
+        case DebugLog::Type::Error:
+            color = errorColor;
+            break;
+        }
         int height = line * 2 + padding;
         int this_up = defaultUp - (scroll >> pointPosition) + (height + space) * num_;
         if (this_up > WindowSettings::WindowHeight ||
@@ -97,10 +98,21 @@ void DebugLogger::RenderLog(int num_, const DebugLog& log_)
     }
     else if(state == State::Simple)
     {
+        switch (log_.LogType)
+        {
+        case DebugLog::Type::Message:
+            color = GetColor(255, 255, 255);
+            break;
+        case DebugLog::Type::Warning:
+            color = warningColor;
+            break;
+        case DebugLog::Type::Error:
+            color = errorColor;
+            break;
+        }
         int height = line + padding;
         int this_up = defaultUp + (height + space) * num_;
         if (this_up > WindowSettings::WindowHeight) { return; }
-        DrawBox(leftOnSimple, this_up, leftOnSimple + widthOnSimple, this_up + height, color, TRUE);
-        DrawString(leftOnSimple + padding, this_up + padding, log_.Message.c_str(), characterColor);
+        DrawString(leftOnSimple + padding, this_up + padding, log_.Message.c_str(), color);
     }
 }

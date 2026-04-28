@@ -15,6 +15,7 @@ bool EnemyReportHandler::HasAchievedEverybody()
 			return false;
 		}
 	}
+	DebugMessenger::Log("レポートハンドラー：全員がミッション達成");
 	return true;
 }
 

@@ -1,4 +1,5 @@
 #include "EnemyReport.h"
+#include "../Debug/DebugMessenger.h"
 
 using namespace EnemyAI;
 EnemyReport::EnemyReport(int id_) :
@@ -7,24 +8,42 @@ EnemyReport::EnemyReport(int id_) :
 
 }
 
-int EnemyReport::GetId()
+int EnemyReport::GetId() const
 {
 	return id;
 }
 
-bool EnemyReport::IsAlive()
+bool EnemyReport::IsAlive() const
 {
 	return isAlive;
 }
 
-bool EnemyReport::HasReadDirective()
+bool EnemyReport::HasReadDirective() const
 {
 	return hasReadDirective;
 }
 
-bool EnemyReport::HasAchieved()
+bool EnemyReport::HasAchieved() const
 {
 	return hasAchieved;
+}
+
+std::shared_ptr<const Transform> EnemyReport::GetTransform() const
+{
+	return transform;
+}
+
+void EnemyReport::SetTransform(std::shared_ptr<const Transform> transform_)
+{
+	transform = transform_;
+	if (transform == nullptr)
+	{
+		DebugMessenger::LogWarning("transform‚ªnullptr‚Å‚·");
+	}
+	else
+	{
+		DebugMessenger::Log("transform‚ðƒZƒbƒg‚µ‚Ü‚µ‚½");
+	}
 }
 
 void EnemyReport::ReadDirective()

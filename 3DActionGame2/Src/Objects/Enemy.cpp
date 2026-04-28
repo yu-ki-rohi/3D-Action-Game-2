@@ -40,13 +40,16 @@ void Enemy::MultiplyLocalTimeScaleBy(float multiplier_)
 	brain->SetLocalTimeScale(localTimeScale);
 }
 
+void Enemy::Awake()
+{
+	SetupBrain();
+}
+
 void Enemy::Start()
 {
 	CharacterBase::Start();
 	if (!IsActive()) { return; }
 	justAvoidIgnition = std::make_shared<JustAvoidIgnition>(Tag::Player);
-
-	SetupBrain();
 
 	SetupColliders();
 	

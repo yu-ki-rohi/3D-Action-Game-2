@@ -5,7 +5,7 @@
 #include "../Debug/Profiler.h"
 #include "../Systems/Time.h"
 
-//#define DELAY_EMULATE
+#define DELAY_EMULATE
 
 
 class SceneBase;
@@ -71,7 +71,7 @@ private:
 	std::unique_ptr<Timer<SceneManager, SceneBase>> debugTimer = nullptr;
 
 #ifdef DELAY_EMULATE
-	static constexpr long delayLoopNum = 500000;
+	static constexpr long delayLoopNum = 150000;
 #endif
 #endif
 };

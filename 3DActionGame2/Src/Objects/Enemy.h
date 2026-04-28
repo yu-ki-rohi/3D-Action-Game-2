@@ -27,6 +27,8 @@ public:
 	virtual void SetLocalTimeScale(float time_scale_) override;
 	virtual void MultiplyLocalTimeScaleBy(float multiplier_) override;
 
+	void Awake() override;
+
 	void Start() override;
 
 	void FixedUpdate() override;

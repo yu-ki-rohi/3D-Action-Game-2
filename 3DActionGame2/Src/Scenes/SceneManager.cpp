@@ -6,7 +6,7 @@
 #include "../Debug/DebugManager.h"
 #include <DxLib.h>
 
-#define FIXEDUPDATE_LOOP
+//#define FIXEDUPDATE_LOOP
 
 SceneManager::SceneManager(std::shared_ptr<SceneBase> initial_scene_) :
 	currentScene(initial_scene_)

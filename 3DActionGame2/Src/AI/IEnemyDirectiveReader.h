@@ -14,6 +14,7 @@ namespace EnemyAI
 		virtual Actions GetDirectedAciton(int id_) const = 0;
 		virtual Vector3 GetPlayerPosition() const = 0;
 		virtual int GetDirectivesNum() const = 0;
+		virtual float GetMaximumDistance() const = 0;
 
 	};
 }

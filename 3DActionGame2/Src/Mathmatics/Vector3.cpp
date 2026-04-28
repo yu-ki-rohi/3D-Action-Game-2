@@ -163,7 +163,7 @@ float Vector3::GetComponent(int index_)
 
 Vector3 Vector3::Normalize() const
 {
-	// 0割りはオペレータでケア
+	if (*this == Vector3::ZERO) { return Vector3::ZERO; }
 	return *this / Length();
 }
 

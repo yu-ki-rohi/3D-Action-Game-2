@@ -127,6 +127,10 @@ void Transform::Update(float elapsed_time_)
 	{
 		SlearpRotation(elapsed_time_);
 	}
+
+	Position += quaternion.GetForward() * velocity.z * elapsed_time_;
+	Position += quaternion.GetUp() * velocity.y * elapsed_time_;
+	Position += quaternion.GetRight() * velocity.x * elapsed_time_;
 }
 
 void Transform::SlearpRotation(float elapsed_time_)
@@ -185,9 +189,8 @@ void Transform::RotateAxisRight(float angle_)
 
 void Transform::Translate(const Vector3& vec_)
 {
-	Position += quaternion.GetForward() * vec_.z;
-	Position += quaternion.GetUp() * vec_.y;
-	Position += quaternion.GetRight() * vec_.x;
+	velocity = vec_;
+	velocity.z *= -1;
 }
 Transform::Transform() :
 	Position(Vector3::ZERO),

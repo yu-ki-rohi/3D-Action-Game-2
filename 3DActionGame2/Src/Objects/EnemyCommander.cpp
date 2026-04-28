@@ -18,25 +18,26 @@ ObjectBase::Tag EnemyCommander::GetTag() const
 
 void EnemyCommander::SetLocalTimeScale(float time_scale_)
 {
-
+	localTimeScale = time_scale_;
+	if (commandTimer == nullptr) { return; }
+	commandTimer->SetLocalTimeScale(localTimeScale);
 }
 
 void EnemyCommander::MultiplyLocalTimeScaleBy(float multiplier_)
 {
-
+	localTimeScale *= multiplier_;
+	if (commandTimer == nullptr) { return; }
+	commandTimer->SetLocalTimeScale(localTimeScale);
 }
 
 void EnemyCommander::Start()
 {
-
+	brain->Start();
 }
 
 void EnemyCommander::Update(float elapsed_time)
 {
-	if (commandTimer == nullptr || commandTimer->IsActive() == false)
-	{
-		commandTimer = TimerFactory::CreateTimer(10.0f, brain, &*brain, &EnemyAI::EnemyCommanderBrain::Command);
-	}
+	brain->Command();
 }
 
 int EnemyCommander::AllocateId()
