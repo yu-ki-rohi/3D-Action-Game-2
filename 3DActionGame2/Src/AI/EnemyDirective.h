@@ -47,24 +47,6 @@ namespace EnemyAI
 
 		void SetTransformOfRepresentativeEnemy(std::shared_ptr<const Transform> transform_of_representative_enemy_);
 
-	private:
-		// 検討事項：マスクの定義の仕方
-		enum Mask
-		{
-			NONE = 0x00,
-			DIRECTION = 0x0f,	// 方位指定部分
-			COMBAT_RANGE = 0x30,	// 距離指定部分
-			ACTION = 0xc0,	// 行動内容指定部分
-			ALL = 0xff
-		};
-
-	private:
-		// 待機距離の値
-		static constexpr float inFightDistance = 15.0f;
-		static constexpr float closeRangeDistance = 50.0f;
-		static constexpr float middleRangeDistance = 70.0f;
-		static constexpr float outRangeDistance = 120.0f;
-
 
 	private:
 		// directivesの表現方法

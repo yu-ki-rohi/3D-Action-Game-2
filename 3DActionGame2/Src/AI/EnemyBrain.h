@@ -56,20 +56,12 @@ namespace EnemyAI
 #endif
 
 	private:
-		// 実際の行動として登録する関数
-		// HACK: 関数の中身の修正・メンバ関数にする必要はないかも?
-		BehaviorTree::Status Idle(float elapsed_time_);
 		BehaviorTree::Status Turn(float elapsed_time_);
-		BehaviorTree::Status CheckAttackable(float elapsed_time_);
-		BehaviorTree::Status AttackStart0(float elapsed_time_);
-		BehaviorTree::Status AttackStart1(float elapsed_time_);
-		BehaviorTree::Status AttackStart2(float elapsed_time_);
-		BehaviorTree::Status Attack(float elapsed_time_);
-
-
 		BehaviorTree::Status AttackStart(AKind anim_kind_);
 
 		void RegisterMoveDicision();
+		void RegisterAttackDicision();
+		void RegisterIdleDicision();
 
 		void EnableAttackCollider();
 		void DisableAttackCollider();

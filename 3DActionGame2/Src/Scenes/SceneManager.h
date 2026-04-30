@@ -5,7 +5,7 @@
 #include "../Debug/Profiler.h"
 #include "../Systems/Time.h"
 
-#define DELAY_EMULATE
+//#define DELAY_EMULATE
 
 
 class SceneBase;

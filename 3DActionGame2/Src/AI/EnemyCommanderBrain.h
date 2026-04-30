@@ -23,11 +23,11 @@ namespace EnemyAI
 		int AllocateId();
 
 		void Start();
-		void InitialCommand();
 		void Command();
 
 	private:
 		void SetupSequences();
+		void InitialCommand();
 		void SetNextCenter(int id_);
 
 	private:

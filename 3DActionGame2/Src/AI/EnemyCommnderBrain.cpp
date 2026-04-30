@@ -93,27 +93,27 @@ void EnemyCommanderBrain::SetupSequences()
 	{
 		std::vector<unsigned int> sequence;
 
-		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK0);
 		dir_info[1] = DirectiveInfo(1, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		dir_info[2] = DirectiveInfo(-1, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		meke_directives();
 		sequence.push_back(directives);
 
 		dir_info[0] = DirectiveInfo(0, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
-		dir_info[1] = DirectiveInfo(1, CombatRange::IN_FIGHT, Actions::ATTACK);
-		dir_info[2] = DirectiveInfo(-1, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[1] = DirectiveInfo(1, CombatRange::IN_FIGHT, Actions::ATTACK2);
+		dir_info[2] = DirectiveInfo(-1, CombatRange::IN_FIGHT, Actions::ATTACK2);
 		meke_directives();
 		sequence.push_back(directives);
 
-		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK1);
 		dir_info[1] = DirectiveInfo(6, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		dir_info[2] = DirectiveInfo(-6, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		meke_directives();
 		sequence.push_back(directives);
 
 		dir_info[0] = DirectiveInfo(0, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
-		dir_info[1] = DirectiveInfo(6, CombatRange::IN_FIGHT, Actions::ATTACK);
-		dir_info[2] = DirectiveInfo(-6, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[1] = DirectiveInfo(6, CombatRange::IN_FIGHT, Actions::ATTACK1);
+		dir_info[2] = DirectiveInfo(-6, CombatRange::IN_FIGHT, Actions::ATTACK1);
 		meke_directives();
 		sequence.push_back(directives);
 
@@ -129,9 +129,9 @@ void EnemyCommanderBrain::SetupSequences()
 		meke_directives();
 		sequence.push_back(directives);
 
-		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK);
-		dir_info[1] = DirectiveInfo(6, CombatRange::IN_FIGHT, Actions::ATTACK);
-		dir_info[2] = DirectiveInfo(-6, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK2);
+		dir_info[1] = DirectiveInfo(6, CombatRange::IN_FIGHT, Actions::ATTACK2);
+		dir_info[2] = DirectiveInfo(-6, CombatRange::IN_FIGHT, Actions::ATTACK2);
 		meke_directives();
 		sequence.push_back(directives);
 
@@ -147,19 +147,19 @@ void EnemyCommanderBrain::SetupSequences()
 	{
 		std::vector<unsigned int> sequence;
 
-		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK0);
 		dir_info[1] = DirectiveInfo(6, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		dir_info[2] = DirectiveInfo(-6, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		meke_directives();
 		sequence.push_back(directives);
 
 		dir_info[0] = DirectiveInfo(0, CombatRange::MIDDLE_RANGE, Actions::STAND_BY);
-		dir_info[1] = DirectiveInfo(1, CombatRange::CLOSE_RANGE, Actions::ATTACK);
-		dir_info[2] = DirectiveInfo(-1, CombatRange::CLOSE_RANGE, Actions::ATTACK);
+		dir_info[1] = DirectiveInfo(1, CombatRange::CLOSE_RANGE, Actions::ATTACK2);
+		dir_info[2] = DirectiveInfo(-1, CombatRange::CLOSE_RANGE, Actions::ATTACK2);
 		meke_directives();
 		sequence.push_back(directives);
 
-		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK);
+		dir_info[0] = DirectiveInfo(0, CombatRange::IN_FIGHT, Actions::ATTACK1);
 		dir_info[1] = DirectiveInfo(6, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		dir_info[2] = DirectiveInfo(-6, CombatRange::CLOSE_RANGE, Actions::STAND_BY);
 		meke_directives();

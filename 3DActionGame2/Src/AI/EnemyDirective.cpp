@@ -18,6 +18,25 @@
 #define SIN_3_8 0.9238795
 #define SIN_4_8 1.0000000
 
+namespace
+{
+	// 待機距離の値
+	constexpr float inFightDistance = 15.0f;
+	constexpr float closeRangeDistance = 50.0f;
+	constexpr float middleRangeDistance = 70.0f;
+	constexpr float outRangeDistance = 120.0f;
+
+	// 検討事項：マスクの定義の仕方
+	enum Mask
+	{
+		NONE = 0x00,
+		DIRECTION = 0x0f,	// 方位指定部分
+		COMBAT_RANGE = 0x30,	// 距離指定部分
+		ACTION = 0xc0,	// 行動内容指定部分
+		ALL = 0xff
+	};
+}
+
 using namespace EnemyAI;
 
 EnemyDirective::EnemyDirective(std::shared_ptr<const WorldBlackboard> world_blackboard_, std::shared_ptr<EnemyReportHandler> report_handler_) :
@@ -42,7 +61,16 @@ unsigned char EnemyDirective::MakeDirective(DirectiveInfo directive_info_)
 
 Vector3 EnemyDirective::GetDirectedPosition(int id_) const
 {
-	return GetDirectedRelativePositionToPlayer(id_) + worldBrackbord->GetPlayerPosition();
+	return GetDirectedRelativePositionToPlayer(id_) + GetPlayerPosition();
+}
+
+namespace
+{
+	void ToDirection(float& x, float& z, unsigned char directive);
+
+	void ToClockPosition(float& x, float& z, const Vector3& position_of_representative_enemy, const Vector3& player_position);
+
+	void ReflectDistance(float& x, float& z, unsigned char directive);
 }
 
 Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
@@ -57,16 +85,29 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 		DebugMessenger::LogError("worldBrackbordがnullptrです");
 		return Vector3::ZERO;
 	}
-	// TODO: 長いので関数を分ける
 
 	// 現状ステージ内に高低差が存在しないので、yは0.0固定
 	float x, y = 0.0f, z;
 
-	// 方位確認
-	{
-		// 方位情報の抜き出し
-		unsigned char direction = directives[id_] & Mask::DIRECTION;
+	// 方位変換
+	ToDirection(x, z, directives[id_]);
 
+	// 基準となるエネミーのTransformがあるなら、プレイヤーからそのエネミーへの向きのクロックポジションに変換
+	if (transformOfRepresentativeEnemy != nullptr)
+	{
+		ToClockPosition(x, z, transformOfRepresentativeEnemy->Position, GetPlayerPosition());
+	}
+
+	// 距離反映
+	ReflectDistance(x, z, directives[id_]);
+
+	return Vector3(x, y, z);
+}
+
+namespace
+{
+	void ToDirection(float& x, float& z, unsigned char directive)
+	{
 		// 三角関数を使う方が実装が楽かつ変更させやすいが、今回は別の方法を検討
 		// 現状は高々数パターンしか存在せず、また今後ここの分割を増やすとは思えないため
 		// 三角関数でいうと下記のような結果にしたい
@@ -81,7 +122,8 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 		// 半径1の円のとの交点座標を0～pi/2の間のsinで表す
 		// 並びと符号を上手く対応させる
 
-
+		// 方位情報の抜き出し
+		unsigned char direction = directive & Mask::DIRECTION;
 
 		// 符号の抽出
 		float sign = static_cast<float>(direction >> (DIRECTION_BIT_NUM - 1));
@@ -131,24 +173,22 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 		// 符号反映
 		x *= sign;
 		z *= sign;
-
 	}
 
-	// 基準となるエネミーのTransformがあるなら、プレイヤーからそのエネミーへの向きのクロックポジションに変換
-	if (transformOfRepresentativeEnemy != nullptr)
+	void ToClockPosition(float& x, float& z, const Vector3& position_of_representative_enemy, const Vector3& player_position)
 	{
-		Vector3 base = (transformOfRepresentativeEnemy->Position - GetPlayerPosition()).Normalize();
+		Vector3 base = (position_of_representative_enemy - player_position).Normalize();
 		float tmp_x = x;
 		float tmp_z = z;
 
-		z =  base.z * tmp_z + base.x * tmp_x;
+		z = base.z * tmp_z + base.x * tmp_x;
 		x = -base.z * tmp_x + base.x * tmp_z;
 	}
 
-	// 距離確認
+	void ReflectDistance(float& x, float& z, unsigned char directive)
 	{
 		// 距離情報の抜き出し
-		unsigned char range = directives[id_] & Mask::COMBAT_RANGE;
+		unsigned char range = directive & Mask::COMBAT_RANGE;
 		range >>= DIRECTION_BIT_NUM;
 
 		float distance = 0.0f;
@@ -174,12 +214,9 @@ Vector3 EnemyDirective::GetDirectedRelativePositionToPlayer(int id_) const
 		x *= distance;
 		z *= distance;
 	}
-
-	
-	
-
-	return Vector3(x, y, z);
 }
+
+
 Actions EnemyDirective::GetDirectedAciton(int id_) const
 {
 	if (id_ < 0 || id_ >= directives.size())
@@ -199,7 +236,7 @@ Vector3 EnemyDirective::GetPlayerPosition() const
 
 int EnemyDirective::GetDirectivesNum() const
 {
-	return directives.size();
+	return static_cast<int>(directives.size());
 }
 
 float EnemyDirective::GetMaximumDistance() const
@@ -295,7 +332,7 @@ void EnemyDirective::RotatePosition(int id_, signed char num_)
 int EnemyDirective::AddDirective(unsigned char directive_)
 {
 	directives.push_back(directive_);
-	return (int)directives.size() - 1;
+	return static_cast<int>(directives.size()) - 1;
 }
 
 

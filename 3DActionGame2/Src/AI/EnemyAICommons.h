@@ -16,9 +16,9 @@ namespace EnemyAI
 	enum class Actions
 	{
 		STAND_BY,
-		ATTACK,
-		RUSH,
-		GUARD,
+		ATTACK0,
+		ATTACK1,
+		ATTACK2,
 		End
 	};
 
